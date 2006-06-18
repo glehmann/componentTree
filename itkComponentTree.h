@@ -110,6 +110,16 @@ public:
   /** Get the root node */
   itkGetMacro(Root, NodePointer);
 
+  /** Restore the data object to its initial state. This means releasing
+   * memory. */
+  virtual void Initialize();
+
+  /** This method is here to be usable as an Image. It only calls 
+   * Initialize() */
+  void Allocate()
+    { this->Initialize(); }
+
+
 protected:
   ComponentTree();
   void PrintSelf(std::ostream& os, Indent indent) const;

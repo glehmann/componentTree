@@ -33,7 +33,7 @@ template<class TPixel, unsigned int VImageDimension, class TValue>
 ComponentTree<TPixel, VImageDimension, TValue>
 ::ComponentTree()
 {
-  m_Root = NULL;
+  this->Initialize();
 }
 
 
@@ -52,6 +52,20 @@ ComponentTree<TPixel, VImageDimension, TValue>
 
 // m_Origin and m_Spacing are printed in the Superclass
 }
+
+
+/**
+ *
+ */
+template<class TPixel, unsigned int VImageDimension, class TValue>
+void 
+ComponentTree<TPixel, VImageDimension, TValue>
+::Initialize()
+{
+  m_Root = NULL;
+}
+
+
 } // end namespace itk
 
 #endif
