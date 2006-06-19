@@ -185,6 +185,16 @@ int ComponentTreeNode<TPixel, TIndex, TValue>::ChildPosition( TValue element ) c
 template <typename TPixel, typename TIndex, typename TValue>
 void ComponentTreeNode<TPixel, TIndex, TValue>::AddChild( ComponentTreeNode<TPixel, TIndex, TValue> *node ) 
 {
+  if( node == this )
+    {
+    itkExceptionMacro(<<"Can't set 'this' as child.");
+    }
+
+  for(typename ChildrenListType::iterator it=m_Children.begin(); it!=m_Children.end(); it++)
+    {
+    if( it->GetPointer() == node )
+      { return; }
+    }
   node->SetParent(this);
   m_Children.push_back(node);
 }
