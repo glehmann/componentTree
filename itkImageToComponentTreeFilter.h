@@ -49,12 +49,13 @@ public:
   typedef typename OutputImageType::ConstPointer   OutputImageConstPointer;
   typedef typename OutputImageType::RegionType     OutputImageRegionType;
   typedef typename OutputImageType::PixelType      OutputImagePixelType;
+  typedef typename OutputImageType::NodeType       NodeType;
+  typedef typename OutputImageType::NodePointer    NodePointer;
+  typedef typename OutputImageType::IndexType      IndexType;
   
   /** ImageDimension constants */
-  itkStaticConstMacro(InputImageDimension, unsigned int,
+  itkStaticConstMacro(ImageDimension, unsigned int,
                       TInputImage::ImageDimension);
-  itkStaticConstMacro(OutputImageDimension, unsigned int,
-                      TOutputImage::ImageDimension);
 
   /** Standard New method. */
   itkNewMacro(Self);  
