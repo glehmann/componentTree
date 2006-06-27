@@ -164,6 +164,12 @@ std::cout<<pixelMap.size()<<std::endl;
             }
           else
             {
+            // we have found an equivalent node
+            // they must be merged
+	          nn->GetIndexList().splice( nn->GetIndexList().begin(), n->GetIndexList() );
+	          // nn->GetIndexList().splice( n->GetIndexList().begin(), n->GetIndexList().end() );
+            // store the equivalency to avoid resetting all the nodes in temp image with the new
+            // one.s
             equiv->Add(n, nn);
             }
           }
@@ -213,10 +219,12 @@ std::cout<<pixelMap.size()<<std::endl;
   std::cout << "chilren: " << n->CountChildren() << std::endl;
   std::cout << "p: " << n->GetPixel() << std::endl;
 
-for( int i=0; i<n->CountChildren() ; i++ )
+  this->GetOutput()->SetRoot( n );
+
+/* for( int i=0; i<n->CountChildren() ; i++ )
   {
   std::cout <<   n->GetChildrenList()[i]->GetPixel() << std::endl;
-  }
+  }*/
 }
 
 

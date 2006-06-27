@@ -107,8 +107,9 @@ public:
     this->SetRequestedRegion(region);
     };
 
-  /** Get the root node */
-  itkGetMacro(Root, NodePointer);
+  /** Set/Get the root node */
+	  itkGetMacro(Root, NodePointer);
+	  itkSetMacro(Root, NodePointer);
 
   /** Restore the data object to its initial state. This means releasing
    * memory. */
