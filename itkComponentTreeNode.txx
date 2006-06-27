@@ -118,8 +118,37 @@ int
 ComponentTreeNode<TPixel, TIndex, TValue>
 ::CountChildren( ) const 
 {
+	int size = 1;
+	for( typename ChildrenListType::const_iterator it=m_Children.begin(); it!=m_Children.end(); it++ )
+	  {
+		size += (*it)->CountChildren();
+  	}
+  return size;
+}
+
+/** Return the number of children */
+template <typename TPixel, typename TIndex, typename TValue>
+int 
+ComponentTreeNode<TPixel, TIndex, TValue>
+::Depth( ) const 
+{
+	int depth = 0;
+	for( typename ChildrenListType::const_iterator it=m_Children.begin(); it!=m_Children.end(); it++ )
+	  {
+		depth = std::max( depth, (*it)->Depth() );
+  	}
+  return depth + 1;
+}
+
+/** Return the number of children */
+/* template <typename TPixel, typename TIndex, typename TValue>
+int 
+ComponentTreeNode<TPixel, TIndex, TValue>
+::Size( ) const 
+{
   return m_Children.size();
 }
+*/
 
 /** Remove a child node from the current node */
 template <typename TPixel, typename TIndex, typename TValue>

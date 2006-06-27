@@ -85,6 +85,9 @@ public:
   /** Return the number of children */
   int CountChildren( ) const;
 
+  /** Return the depth of the tree */
+  int Depth( ) const;
+
   /** Remove a node from the node */
   bool Remove( ComponentTreeNode<TPixel, TIndex, TValue> *n );
 
