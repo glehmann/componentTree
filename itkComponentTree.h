@@ -109,6 +109,7 @@ public:
 
   /** Set/Get the root node */
 	  itkGetMacro(Root, NodePointer);
+	  itkGetConstMacro(Root, NodePointer);
 	  itkSetMacro(Root, NodePointer);
 
   /** Restore the data object to its initial state. This means releasing

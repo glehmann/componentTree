@@ -113,6 +113,7 @@ public:
   
   /** Get the internal list of children */
   virtual ChildrenListType& GetChildrenList() {return m_Children;}
+  virtual const ChildrenListType& GetChildrenList() const {return m_Children;}
 
   /** Set the data of the node */
   //virtual void SetData(TValue data) {m_Data = data;}
@@ -122,6 +123,8 @@ public:
   itkSetMacro(Pixel, PixelType);
 
   /** Get the index list */
+  const IndexListType& GetIndexList() const
+    { return m_IndexList; }
   IndexListType& GetIndexList()
     { return m_IndexList; }
 
