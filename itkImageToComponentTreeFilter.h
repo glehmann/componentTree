@@ -20,6 +20,19 @@
 #include "itkImageToImageFilter.h"
 
 namespace itk {
+	
+  namespace Function {
+
+  template <class TYPE>
+  class PointerHash
+  {
+  public:
+  unsigned long operator() (TYPE t) const
+    { return reinterpret_cast<unsigned long> (t); }
+  };
+
+  }
+
 
 /** \class ImageToComponentTreeFilter
  * \brief 

@@ -87,7 +87,7 @@ ComponentTreeToImageFilter<TInputImage, TOutputImage>
 	OutputImageType* output = this->GetOutput();
   for( typename NodeType::IndexListType::const_iterator it=indexList->begin(); it!=indexList->end(); it++ )
     {
-	  std::cout << *it << ": " << v << std::endl;
+	  // std::cout << *it << ": " << v << std::endl;
 	  output->SetPixel( *it, v );
     }
   

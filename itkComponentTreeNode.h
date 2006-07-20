@@ -49,7 +49,7 @@ public:
   typedef ComponentTreeNode<TPixel, TIndex, TValue>      Self;
   typedef SmartPointer<Self>        Pointer;
   typedef SmartPointer<const Self>  ConstPointer;
-  typedef std::vector<Pointer>      ChildrenListType;
+  typedef std::list<Pointer>      ChildrenListType;
 
   typedef TIndex                     IndexType;
   typedef typename std::list<IndexType>      IndexListType;
@@ -67,14 +67,8 @@ public:
   /** Set the current value of the node */
   TValue Set(const TValue data);
 
-  /** Get the child node */
-  ComponentTreeNode<TPixel, TIndex, TValue>* GetChild( int number ) const;
-
   /** Get the parent node */
   ComponentTreeNode<TPixel, TIndex, TValue>* GetParent( ) const;
-
-  /** Return true if the node has children */
-  bool HasChildren( ) const;
 
   /** Return true if the node has a parent */
   bool HasParent( ) const;
@@ -85,32 +79,24 @@ public:
   /** Return the number of children */
   int CountChildren( ) const;
 
+  /**  */
+  int CountPixels( ) const;
+
   /** Return the depth of the tree */
   int Depth( ) const;
 
   /** Remove a node from the node */
   bool Remove( ComponentTreeNode<TPixel, TIndex, TValue> *n );
 
-  /** Get the number of children given a name and depth */
-  unsigned int GetNumberOfChildren(unsigned int depth=0, char * name=NULL ) const;
-
-  /** Replace a given child by a new one */
-  bool ReplaceChild( ComponentTreeNode<TPixel, TIndex, TValue> *oldChild, ComponentTreeNode<TPixel, TIndex, TValue> *newChild );
-
-  /** Return the child position given a node */
-  int ChildPosition( const ComponentTreeNode<TPixel, TIndex, TValue> *node ) const;
-  /** Return the child position given a value */
-  int ChildPosition( TValue node ) const;
-
   /** Add a child to the node */
   void AddChild( ComponentTreeNode<TPixel, TIndex, TValue> *node );
 
-  /** Add a child to the node and specify the number in the children list */
-  virtual void AddChild( int number, ComponentTreeNode<TPixel, TIndex, TValue> *node );
+  /**  */
+  bool HasChild( ComponentTreeNode<TPixel, TIndex, TValue> *node );
 
-  /** Get the children list */
-  virtual ChildrenListType* GetChildren( unsigned int depth=0, char * name=NULL) const;
-  
+  /** Merge node */
+  virtual void Merge( ComponentTreeNode<TPixel, TIndex, TValue> *node );
+
   /** Get the internal list of children */
   virtual ChildrenListType& GetChildrenList() {return m_Children;}
   virtual const ChildrenListType& GetChildrenList() const {return m_Children;}
@@ -127,6 +113,9 @@ public:
     { return m_IndexList; }
   IndexListType& GetIndexList()
     { return m_IndexList; }
+//  itkGetMacro(IndexList, IndexListType&);
+
+  const void print( int indent=0 ) const;
 
 protected:
 

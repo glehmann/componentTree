@@ -28,18 +28,6 @@
 
 namespace itk
 {
-  namespace Function {
-
-  template <class TYPE>
-  class PointerHash
-  {
-  public:
-  unsigned long operator() (TYPE t) const
-    { return reinterpret_cast<unsigned long> (t); }
-  };
-
-  }
-
 /** \class EquivalencyTable
  * \brief Hash table to manage integral label equivalencies
  *
@@ -55,7 +43,7 @@ class ITK_EXPORT EquivalencyTable : public DataObject
 {
 public:
   /** Standard smart pointer declarations */
-  typedef EquivalencyTable         Self;
+  typedef EquivalencyTable<TValueType, THash>         Self;
   typedef DataObject               Superclass;
   typedef SmartPointer<Self>       Pointer;
   typedef SmartPointer<const Self> ConstPointer;

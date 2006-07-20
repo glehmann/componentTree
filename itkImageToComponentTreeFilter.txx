@@ -28,7 +28,7 @@
 #include "itkConstShapedNeighborhoodIterator.h"
 #include "itkShapedNeighborhoodIterator.h"
 #include "itkConstantBoundaryCondition.h"
-#include "itkEquivalencyTable.h"
+#include "itkOneWayEquivalencyTable.h"
 
 namespace itk {
 
@@ -92,8 +92,6 @@ ImageToComponentTreeFilter<TInputImage, TOutputImage>
     pixelMap[inputIt.Get()].push_back( inputIt.GetIndex() );
     }
 
-std::cout<<pixelMap.size()<<std::endl;
-
   // we need, to construct the full build tree, to know to which node a pixel
   // belong
   typedef Image< NodeType*, ImageDimension > NodeImageType;
@@ -127,7 +125,7 @@ std::cout<<pixelMap.size()<<std::endl;
   NodePointerList tempNodeList;
 
   NodeType* n = NULL;
-  typedef EquivalencyTable< NodeType*, typename Function::PointerHash< NodeType* > > EquivType;
+  typedef OneWayEquivalencyTable< NodeType*, typename Function::PointerHash< NodeType* > > EquivType;
   typename EquivType::Pointer equiv = EquivType::New();
 
   // iterate over pixel values, from high to low
@@ -136,9 +134,13 @@ std::cout<<pixelMap.size()<<std::endl;
     InputImagePixelType pixelValue = pixelMapIt->first;
     IndexListType* indexes = &(pixelMapIt->second);
 
+    std::cout << "pixelValue: " << pixelValue+0.0 << std::endl;
+
     // iterate over pixel indexes, and build the tree !
     for ( typename IndexListType::iterator idxIt = indexes->begin(); idxIt != indexes->end(); ++idxIt )
       {
+		  // std::cout << "*idxIt: " << *idxIt << std::endl;
+	
       // shift output and mask iterators to new location
       nIt += *idxIt - nIt.GetIndex();
       iIt += *idxIt - iIt.GetIndex();
@@ -155,7 +157,7 @@ std::cout<<pixelMap.size()<<std::endl;
         NodeType* nn = equiv->RecursiveLookup( nnIt.Get() );
         InputImagePixelType np = niIt.Get();
 
-        if( nn != NULL &&  np == p )
+        if( nn != NULL &&  n != nn && np == p )
           {
           if( n == NULL )
             {
@@ -164,13 +166,13 @@ std::cout<<pixelMap.size()<<std::endl;
             }
           else
             {
+			      // std::cout << nn << " -> " << n << "   " << *idxIt << "   " << equiv->RecursiveLookup( nn ) << std::endl;
             // we have found an equivalent node
             // they must be merged
-	          nn->GetIndexList().splice( nn->GetIndexList().begin(), n->GetIndexList() );
-	          // nn->GetIndexList().splice( n->GetIndexList().begin(), n->GetIndexList().end() );
+            n->Merge( nn );
             // store the equivalency to avoid resetting all the nodes in temp image with the new
-            // one.s
-            equiv->Add(n, nn);
+            // one.
+            equiv->Add(nn, n);
             }
           }
         }
@@ -179,7 +181,7 @@ std::cout<<pixelMap.size()<<std::endl;
       if( n == NULL )
         {
 
-        std::cout << iIt.GetIndex() << std::endl;
+        // std::cout << iIt.GetIndex() << std::endl;
 
         NodePointer newNode = NodeType::New();
         tempNodeList.push_back( newNode );
@@ -194,30 +196,47 @@ std::cout<<pixelMap.size()<<std::endl;
       // the deepest parent of the neighbor
       for( nnIt = nIt.Begin(); nnIt != nIt.End(); nnIt++ )
         {
-        NodeType* nn = nnIt.Get();
+        NodeType* nn = equiv->RecursiveLookup( nnIt.Get() );
 
-        if( nn != NULL )
+        if( nn != NULL &&  nn->GetPixel() > pixelValue )
           {
-          std::cout << "- " << nn->GetPixel() << std::endl;
-
+          // find nn deepest current parent
           while( nn->GetParent() != NULL )
             {
-            nn = nn->GetParent(); 
-            std::cout << "  " << nn->GetPixel() << std::endl;
+            // std::cout << "nn: " << nn << std::endl;
+            assert(equiv->RecursiveLookup( nn->GetParent() )->GetPixel() < nn->GetPixel() );
+            nn = equiv->RecursiveLookup( nn->GetParent() ); 
+            // std::cout << "  " << nn->GetPixel() << std::endl;
             }
 
-          if( nn != n )
-            { n->AddChild( nn ); }
+          // and if n and nn are different, set n as parent of nn
+          if( n->GetPixel() != nn->GetPixel() )
+            {
+            assert( n->GetParent() == NULL );
+            assert( n->GetParent() != nn );
+            assert( nn->GetPixel() >= n->GetPixel() );
+            n->AddChild( nn );
+            }
+          else if( nn != n )
+            {
+			      // std::cout << nn << " => " << n << "   " << *idxIt << "   " << equiv->RecursiveLookup( nn ) << std::endl;
+	          n->Merge( nn );
+	          equiv->Add(nn, n);
+	          // equiv->Add(n, NULL);
+            }
           }
         }
 
       }
     }
 
+  assert( n->CountPixels() == this->GetOutput()->GetRequestedRegion().GetNumberOfPixels() );
 
   std::cout << "tempNodeList: " << tempNodeList.size() << std::endl;
   std::cout << "chilren: " << n->CountChildren() << std::endl;
-  std::cout << "p: " << n->GetPixel() << std::endl;
+  std::cout << "pixels: " << n->CountPixels() << std::endl;
+  std::cout << "p: " << n->GetPixel()+0.0 << std::endl;
+  n->print();
 
   this->GetOutput()->SetRoot( n );
 

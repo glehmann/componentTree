@@ -33,7 +33,7 @@ ComponentTreeNode<TPixel, TIndex, TValue>::ComponentTreeNode()
 template <typename TPixel, typename TIndex, typename TValue>
 ComponentTreeNode<TPixel, TIndex, TValue>::~ComponentTreeNode() 
 {
-  if ( m_Parent )
+/*  if ( m_Parent )
     {
     m_Parent->Remove(this);
     }
@@ -45,7 +45,7 @@ ComponentTreeNode<TPixel, TIndex, TValue>::~ComponentTreeNode()
    }
   m_Children.clear();
   m_Parent = NULL;
-  m_Data = 0;
+  m_Data = 0; */
 }
 
 /** Return the parent node */
@@ -55,22 +55,6 @@ ComponentTreeNode<TPixel, TIndex, TValue>
 ::GetParent( ) const 
 {
   return m_Parent;
-}
-
-/** Get a child */
-template <typename TPixel, typename TIndex, typename TValue>
-ComponentTreeNode<TPixel, TIndex, TValue>* 
-ComponentTreeNode<TPixel, TIndex, TValue>
-::GetChild( int number ) const 
-{
-  if ( (unsigned int)number < m_Children.size() )
-    {
-    return m_Children[number];
-    }
-  else
-    {
-    return NULL;
-    }
 }
 
 /** Set the value of a node */
@@ -89,27 +73,14 @@ const TValue& ComponentTreeNode<TPixel, TIndex, TValue>::Get() const
   return m_Data;
 }
 
-/** Return true if has a parent */
-template <typename TPixel, typename TIndex, typename TValue>
-bool 
-ComponentTreeNode<TPixel, TIndex, TValue>::HasParent() const 
-{
-  return (m_Parent)?true:false;
-}
-
 /** Set the parent node */
 template <typename TPixel, typename TIndex, typename TValue>
 void 
 ComponentTreeNode<TPixel, TIndex, TValue>::SetParent( ComponentTreeNode<TPixel, TIndex, TValue>* node) 
 {
+	assert( node != this );
+	// assert( node->GetPixel() < this->GetPixel() );
   m_Parent = node;
-}
-
-/** Return true if the node has children */
-template <typename TPixel, typename TIndex, typename TValue>
-bool ComponentTreeNode<TPixel, TIndex, TValue>::HasChildren() const 
-{
-  return (m_Children.size()>0)?true:false;
 }
 
 /** Return the number of children */
@@ -130,6 +101,20 @@ ComponentTreeNode<TPixel, TIndex, TValue>
 template <typename TPixel, typename TIndex, typename TValue>
 int 
 ComponentTreeNode<TPixel, TIndex, TValue>
+::CountPixels( ) const 
+{
+	int size = this->GetIndexList().size();
+	for( typename ChildrenListType::const_iterator it=m_Children.begin(); it!=m_Children.end(); it++ )
+	  {
+		size += (*it)->CountPixels();
+  	}
+  return size;
+}
+
+/** Return the number of children */
+template <typename TPixel, typename TIndex, typename TValue>
+int 
+ComponentTreeNode<TPixel, TIndex, TValue>
 ::Depth( ) const 
 {
 	int depth = 0;
@@ -139,16 +124,6 @@ ComponentTreeNode<TPixel, TIndex, TValue>
   	}
   return depth + 1;
 }
-
-/** Return the number of children */
-/* template <typename TPixel, typename TIndex, typename TValue>
-int 
-ComponentTreeNode<TPixel, TIndex, TValue>
-::Size( ) const 
-{
-  return m_Children.size();
-}
-*/
 
 /** Remove a child node from the current node */
 template <typename TPixel, typename TIndex, typename TValue>
@@ -167,162 +142,61 @@ ComponentTreeNode<TPixel, TIndex, TValue>
   return false;
 }
 
-/** Replace a child by a new one */
-template <typename TPixel, typename TIndex, typename TValue>
-bool ComponentTreeNode<TPixel, TIndex, TValue>::ReplaceChild( ComponentTreeNode<TPixel, TIndex, TValue> *oldChild, ComponentTreeNode<TPixel, TIndex, TValue> *newChild )
-{
-  int size = m_Children.size();
-
-  for ( int i=0; i<size; i++ )
-    {
-    if ( m_Children[i] == oldChild )
-      {
-      m_Children[i] = newChild;
-      return true;
-      }
-    }
-  return false;
-}
-
-/** Return the child position given a node */
-template <typename TPixel, typename TIndex, typename TValue>
-int ComponentTreeNode<TPixel, TIndex, TValue>::ChildPosition( const ComponentTreeNode<TPixel, TIndex, TValue> *node ) const 
-{
-  for ( unsigned int i=0; i < m_Children.size(); i++ )
-    {
-    if ( m_Children[i] == node )
-      {
-      return i;
-      }
-    }
-  return -1;
-}
-
-/** Return the child position given an element, the first child found. */
-template <typename TPixel, typename TIndex, typename TValue>
-int ComponentTreeNode<TPixel, TIndex, TValue>::ChildPosition( TValue element ) const 
-{
-  for ( unsigned int i=0; i < m_Children.size(); i++ ) 
-    {
-    if ( m_Children[i]->Get() == element )
-    return i;
-    }
-  return -1;
-}
 
 /** Add a child node */
 template <typename TPixel, typename TIndex, typename TValue>
 void ComponentTreeNode<TPixel, TIndex, TValue>::AddChild( ComponentTreeNode<TPixel, TIndex, TValue> *node ) 
 {
-  if( node == this )
-    {
-    itkExceptionMacro(<<"Can't set 'this' as child.");
-    }
+  assert( node != this );
+  // assert( node->GetPixel() > this->GetPixel() );
+  assert( !this->HasChild( node ) );
 
-  for(typename ChildrenListType::iterator it=m_Children.begin(); it!=m_Children.end(); it++)
-    {
-    if( it->GetPointer() == node )
-      { return; }
-    }
   node->SetParent(this);
   m_Children.push_back(node);
 }
 
-/** Add a child at a specific position in the children list */
 template <typename TPixel, typename TIndex, typename TValue>
-void 
-ComponentTreeNode<TPixel, TIndex, TValue>
-::AddChild( int number, ComponentTreeNode<TPixel, TIndex, TValue> *node ) 
-{  
-  int size = m_Children.size();
-
-  if ( number > size ) 
+void ComponentTreeNode<TPixel, TIndex, TValue>::Merge( ComponentTreeNode<TPixel, TIndex, TValue> *node ) 
+{
+	assert( node != this );
+	assert( this->GetPixel() <= node->GetPixel() );
+	// merge the index list
+  m_IndexList.splice( m_IndexList.begin(), node->GetIndexList() );
+  // and add each child from node to the current child list
+  for( typename ChildrenListType::iterator it=node->GetChildrenList().begin(); it!=node->GetChildrenList().end(); it++ )
     {
-    for ( int i=size; i <= number; i++ )
-      {
-      m_Children[i] = NULL;
-      }
-    m_Children[number] = node;
-    return;
-    }
-
-  ComponentTreeNode<TPixel, TIndex, TValue>* old = m_Children[number];
-  if ( old != NULL )
-    {
-    delete old;
-    }
-  m_Children[number] = node;
+	  assert( (*it)->GetParent() == node );
+	  this->AddChild( *it );
+	  }
+	// clear the child list to be sure they will not be accidentally used
+	// so node will have no children and no index after this method
+	// node->GetChildrenList().clear();
 }
 
-/** Get the number of children given a name and a depth */
 template <typename TPixel, typename TIndex, typename TValue>
-unsigned int
-ComponentTreeNode<TPixel, TIndex, TValue>
-::GetNumberOfChildren( unsigned int depth, char * name ) const
+bool ComponentTreeNode<TPixel, TIndex, TValue>::HasChild( ComponentTreeNode<TPixel, TIndex, TValue> *node ) 
 {
-  typename ChildrenListType::const_iterator it = m_Children.begin();
-  typename ChildrenListType::const_iterator itEnd = m_Children.end();
-
-  unsigned int cnt = 0;
-  while(it != itEnd)
-    {
-    if(name == NULL || strstr(typeid(**it).name(), name))
-      {
-      cnt++;
-      }
-    it++;
-    }
-
-  it = m_Children.begin();
-  itEnd = m_Children.end();
-  if( depth > 0 )
-    {
-    while(it != itEnd)
-      {
-      cnt += (*it)->GetNumberOfChildren( depth-1, name );
-      it++;
-      }
-    }
-
-  return cnt;
+	return std::find(m_Children.begin(), m_Children.end(), node ) != m_Children.end();
 }
 
-/** Get children given a name and a depth */
 template <typename TPixel, typename TIndex, typename TValue>
-typename ComponentTreeNode<TPixel, TIndex, TValue>::ChildrenListType* 
-ComponentTreeNode<TPixel, TIndex, TValue>
-::GetChildren( unsigned int depth, char * name) const
+const void ComponentTreeNode<TPixel, TIndex, TValue>::print( int indent ) const
 {
-  ChildrenListType * children = new ChildrenListType;
-
-  typename ChildrenListType::const_iterator childrenListIt = 
-    m_Children.begin();
-  typename ChildrenListType::const_iterator childrenListEnd = 
-    m_Children.end();
-
-  while( childrenListIt != childrenListEnd )
-    {
-    if( name == NULL || strstr(typeid(**childrenListIt).name(), name) )
-      {
-      children->push_back(*childrenListIt);
-      }
-    if( depth > 0 )
-      {
-      ChildrenListType * nextchildren = (**childrenListIt).GetChildren(depth-1,
-                                                                       name);  
-      // Add the child to the current list
-      typename ChildrenListType::const_iterator nextIt = nextchildren->begin();
-      while(nextIt != nextchildren->end())
-        {
-        children->push_back(*nextIt);
-        nextIt++;
-        }
-      delete nextchildren;
-      }
-    childrenListIt++;
+	for( int i=0; i<indent; i++)
+	  {
+    std::cout << "  ";
     }
-
-  return children;
+  std::cout << "+ " << this->GetPixel()+0.0 << ": ";
+  for( typename IndexListType::const_iterator it=this->GetIndexList().begin(); it!=this->GetIndexList().end(); it++ )
+    {
+	  std::cout << *it << " ";
+    }
+  std::cout << std::endl;
+  for( typename ChildrenListType::const_iterator it=this->GetChildrenList().begin(); it!=this->GetChildrenList().end(); it++ )
+    {
+	  (*it)->print( indent+1 );
+	  }
+  
 }
 
 

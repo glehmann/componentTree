@@ -22,6 +22,7 @@
 #include "itkFixedArray.h"
 #include "itkWeakPointer.h"
 #include "itkComponentTreeNode.h"
+#include <list>
 
 namespace itk
 {
@@ -88,6 +89,7 @@ public:
   /** Node type */
   typedef ComponentTreeNode< PixelType, IndexType, ValueType > NodeType;
   typedef SmartPointer< NodeType > NodePointer;
+  typedef std::list< NodeType* > NodeListType;
 
   /** Convenience methods to set the LargestPossibleRegion,
    *  BufferedRegion and RequestedRegion. Allocate must still be called.
@@ -121,6 +123,8 @@ public:
   void Allocate()
     { this->Initialize(); }
 
+  /** Get the leaf list */
+//   itkGetMacro(Leaf, NodeListType);
 
 protected:
   ComponentTree();
@@ -132,6 +136,9 @@ private:
 
   /** The root node */
   NodePointer m_Root;
+
+  NodeListType m_Leaf;
+
 };
 
 } // end namespace itk
