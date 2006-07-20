@@ -66,6 +66,43 @@ ComponentTree<TPixel, VImageDimension, TValue>
 }
 
 
-} // end namespace itk
+template<class TPixel, unsigned int VImageDimension, class TValue>
+void 
+ComponentTree<TPixel, VImageDimension, TValue>
+::Graft(const DataObject *data)
+{
+  // call the superclass' implementation
+  Superclass::Graft( data );
+
+  if ( data )
+    {
+    // Attempt to cast data to an Image
+    const Self * imgData;
+
+    try
+      {
+      imgData = dynamic_cast<const Self *>( data );
+      }
+    catch( ... )
+      {
+      return;
+      }
+
+
+    if ( imgData )
+      {
+      // Now copy anything remaining that is needed
+      this->SetRoot( const_cast< NodeType * >
+                                  (imgData->GetRoot().GetPointer() ) );
+      }
+    else
+      {
+      // pointer could not be cast back down
+      itkExceptionMacro( << "itk::Image::Graft() cannot cast "
+                         << typeid(data).name() << " to "
+                         << typeid(const Self *).name() );
+      }
+    }
+}} // end namespace itk
 
 #endif

@@ -123,6 +123,8 @@ public:
   void Allocate()
     { this->Initialize(); }
 
+  virtual void Graft(const DataObject *data);
+
   /** Get the leaf list */
 //   itkGetMacro(Leaf, NodeListType);
 
