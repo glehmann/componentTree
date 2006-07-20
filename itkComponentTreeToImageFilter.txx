@@ -69,7 +69,6 @@ ComponentTreeToImageFilter<TInputImage, TOutputImage>
 {
   // Allocate the output
   this->AllocateOutputs();
-this->GetOutput()->FillBuffer(255);
   this->WriteNodes( this->GetInput()->GetRoot() );
     
   
