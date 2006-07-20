@@ -120,6 +120,8 @@ public:
 
   const void print( int indent=0 ) const;
 
+  Pointer Clone();
+
 protected:
 
   ComponentTreeNode();

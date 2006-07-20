@@ -190,6 +190,31 @@ void ComponentTreeNode<TPixel, TIndex, TValue>::MergeChildren()
 }
 
 template <typename TPixel, typename TIndex, typename TValue>
+typename ComponentTreeNode<TPixel, TIndex, TValue>::Pointer
+ComponentTreeNode<TPixel, TIndex, TValue>::Clone() 
+{
+	// create a new node to clone this one
+	Pointer node = Self::New();
+	// copy the ivars
+	node->Set( m_Data );
+  // node->SetParent( NULL );
+  node->SetPixel( m_Pixel );
+  IndexListType  m_IndexList;
+  
+  for( typename ChildrenListType::iterator it=this->GetChildrenList().begin(); it!=this->GetChildrenList().end(); it++ )
+    {
+	  assert( (*it)->GetParent() == this );
+		assert( this->GetPixel() < (*it)->GetPixel() );
+	  // merge the children of the children
+	  (*it)->MergeChildren();
+	  // and merge this children
+	  this->Merge( *it );
+	  }
+	// clear the child list 
+	this->GetChildrenList().clear();
+}
+
+template <typename TPixel, typename TIndex, typename TValue>
 bool ComponentTreeNode<TPixel, TIndex, TValue>::HasChild( ComponentTreeNode<TPixel, TIndex, TValue> *node ) 
 {
 	return std::find(m_Children.begin(), m_Children.end(), node ) != m_Children.end();
