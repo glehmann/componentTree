@@ -131,8 +131,7 @@ bool
 ComponentTreeNode<TPixel, TIndex, TValue>
 ::Remove( ComponentTreeNode<TPixel, TIndex, TValue> *n ) 
 {
-  typename std::vector<Pointer>::iterator pos;
-  pos = std::find(m_Children.begin(), m_Children.end(), n );
+  typename ChildrenListType::iterator pos = std::find(m_Children.begin(), m_Children.end(), n );
   if ( pos != m_Children.end() ) 
     {
     m_Children.erase(pos);
