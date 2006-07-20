@@ -159,7 +159,7 @@ template <typename TPixel, typename TIndex, typename TValue>
 void ComponentTreeNode<TPixel, TIndex, TValue>::Merge( ComponentTreeNode<TPixel, TIndex, TValue> *node ) 
 {
 	assert( node != this );
-	assert( this->GetPixel() <= node->GetPixel() );
+	// assert( this->GetPixel() <= node->GetPixel() );
 	// merge the index list
   m_IndexList.splice( m_IndexList.begin(), node->GetIndexList() );
   // and add each child from node to the current child list
@@ -171,6 +171,22 @@ void ComponentTreeNode<TPixel, TIndex, TValue>::Merge( ComponentTreeNode<TPixel,
 	// clear the child list to be sure they will not be accidentally used
 	// so node will have no children and no index after this method
 	// node->GetChildrenList().clear();
+}
+
+template <typename TPixel, typename TIndex, typename TValue>
+void ComponentTreeNode<TPixel, TIndex, TValue>::MergeChildren() 
+{
+  for( typename ChildrenListType::iterator it=this->GetChildrenList().begin(); it!=this->GetChildrenList().end(); it++ )
+    {
+	  assert( (*it)->GetParent() == this );
+		assert( this->GetPixel() < (*it)->GetPixel() );
+	  // merge the children of the children
+	  (*it)->MergeChildren();
+	  // and merge this children
+	  this->Merge( *it );
+	  }
+	// clear the child list 
+	this->GetChildrenList().clear();
 }
 
 template <typename TPixel, typename TIndex, typename TValue>

@@ -25,6 +25,8 @@ int main(int, char * argv[])
   FilterType::Pointer filter = FilterType::New();
   filter->SetInput( reader->GetOutput() );
   filter->Update();
+  
+  (*filter->GetOutput()->GetRoot()->GetChildrenList().begin())->MergeChildren();
 
 /*	std::cout << filter << std::endl;
   std::cout << filter->GetOutput() << std::endl;

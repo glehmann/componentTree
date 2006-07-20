@@ -97,6 +97,9 @@ public:
   /** Merge node */
   virtual void Merge( ComponentTreeNode<TPixel, TIndex, TValue> *node );
 
+  /** Merge node */
+  virtual void MergeChildren();
+
   /** Get the internal list of children */
   virtual ChildrenListType& GetChildrenList() {return m_Children;}
   virtual const ChildrenListType& GetChildrenList() const {return m_Children;}
