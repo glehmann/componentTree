@@ -32,16 +32,16 @@
 
 namespace itk {
 
-template <class TInputImage, class TOutputImage>
-ImageToComponentTreeFilter<TInputImage, TOutputImage>
+template <class TInputImage, class TOutputImage, class TCompare>
+ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>
 ::ImageToComponentTreeFilter()
 {
   m_FullyConnected = false;
 }
 
-template <class TInputImage, class TOutputImage>
+template <class TInputImage, class TOutputImage, class TCompare>
 void 
-ImageToComponentTreeFilter<TInputImage, TOutputImage>
+ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>
 ::GenerateInputRequestedRegion()
 {
   // call the superclass' implementation of this method
@@ -57,9 +57,9 @@ ImageToComponentTreeFilter<TInputImage, TOutputImage>
 }
 
 
-template <class TInputImage, class TOutputImage>
+template <class TInputImage, class TOutputImage, class TCompare>
 void 
-ImageToComponentTreeFilter<TInputImage, TOutputImage>
+ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>
 ::EnlargeOutputRequestedRegion(DataObject *)
 {
   this->GetOutput()
@@ -67,9 +67,9 @@ ImageToComponentTreeFilter<TInputImage, TOutputImage>
 }
 
 
-template<class TInputImage, class TOutputImage>
+template<class TInputImage, class TOutputImage, class TCompare>
 void
-ImageToComponentTreeFilter<TInputImage, TOutputImage>
+ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>
 ::GenerateData()
 {
   // Allocate the output
@@ -83,7 +83,7 @@ ImageToComponentTreeFilter<TInputImage, TOutputImage>
 
   // create map to store     pixel value -> [pos1, pos2 .. posn]
   typedef std::list<IndexType> IndexListType;
-  typedef std::map <InputImagePixelType, IndexListType> PixelMapType;
+  typedef std::map <InputImagePixelType, IndexListType, TCompare> PixelMapType;
   PixelMapType pixelMap;
 
   for ( inputIt.GoToBegin(); !inputIt.IsAtEnd(); ++inputIt )
@@ -129,7 +129,7 @@ ImageToComponentTreeFilter<TInputImage, TOutputImage>
   typename EquivType::Pointer equiv = EquivType::New();
 
   // iterate over pixel values, from high to low
-  for ( typename PixelMapType::reverse_iterator pixelMapIt=pixelMap.rbegin(); pixelMapIt!=pixelMap.rend(); ++pixelMapIt )
+  for ( typename PixelMapType::iterator pixelMapIt=pixelMap.begin(); pixelMapIt!=pixelMap.end(); ++pixelMapIt )
     {
     InputImagePixelType pixelValue = pixelMapIt->first;
     IndexListType* indexes = &(pixelMapIt->second);
@@ -247,9 +247,9 @@ ImageToComponentTreeFilter<TInputImage, TOutputImage>
 }
 
 
-template<class TInputImage, class TOutputImage>
+template<class TInputImage, class TOutputImage, class TCompare>
 void
-ImageToComponentTreeFilter<TInputImage, TOutputImage>
+ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>
 ::PrintSelf(std::ostream &os, Indent indent) const
 {
   Superclass::PrintSelf(os, indent);

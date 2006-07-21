@@ -39,7 +39,7 @@ namespace itk {
  *
  * \ingroup ImageEnhancement  MathematicalMorphologyImageFilters
  */
-template<class TInputImage, class TOutputImage>
+template<class TInputImage, class TOutputImage, class TCompare>
 class ITK_EXPORT ImageToComponentTreeFilter : 
     public ImageToImageFilter<TInputImage, TOutputImage>
 {
