@@ -3,7 +3,8 @@
 #include "itkCommand.h"
 #include "itkSimpleFilterWatcher.h"
 
-#include "itkImageToComponentTreeFilter.h"
+#include "itkImageToMaximumTreeFilter.h"
+#include "itkImageToMinimumTreeFilter.h"
 #include "itkComponentTreeToImageFilter.h"
 #include "itkComponentTree.h"
 #include "itkAttributeOpeningComponentTreeFilter.h"
@@ -21,7 +22,7 @@ int main(int, char * argv[])
   ReaderType::Pointer reader = ReaderType::New();
   reader->SetFileName( argv[1] );
 
-  typedef itk::ImageToComponentTreeFilter< IType, TreeType, std::greater<PType> > FilterType;
+  typedef itk::ImageToMinimumTreeFilter< IType, TreeType > FilterType;
   FilterType::Pointer filter = FilterType::New();
   filter->SetInput( reader->GetOutput() );
   filter->Update();
