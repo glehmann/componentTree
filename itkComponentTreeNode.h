@@ -61,11 +61,9 @@ public:
   /** Run-time type information (and related methods). */ 
   itkTypeMacro( ComponentTreeNode, Object );
 
-  /** Get the value of the node */
-  const TValue& Get() const;
-
-  /** Set the current value of the node */
-  TValue Set(const TValue data);
+  /* Get/Set Attribute */
+  itkGetConstReferenceMacro(Attribute, TValue);
+  itkSetMacro(Attribute, TValue);
 
   /** Get the parent node */
   ComponentTreeNode<TPixel, TIndex, TValue>* GetParent( ) const;
@@ -86,7 +84,7 @@ public:
   int Depth( ) const;
 
   /** Remove a node from the node */
-  bool Remove( ComponentTreeNode<TPixel, TIndex, TValue> *n );
+  bool RemoveChild( ComponentTreeNode<TPixel, TIndex, TValue> *n );
 
   /** Add a child to the node */
   void AddChild( ComponentTreeNode<TPixel, TIndex, TValue> *node );
@@ -101,8 +99,8 @@ public:
   virtual void MergeChildren();
 
   /** Get the internal list of children */
-  virtual ChildrenListType& GetChildrenList() {return m_Children;}
-  virtual const ChildrenListType& GetChildrenList() const {return m_Children;}
+  virtual ChildrenListType& GetChildren() {return m_Children;}
+  virtual const ChildrenListType& GetChildren() const {return m_Children;}
 
   /** Set the data of the node */
   //virtual void SetData(TValue data) {m_Data = data;}
@@ -112,10 +110,10 @@ public:
   itkSetMacro(Pixel, PixelType);
 
   /** Get the index list */
-  const IndexListType& GetIndexList() const
-    { return m_IndexList; }
-  IndexListType& GetIndexList()
-    { return m_IndexList; }
+  const IndexListType& GetIndexes() const
+    { return m_Indexes; }
+  IndexListType& GetIndexes()
+    { return m_Indexes; }
 //  itkGetMacro(IndexList, IndexListType&);
 
   const void print( int indent=0 ) const;
@@ -126,12 +124,12 @@ protected:
 
   ComponentTreeNode();
   virtual ~ComponentTreeNode();
-  TValue m_Data;
+  TValue m_Attribute;
   Self* m_Parent;
   ChildrenListType m_Children;
 
   PixelType m_Pixel;
-  IndexListType  m_IndexList;
+  IndexListType  m_Indexes;
 
 private:
   ComponentTreeNode(const Self&); //purposely not implemented

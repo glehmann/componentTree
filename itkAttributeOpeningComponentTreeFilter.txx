@@ -50,14 +50,14 @@ AttributeOpeningComponentTreeFilter<TInputImage, TOutputImage>
 ::ThresholdComponents( NodeType* node )
 {
 	assert(node != NULL);
-  const typename NodeType::ChildrenListType * childrenList = & node->GetChildrenList();
+  const typename NodeType::ChildrenListType * childrenList = & node->GetChildren();
 	for( typename NodeType::ChildrenListType::const_iterator it=childrenList->begin(); it!=childrenList->end(); it++ )
     {
 	  if( (*it)->CountPixels() <= m_Threshold )
 	    {
 		  (*it)->MergeChildren();
 		  node->Merge( *it );
-		  node->Remove( *it );
+		  node->RemoveChild( *it );
       }
     else
       {
