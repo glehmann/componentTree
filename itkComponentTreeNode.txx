@@ -178,7 +178,7 @@ void ComponentTreeNode<TPixel, TIndex, TValue>::MergeChildren()
   for( typename ChildrenListType::iterator it=this->GetChildrenList().begin(); it!=this->GetChildrenList().end(); it++ )
     {
 	  assert( (*it)->GetParent() == this );
-		assert( this->GetPixel() < (*it)->GetPixel() );
+		// assert( this->GetPixel() < (*it)->GetPixel() );
 	  // merge the children of the children
 	  (*it)->MergeChildren();
 	  // and merge this children

@@ -74,6 +74,9 @@ ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>
 {
   // Allocate the output
   this->AllocateOutputs();
+
+  // instantiate the comparator
+  TCompare compare;
   
   // sort the pixel by gray level
 
@@ -198,13 +201,13 @@ ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>
         {
         NodeType* nn = equiv->RecursiveLookup( nnIt.Get() );
 
-        if( nn != NULL &&  nn->GetPixel() > pixelValue )
+        if( nn != NULL &&  compare ( nn->GetPixel(), pixelValue ) )
           {
           // find nn deepest current parent
           while( nn->GetParent() != NULL )
             {
             // std::cout << "nn: " << nn << std::endl;
-            assert(equiv->RecursiveLookup( nn->GetParent() )->GetPixel() < nn->GetPixel() );
+            assert(compare ( nn->GetPixel(), equiv->RecursiveLookup( nn->GetParent() )->GetPixel() ) );
             nn = equiv->RecursiveLookup( nn->GetParent() ); 
             // std::cout << "  " << nn->GetPixel() << std::endl;
             }
@@ -214,7 +217,7 @@ ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>
             {
             assert( n->GetParent() == NULL );
             assert( n->GetParent() != nn );
-            assert( nn->GetPixel() >= n->GetPixel() );
+            assert( compare( nn->GetPixel(), n->GetPixel() ) || nn->GetPixel() == n->GetPixel() );
             n->AddChild( nn );
             }
           else if( nn != n )
@@ -230,13 +233,13 @@ ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>
       }
     }
 
-  assert( n->CountPixels() == this->GetOutput()->GetRequestedRegion().GetNumberOfPixels() );
-
+  n->print();
   std::cout << "tempNodeList: " << tempNodeList.size() << std::endl;
   std::cout << "chilren: " << n->CountChildren() << std::endl;
   std::cout << "pixels: " << n->CountPixels() << std::endl;
   std::cout << "p: " << n->GetPixel()+0.0 << std::endl;
-  n->print();
+
+  assert( n->CountPixels() == this->GetOutput()->GetRequestedRegion().GetNumberOfPixels() );
 
   this->GetOutput()->SetRoot( n );
 

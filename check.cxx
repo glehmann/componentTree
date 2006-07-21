@@ -6,7 +6,7 @@
 #include "itkImageToComponentTreeFilter.h"
 #include "itkComponentTreeToImageFilter.h"
 #include "itkComponentTree.h"
-
+#include "itkAttributeOpeningComponentTreeFilter.h"
 
 int main(int, char * argv[])
 {
@@ -21,12 +21,20 @@ int main(int, char * argv[])
   ReaderType::Pointer reader = ReaderType::New();
   reader->SetFileName( argv[1] );
 
-  typedef itk::ImageToComponentTreeFilter< IType, TreeType > FilterType;
+  typedef itk::ImageToComponentTreeFilter< IType, TreeType, std::greater<PType> > FilterType;
   FilterType::Pointer filter = FilterType::New();
   filter->SetInput( reader->GetOutput() );
   filter->Update();
+
+  typedef itk::AttributeOpeningComponentTreeFilter< TreeType, TreeType > InPlaceType;
+  InPlaceType::Pointer inplace = InPlaceType::New();
+  inplace->SetInput( filter->GetOutput() );
+  inplace->SetInPlace( true );
+  inplace->SetThreshold( atoi(argv[3]) );
   
-  (*filter->GetOutput()->GetRoot()->GetChildrenList().begin())->MergeChildren();
+//  (*filter->GetOutput()->GetRoot()->GetChildrenList().begin())->MergeChildren();
+
+ 
 
 /*	std::cout << filter << std::endl;
   std::cout << filter->GetOutput() << std::endl;
@@ -36,7 +44,7 @@ int main(int, char * argv[])
 	
 	typedef itk::ComponentTreeToImageFilter< TreeType, IType > T2IType;
 	T2IType::Pointer filter2 = T2IType::New();
-	filter2->SetInput( filter->GetOutput() );
+	filter2->SetInput( inplace->GetOutput() );
 //	filter2->Update();
 	
 //  itk::SimpleFilterWatcher watcher(filter, "filter");
