@@ -22,16 +22,16 @@
 
 namespace itk {
 
-template <class TInputImage>
-SizeComponentTreeFilter<TInputImage>
+template <class TInputImage, class TSize>
+SizeComponentTreeFilter<TInputImage, TSize>
 ::SizeComponentTreeFilter()
 {
 }
 
 
-template<class TInputImage>
+template<class TInputImage, class TSize>
 void
-SizeComponentTreeFilter<TInputImage>
+SizeComponentTreeFilter<TInputImage, TSize>
 ::GenerateData()
 {
   // Allocate the output
@@ -43,13 +43,13 @@ SizeComponentTreeFilter<TInputImage>
 }
 
 
-template<class TInputImage>
+template<class TInputImage, class TSize>
 void
-SizeComponentTreeFilter<TInputImage>
+SizeComponentTreeFilter<TInputImage, TSize>
 ::SetComponentSize( NodeType* node )
 {
 	assert(node != NULL);
-	unsigned long size = 0;
+	SizeType size = 0;
   const typename NodeType::ChildrenListType * childrenList = & node->GetChildren();
 	for( typename NodeType::ChildrenListType::const_iterator it=childrenList->begin(); it!=childrenList->end(); it++ )
     {
@@ -62,9 +62,9 @@ SizeComponentTreeFilter<TInputImage>
 }
 
 
-template<class TInputImage>
+template<class TInputImage, class TSize>
 void
-SizeComponentTreeFilter<TInputImage>
+SizeComponentTreeFilter<TInputImage, TSize>
 ::PrintSelf(std::ostream &os, Indent indent) const
 {
   Superclass::PrintSelf(os, indent);

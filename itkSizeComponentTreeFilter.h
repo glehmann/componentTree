@@ -25,7 +25,7 @@ namespace itk {
  *
  * \ingroup ImageEnhancement  MathematicalMorphologyImageFilters
  */
-template<class TInputImage>
+template<class TInputImage, class TSize=typename TInputImage::ValueType>
 class ITK_EXPORT SizeComponentTreeFilter : 
     public InPlaceComponentTreeFilter<TInputImage>
 {
@@ -52,6 +52,7 @@ public:
   typedef typename OutputImageType::NodeType       NodeType;
   typedef typename OutputImageType::NodePointer    NodePointer;
   typedef typename OutputImageType::IndexType      IndexType;
+  typedef TSize SizeType;
   
   /** ImageDimension constants */
   itkStaticConstMacro(ImageDimension, unsigned int,
