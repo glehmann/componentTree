@@ -233,7 +233,7 @@ ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>
       }
     }
 
-  n->print();
+//  n->print();
   std::cout << "tempNodeList: " << tempNodeList.size() << std::endl;
   std::cout << "chilren: " << n->CountChildren() << std::endl;
   std::cout << "pixels: " << n->CountPixels() << std::endl;

@@ -7,6 +7,7 @@
 #include "itkImageToMinimumTreeFilter.h"
 #include "itkComponentTreeToImageFilter.h"
 #include "itkComponentTree.h"
+#include "itkSizeComponentTreeFilter.h"
 #include "itkAttributeOpeningComponentTreeFilter.h"
 
 int main(int, char * argv[])
@@ -16,20 +17,29 @@ int main(int, char * argv[])
   typedef unsigned char PType;
   typedef itk::Image< PType, dim > IType;
 
-  typedef itk::ComponentTree< PType, dim, double > TreeType;
+  typedef itk::ComponentTree< PType, dim, unsigned long > TreeType;
 
   typedef itk::ImageFileReader< IType > ReaderType;
   ReaderType::Pointer reader = ReaderType::New();
   reader->SetFileName( argv[1] );
 
-  typedef itk::ImageToMinimumTreeFilter< IType, TreeType > FilterType;
+  typedef itk::ImageToMaximumTreeFilter< IType, TreeType > FilterType;
   FilterType::Pointer filter = FilterType::New();
   filter->SetInput( reader->GetOutput() );
-  filter->Update();
+//  filter->Update();
+
+  typedef itk::SizeComponentTreeFilter< TreeType, TreeType > SizeType;
+  SizeType::Pointer size = SizeType::New();
+  size->SetInput( filter->GetOutput() );
+  size->Update();
+  std::cout << "InPlace: " << size->GetInPlace() << std::endl;
+
+//  size->GetOutput()->GetRoot()->print();
+
 
   typedef itk::AttributeOpeningComponentTreeFilter< TreeType, TreeType > InPlaceType;
   InPlaceType::Pointer inplace = InPlaceType::New();
-  inplace->SetInput( filter->GetOutput() );
+  inplace->SetInput( size->GetOutput() );
   inplace->SetInPlace( true );
   inplace->SetThreshold( atoi(argv[3]) );
   

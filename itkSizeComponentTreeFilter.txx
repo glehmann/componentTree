@@ -1,7 +1,7 @@
 /*=========================================================================
 
   Program:   Insight Segmentation & Registration Toolkit
-  Module:    $RCSfile: itkAttributeOpeningComponentTreeFilter.txx,v $
+  Module:    $RCSfile: itkSizeComponentTreeFilter.txx,v $
   Language:  C++
   Date:      $Date: 2005/08/23 15:09:03 $
   Version:   $Revision: 1.6 $
@@ -14,62 +14,57 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef __itkAttributeOpeningComponentTreeFilter_txx
-#define __itkAttributeOpeningComponentTreeFilter_txx
+#ifndef __itkSizeComponentTreeFilter_txx
+#define __itkSizeComponentTreeFilter_txx
 
-#include "itkAttributeOpeningComponentTreeFilter.h"
+#include "itkSizeComponentTreeFilter.h"
 
 
 namespace itk {
 
 template <class TInputImage, class TOutputImage>
-AttributeOpeningComponentTreeFilter<TInputImage, TOutputImage>
-::AttributeOpeningComponentTreeFilter()
+SizeComponentTreeFilter<TInputImage, TOutputImage>
+::SizeComponentTreeFilter()
 {
-	m_Threshold = 0;
 }
 
 
 template<class TInputImage, class TOutputImage>
 void
-AttributeOpeningComponentTreeFilter<TInputImage, TOutputImage>
+SizeComponentTreeFilter<TInputImage, TOutputImage>
 ::GenerateData()
 {
   // Allocate the output
   this->AllocateOutputs();
 
   // this->GetOutput()->GetRoot()->MergeChildren();
-  this->ThresholdComponents( this->GetOutput()->GetRoot() );
+  this->SetComponentSize( this->GetOutput()->GetRoot() );
 
 }
 
 
 template<class TInputImage, class TOutputImage>
 void
-AttributeOpeningComponentTreeFilter<TInputImage, TOutputImage>
-::ThresholdComponents( NodeType* node )
+SizeComponentTreeFilter<TInputImage, TOutputImage>
+::SetComponentSize( NodeType* node )
 {
 	assert(node != NULL);
+	unsigned long size = 0;
   const typename NodeType::ChildrenListType * childrenList = & node->GetChildren();
 	for( typename NodeType::ChildrenListType::const_iterator it=childrenList->begin(); it!=childrenList->end(); it++ )
     {
-	  if( (*it)->GetAttribute() <= m_Threshold )
-	    {
-		  (*it)->MergeChildren();
-		  node->Merge( *it );
-		  node->RemoveChild( *it );
-      }
-    else
-      {
-			this->ThresholdComponents( *it );
-      }
+	  this->SetComponentSize( *it );
+	  size += (*it)->GetAttribute();
 	  }
+	size += node->GetIndexes().size();
+  assert( size > 0 );
+  node->SetAttribute( size );
 }
 
 
 template<class TInputImage, class TOutputImage>
 void
-AttributeOpeningComponentTreeFilter<TInputImage, TOutputImage>
+SizeComponentTreeFilter<TInputImage, TOutputImage>
 ::PrintSelf(std::ostream &os, Indent indent) const
 {
   Superclass::PrintSelf(os, indent);

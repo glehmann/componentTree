@@ -210,7 +210,7 @@ const void ComponentTreeNode<TPixel, TIndex, TValue>::print( int indent ) const
 	  {
     std::cout << "  ";
     }
-  std::cout << "+ " << this->GetPixel()+0.0 << ": ";
+  std::cout << "+ " << this->GetPixel()+0.0 << ":" << this->GetAttribute() << " ";
   for( typename IndexListType::const_iterator it=this->GetIndexes().begin(); it!=this->GetIndexes().end(); it++ )
     {
 	  std::cout << *it << " ";
