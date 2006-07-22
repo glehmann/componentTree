@@ -8,7 +8,7 @@
 #include "itkComponentTreeToImageFilter.h"
 #include "itkComponentTree.h"
 #include "itkSizeComponentTreeFilter.h"
-#include "itkAttributeOpeningComponentTreeFilter.h"
+#include "itkAttributeFilteringComponentTreeFilter.h"
 
 int main(int, char * argv[])
 {
@@ -37,7 +37,7 @@ int main(int, char * argv[])
 //  size->GetOutput()->GetRoot()->print();
 
 
-  typedef itk::AttributeOpeningComponentTreeFilter< TreeType > InPlaceType;
+  typedef itk::AttributeFilteringComponentTreeFilter< TreeType > InPlaceType;
   InPlaceType::Pointer inplace = InPlaceType::New();
   inplace->SetInput( size->GetOutput() );
   inplace->SetInPlace( true );

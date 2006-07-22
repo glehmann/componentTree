@@ -1,7 +1,7 @@
 /*=========================================================================
 
   Program:   Insight Segmentation & Registration Toolkit
-  Module:    $RCSfile: itkAttributeOpeningComponentTreeFilter.txx,v $
+  Module:    $RCSfile: itkAttributeFilteringComponentTreeFilter.txx,v $
   Language:  C++
   Date:      $Date: 2005/08/23 15:09:03 $
   Version:   $Revision: 1.6 $
@@ -14,17 +14,17 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef __itkAttributeOpeningComponentTreeFilter_txx
-#define __itkAttributeOpeningComponentTreeFilter_txx
+#ifndef __itkAttributeFilteringComponentTreeFilter_txx
+#define __itkAttributeFilteringComponentTreeFilter_txx
 
-#include "itkAttributeOpeningComponentTreeFilter.h"
+#include "itkAttributeFilteringComponentTreeFilter.h"
 
 
 namespace itk {
 
 template <class TInputImage, class TAttribute, class TCompare>
-AttributeOpeningComponentTreeFilter<TInputImage, TAttribute, TCompare>
-::AttributeOpeningComponentTreeFilter()
+AttributeFilteringComponentTreeFilter<TInputImage, TAttribute, TCompare>
+::AttributeFilteringComponentTreeFilter()
 {
 	m_Threshold = itk::NumericTraits<TAttribute>::Zero;
 }
@@ -32,7 +32,7 @@ AttributeOpeningComponentTreeFilter<TInputImage, TAttribute, TCompare>
 
 template<class TInputImage, class TAttribute, class TCompare>
 void
-AttributeOpeningComponentTreeFilter<TInputImage, TAttribute, TCompare>
+AttributeFilteringComponentTreeFilter<TInputImage, TAttribute, TCompare>
 ::GenerateData()
 {
   // Allocate the output
@@ -46,7 +46,7 @@ AttributeOpeningComponentTreeFilter<TInputImage, TAttribute, TCompare>
 
 template<class TInputImage, class TAttribute, class TCompare>
 void
-AttributeOpeningComponentTreeFilter<TInputImage, TAttribute, TCompare>
+AttributeFilteringComponentTreeFilter<TInputImage, TAttribute, TCompare>
 ::ThresholdComponents( NodeType* node )
 {
 	assert(node != NULL);
@@ -70,7 +70,7 @@ AttributeOpeningComponentTreeFilter<TInputImage, TAttribute, TCompare>
 
 template<class TInputImage, class TAttribute, class TCompare>
 void
-AttributeOpeningComponentTreeFilter<TInputImage, TAttribute, TCompare>
+AttributeFilteringComponentTreeFilter<TInputImage, TAttribute, TCompare>
 ::PrintSelf(std::ostream &os, Indent indent) const
 {
   Superclass::PrintSelf(os, indent);

@@ -1,7 +1,7 @@
 /*=========================================================================
 
   Program:   Insight Segmentation & Registration Toolkit
-  Module:    $RCSfile: itkAttributeOpeningComponentTreeFilter.h,v $
+  Module:    $RCSfile: itkAttributeFilteringComponentTreeFilter.h,v $
   Language:  C++
   Date:      $Date: 2006/03/28 19:59:05 $
   Version:   $Revision: 1.6 $
@@ -14,24 +14,24 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef __itkAttributeOpeningComponentTreeFilter_h
-#define __itkAttributeOpeningComponentTreeFilter_h
+#ifndef __itkAttributeFilteringComponentTreeFilter_h
+#define __itkAttributeFilteringComponentTreeFilter_h
 
 #include "itkInPlaceComponentTreeFilter.h"
 
 namespace itk {
-/** \class AttributeOpeningComponentTreeFilter
+/** \class AttributeFilteringComponentTreeFilter
  * \brief 
  *
  * \ingroup ImageEnhancement  MathematicalMorphologyImageFilters
  */
 template<class TInputImage, class TAttribute=typename TInputImage::ValueType, class TCompare=std::less_equal<TAttribute> >
-class ITK_EXPORT AttributeOpeningComponentTreeFilter : 
+class ITK_EXPORT AttributeFilteringComponentTreeFilter : 
     public InPlaceComponentTreeFilter<TInputImage>
 {
 public:
   /** Standard class typedefs. */
-  typedef AttributeOpeningComponentTreeFilter Self;
+  typedef AttributeFilteringComponentTreeFilter Self;
   typedef InPlaceComponentTreeFilter<TInputImage>
   Superclass;
   typedef SmartPointer<Self>        Pointer;
@@ -61,7 +61,7 @@ public:
   itkNewMacro(Self);  
 
   /** Runtime information support. */
-  itkTypeMacro(AttributeOpeningComponentTreeFilter, 
+  itkTypeMacro(AttributeFilteringComponentTreeFilter, 
                ImageToImageFilter);
 
 #ifdef ITK_USE_CONCEPT_CHECKING
@@ -79,8 +79,8 @@ public:
 	  itkGetMacro(Threshold, unsigned long);
 
 protected:
-  AttributeOpeningComponentTreeFilter();
-  ~AttributeOpeningComponentTreeFilter() {};
+  AttributeFilteringComponentTreeFilter();
+  ~AttributeFilteringComponentTreeFilter() {};
   void PrintSelf(std::ostream& os, Indent indent) const;
 
   /** Single-threaded version of GenerateData.  This filter delegates
@@ -90,7 +90,7 @@ protected:
   void ThresholdComponents( NodeType* );
 
 private:
-  AttributeOpeningComponentTreeFilter(const Self&); //purposely not implemented
+  AttributeFilteringComponentTreeFilter(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
 
   unsigned long m_Threshold;
@@ -100,7 +100,7 @@ private:
 } // end namespace itk
   
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkAttributeOpeningComponentTreeFilter.txx"
+#include "itkAttributeFilteringComponentTreeFilter.txx"
 #endif
 
 #endif
