@@ -30,7 +30,7 @@ namespace itk
  *  \brief Templated n-dimensional image class.
  *
  * \ingroup ImageObjects */
-template <class TPixel, unsigned int VImageDimension, class TValue>
+template <class TPixel, unsigned int VImageDimension, class TAttribute>
 class ITK_EXPORT ComponentTree : public ImageBase<VImageDimension>
 {
 public:
@@ -84,10 +84,10 @@ public:
   typedef typename Superclass::OffsetValueType OffsetValueType;
 
   /** the type of data associated with each node */
-  typedef TValue ValueType;
+  typedef TAttribute AttributeType;
 
   /** Node type */
-  typedef ComponentTreeNode< PixelType, IndexType, ValueType > NodeType;
+  typedef ComponentTreeNode< PixelType, IndexType, AttributeType > NodeType;
   typedef SmartPointer< NodeType > NodePointer;
   typedef std::list< NodeType* > NodeListType;
 

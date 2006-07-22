@@ -25,7 +25,7 @@ namespace itk {
  *
  * \ingroup ImageEnhancement  MathematicalMorphologyImageFilters
  */
-template<class TInputImage, class TSize=typename TInputImage::ValueType>
+template<class TInputImage, class TSize=typename TInputImage::AttributeType>
 class ITK_EXPORT SizeComponentTreeFilter : 
     public InPlaceComponentTreeFilter<TInputImage>
 {

@@ -34,11 +34,11 @@ namespace itk
  *
  * Template parameters for class ComponentTreeNode:
  *
- * - TValue = Element type stored in the node
+ * - TAttribute = Element type stored in the node
  *
  * \ingroup DataRepresentation 
  */
-template <typename TPixel, typename TIndex, typename TValue>
+template <typename TPixel, typename TIndex, typename TAttribute>
 class ComponentTreeNode : public Object
 {
 
@@ -46,7 +46,7 @@ public:
 
   /** Standard typedefs */
   typedef Object                    Superclass;
-  typedef ComponentTreeNode<TPixel, TIndex, TValue>      Self;
+  typedef ComponentTreeNode<TPixel, TIndex, TAttribute>      Self;
   typedef SmartPointer<Self>        Pointer;
   typedef SmartPointer<const Self>  ConstPointer;
   typedef std::list<Pointer>      ChildrenListType;
@@ -54,6 +54,7 @@ public:
   typedef TIndex                     IndexType;
   typedef typename std::list<IndexType>      IndexListType;
   typedef TPixel                     PixelType;
+  typedef TAttribute AttributeType;
 
   /** Method for creation through the object factory. */
   itkNewMacro( Self );
@@ -62,17 +63,17 @@ public:
   itkTypeMacro( ComponentTreeNode, Object );
 
   /* Get/Set Attribute */
-  itkGetConstReferenceMacro(Attribute, TValue);
-  itkSetMacro(Attribute, TValue);
+  itkGetConstReferenceMacro(Attribute, TAttribute);
+  itkSetMacro(Attribute, TAttribute);
 
   /** Get the parent node */
-  ComponentTreeNode<TPixel, TIndex, TValue>* GetParent( ) const;
+  ComponentTreeNode<TPixel, TIndex, TAttribute>* GetParent( ) const;
 
   /** Return true if the node has a parent */
   bool HasParent( ) const;
 
   /** Set the parent of the node */
-  void SetParent( ComponentTreeNode<TPixel, TIndex, TValue>* n );
+  void SetParent( ComponentTreeNode<TPixel, TIndex, TAttribute>* n );
 
   /** Return the number of children */
   int CountChildren( ) const;
@@ -84,16 +85,16 @@ public:
   int Depth( ) const;
 
   /** Remove a node from the node */
-  bool RemoveChild( ComponentTreeNode<TPixel, TIndex, TValue> *n );
+  bool RemoveChild( ComponentTreeNode<TPixel, TIndex, TAttribute> *n );
 
   /** Add a child to the node */
-  void AddChild( ComponentTreeNode<TPixel, TIndex, TValue> *node );
+  void AddChild( ComponentTreeNode<TPixel, TIndex, TAttribute> *node );
 
   /**  */
-  bool HasChild( ComponentTreeNode<TPixel, TIndex, TValue> *node );
+  bool HasChild( ComponentTreeNode<TPixel, TIndex, TAttribute> *node );
 
   /** Merge node */
-  virtual void Merge( ComponentTreeNode<TPixel, TIndex, TValue> *node );
+  virtual void Merge( ComponentTreeNode<TPixel, TIndex, TAttribute> *node );
 
   /** Merge node */
   virtual void MergeChildren();
@@ -103,7 +104,7 @@ public:
   virtual const ChildrenListType& GetChildren() const {return m_Children;}
 
   /** Set the data of the node */
-  //virtual void SetData(TValue data) {m_Data = data;}
+  //virtual void SetData(TAttribute data) {m_Data = data;}
 
   /** Get the pixel value */
   itkGetConstReferenceMacro(Pixel, PixelType);
@@ -124,7 +125,7 @@ protected:
 
   ComponentTreeNode();
   virtual ~ComponentTreeNode();
-  TValue m_Attribute;
+  TAttribute m_Attribute;
   Self* m_Parent;
   ChildrenListType m_Children;
 
