@@ -22,17 +22,17 @@
 
 namespace itk {
 
-template <class TInputImage>
-AttributeOpeningComponentTreeFilter<TInputImage>
+template <class TInputImage, class TAttribute, class TCompare>
+AttributeOpeningComponentTreeFilter<TInputImage, TAttribute, TCompare>
 ::AttributeOpeningComponentTreeFilter()
 {
-	m_Threshold = 0;
+	m_Threshold = itk::NumericTraits<TAttribute>::Zero;
 }
 
 
-template<class TInputImage>
+template<class TInputImage, class TAttribute, class TCompare>
 void
-AttributeOpeningComponentTreeFilter<TInputImage>
+AttributeOpeningComponentTreeFilter<TInputImage, TAttribute, TCompare>
 ::GenerateData()
 {
   // Allocate the output
@@ -44,16 +44,17 @@ AttributeOpeningComponentTreeFilter<TInputImage>
 }
 
 
-template<class TInputImage>
+template<class TInputImage, class TAttribute, class TCompare>
 void
-AttributeOpeningComponentTreeFilter<TInputImage>
+AttributeOpeningComponentTreeFilter<TInputImage, TAttribute, TCompare>
 ::ThresholdComponents( NodeType* node )
 {
 	assert(node != NULL);
+	TCompare compare;
   const typename NodeType::ChildrenListType * childrenList = & node->GetChildren();
 	for( typename NodeType::ChildrenListType::const_iterator it=childrenList->begin(); it!=childrenList->end(); it++ )
     {
-	  if( (*it)->GetAttribute() <= m_Threshold )
+	  if( compare( (*it)->GetAttribute(), m_Threshold ) )
 	    {
 		  (*it)->MergeChildren();
 		  node->Merge( *it );
@@ -67,9 +68,9 @@ AttributeOpeningComponentTreeFilter<TInputImage>
 }
 
 
-template<class TInputImage>
+template<class TInputImage, class TAttribute, class TCompare>
 void
-AttributeOpeningComponentTreeFilter<TInputImage>
+AttributeOpeningComponentTreeFilter<TInputImage, TAttribute, TCompare>
 ::PrintSelf(std::ostream &os, Indent indent) const
 {
   Superclass::PrintSelf(os, indent);

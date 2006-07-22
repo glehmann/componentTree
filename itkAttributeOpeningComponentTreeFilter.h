@@ -25,7 +25,7 @@ namespace itk {
  *
  * \ingroup ImageEnhancement  MathematicalMorphologyImageFilters
  */
-template<class TInputImage>
+template<class TInputImage, class TAttribute=typename TInputImage::ValueType, class TCompare=std::less_equal<TAttribute> >
 class ITK_EXPORT AttributeOpeningComponentTreeFilter : 
     public InPlaceComponentTreeFilter<TInputImage>
 {
