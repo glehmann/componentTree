@@ -22,17 +22,17 @@
 
 namespace itk {
 
-template <class TInputImage, class TOutputImage>
-AttributeOpeningComponentTreeFilter<TInputImage, TOutputImage>
+template <class TInputImage>
+AttributeOpeningComponentTreeFilter<TInputImage>
 ::AttributeOpeningComponentTreeFilter()
 {
 	m_Threshold = 0;
 }
 
 
-template<class TInputImage, class TOutputImage>
+template<class TInputImage>
 void
-AttributeOpeningComponentTreeFilter<TInputImage, TOutputImage>
+AttributeOpeningComponentTreeFilter<TInputImage>
 ::GenerateData()
 {
   // Allocate the output
@@ -44,9 +44,9 @@ AttributeOpeningComponentTreeFilter<TInputImage, TOutputImage>
 }
 
 
-template<class TInputImage, class TOutputImage>
+template<class TInputImage>
 void
-AttributeOpeningComponentTreeFilter<TInputImage, TOutputImage>
+AttributeOpeningComponentTreeFilter<TInputImage>
 ::ThresholdComponents( NodeType* node )
 {
 	assert(node != NULL);
@@ -67,9 +67,9 @@ AttributeOpeningComponentTreeFilter<TInputImage, TOutputImage>
 }
 
 
-template<class TInputImage, class TOutputImage>
+template<class TInputImage>
 void
-AttributeOpeningComponentTreeFilter<TInputImage, TOutputImage>
+AttributeOpeningComponentTreeFilter<TInputImage>
 ::PrintSelf(std::ostream &os, Indent indent) const
 {
   Superclass::PrintSelf(os, indent);

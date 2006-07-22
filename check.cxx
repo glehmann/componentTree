@@ -28,7 +28,7 @@ int main(int, char * argv[])
   filter->SetInput( reader->GetOutput() );
 //  filter->Update();
 
-  typedef itk::SizeComponentTreeFilter< TreeType, TreeType > SizeType;
+  typedef itk::SizeComponentTreeFilter< TreeType > SizeType;
   SizeType::Pointer size = SizeType::New();
   size->SetInput( filter->GetOutput() );
   size->Update();
@@ -37,7 +37,7 @@ int main(int, char * argv[])
 //  size->GetOutput()->GetRoot()->print();
 
 
-  typedef itk::AttributeOpeningComponentTreeFilter< TreeType, TreeType > InPlaceType;
+  typedef itk::AttributeOpeningComponentTreeFilter< TreeType > InPlaceType;
   InPlaceType::Pointer inplace = InPlaceType::New();
   inplace->SetInput( size->GetOutput() );
   inplace->SetInPlace( true );

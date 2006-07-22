@@ -28,8 +28,8 @@ namespace itk
 /**
  *
  */
-template <class TInputImage, class TOutputImage>
-InPlaceComponentTreeFilter<TInputImage, TOutputImage>
+template <class TInputImage>
+InPlaceComponentTreeFilter<TInputImage>
 ::InPlaceComponentTreeFilter()
   : m_InPlace(true)
 {
@@ -38,17 +38,17 @@ InPlaceComponentTreeFilter<TInputImage, TOutputImage>
 /**
  *
  */
-template <class TInputImage, class TOutputImage>
-InPlaceComponentTreeFilter<TInputImage, TOutputImage>
+template <class TInputImage>
+InPlaceComponentTreeFilter<TInputImage>
 ::~InPlaceComponentTreeFilter()
 {
 }
   
 
 
-template<class TInputImage, class TOutputImage>
+template<class TInputImage>
 void 
-InPlaceComponentTreeFilter<TInputImage, TOutputImage>
+InPlaceComponentTreeFilter<TInputImage>
 ::PrintSelf(std::ostream& os, Indent indent) const
 {
   Superclass::PrintSelf(os, indent);
@@ -63,9 +63,9 @@ InPlaceComponentTreeFilter<TInputImage, TOutputImage>
     }
 }
 
-template<class TInputImage, class TOutputImage>
+template<class TInputImage>
 void 
-InPlaceComponentTreeFilter<TInputImage, TOutputImage>
+InPlaceComponentTreeFilter<TInputImage>
 ::AllocateOutputs()
 {
   // if told to run in place and the types support it, 
@@ -89,9 +89,9 @@ InPlaceComponentTreeFilter<TInputImage, TOutputImage>
     }
 }
 
-template<class TInputImage, class TOutputImage>
+template<class TInputImage>
 void 
-InPlaceComponentTreeFilter<TInputImage, TOutputImage>
+InPlaceComponentTreeFilter<TInputImage>
 ::ReleaseInputs()
 {
   // if told to run in place and the types support it, 
@@ -114,9 +114,9 @@ InPlaceComponentTreeFilter<TInputImage, TOutputImage>
 }
 
 
-template <class TInputImage, class TOutputImage>
+template <class TInputImage>
 void 
-InPlaceComponentTreeFilter<TInputImage, TOutputImage>
+InPlaceComponentTreeFilter<TInputImage>
 ::GenerateInputRequestedRegion()
 {
   // call the superclass' implementation of this method
@@ -132,9 +132,9 @@ InPlaceComponentTreeFilter<TInputImage, TOutputImage>
 }
 
 
-template <class TInputImage, class TOutputImage>
+template <class TInputImage>
 void 
-InPlaceComponentTreeFilter<TInputImage, TOutputImage>
+InPlaceComponentTreeFilter<TInputImage>
 ::EnlargeOutputRequestedRegion(DataObject *)
 {
   this->GetOutput()

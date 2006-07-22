@@ -58,13 +58,13 @@ namespace itk
  *
  * \ingroup ImageFilters
  */
-template <class TInputImage, class TOutputImage=TInputImage>
-class ITK_EXPORT InPlaceComponentTreeFilter : public ImageToImageFilter<TInputImage, TOutputImage>
+template <class TInputImage>
+class ITK_EXPORT InPlaceComponentTreeFilter : public ImageToImageFilter<TInputImage, TInputImage>
 {
 public:
   /** Standard class typedefs. */
   typedef InPlaceComponentTreeFilter  Self;
-  typedef ImageToImageFilter<TInputImage, TOutputImage>  Superclass;
+  typedef ImageToImageFilter<TInputImage, TInputImage>  Superclass;
   typedef SmartPointer<Self>  Pointer;
   typedef SmartPointer<const Self>  ConstPointer;
   
@@ -83,7 +83,9 @@ public:
   typedef typename InputImageType::Pointer        InputImagePointer;
   typedef typename InputImageType::ConstPointer   InputImageConstPointer;
   typedef typename InputImageType::RegionType     InputImageRegionType; 
-  typedef typename InputImageType::PixelType      InputImagePixelType; 
+  typedef typename InputImageType::PixelType      InputImagePixelType;
+
+  typedef TInputImage TOutputImage;
   
   /** ImageDimension constants */
   itkStaticConstMacro(InputImageDimension, unsigned int,

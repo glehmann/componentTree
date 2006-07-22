@@ -25,20 +25,21 @@ namespace itk {
  *
  * \ingroup ImageEnhancement  MathematicalMorphologyImageFilters
  */
-template<class TInputImage, class TOutputImage=TInputImage>
+template<class TInputImage>
 class ITK_EXPORT SizeComponentTreeFilter : 
-    public InPlaceComponentTreeFilter<TInputImage, TOutputImage>
+    public InPlaceComponentTreeFilter<TInputImage>
 {
 public:
   /** Standard class typedefs. */
   typedef SizeComponentTreeFilter Self;
-  typedef ImageToImageFilter<TInputImage, TOutputImage>
+  typedef InPlaceComponentTreeFilter<TInputImage>
   Superclass;
   typedef SmartPointer<Self>        Pointer;
   typedef SmartPointer<const Self>  ConstPointer;
 
   /** Some convenient typedefs. */
   typedef TInputImage InputImageType;
+  typedef TInputImage TOutputImage;
   typedef TOutputImage OutputImageType;
   typedef typename InputImageType::Pointer         InputImagePointer;
   typedef typename InputImageType::ConstPointer    InputImageConstPointer;
