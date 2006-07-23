@@ -24,14 +24,16 @@ namespace itk
 
 /** Constructor */
 template <typename TPixel, typename TIndex, typename TValue>
-ComponentTreeNode<TPixel, TIndex, TValue>::ComponentTreeNode()
+ComponentTreeNode<TPixel, TIndex, TValue>
+::ComponentTreeNode()
 {
   m_Parent = NULL;
 }
 
 /** Destructor */
 template <typename TPixel, typename TIndex, typename TValue>
-ComponentTreeNode<TPixel, TIndex, TValue>::~ComponentTreeNode() 
+ComponentTreeNode<TPixel, TIndex, TValue>
+::~ComponentTreeNode() 
 {
 /*  if ( m_Parent )
     {
@@ -60,7 +62,8 @@ ComponentTreeNode<TPixel, TIndex, TValue>
 /** Set the parent node */
 template <typename TPixel, typename TIndex, typename TValue>
 void 
-ComponentTreeNode<TPixel, TIndex, TValue>::SetParent( ComponentTreeNode<TPixel, TIndex, TValue>* node) 
+ComponentTreeNode<TPixel, TIndex, TValue>
+::SetParent( ComponentTreeNode<TPixel, TIndex, TValue>* node) 
 {
 	assert( node != this );
 	// assert( node->GetPixel() < this->GetPixel() );
@@ -128,7 +131,8 @@ ComponentTreeNode<TPixel, TIndex, TValue>
 
 /** Add a child node */
 template <typename TPixel, typename TIndex, typename TValue>
-void ComponentTreeNode<TPixel, TIndex, TValue>::AddChild( ComponentTreeNode<TPixel, TIndex, TValue> *node ) 
+void ComponentTreeNode<TPixel, TIndex, TValue>
+::AddChild( ComponentTreeNode<TPixel, TIndex, TValue> *node ) 
 {
   assert( node != this );
   // assert( node->GetPixel() > this->GetPixel() );
@@ -139,7 +143,8 @@ void ComponentTreeNode<TPixel, TIndex, TValue>::AddChild( ComponentTreeNode<TPix
 }
 
 template <typename TPixel, typename TIndex, typename TValue>
-void ComponentTreeNode<TPixel, TIndex, TValue>::Merge( ComponentTreeNode<TPixel, TIndex, TValue> *node ) 
+void ComponentTreeNode<TPixel, TIndex, TValue>
+::Merge( ComponentTreeNode<TPixel, TIndex, TValue> *node ) 
 {
 	assert( node != this );
 	// assert( this->GetPixel() <= node->GetPixel() );
@@ -153,11 +158,12 @@ void ComponentTreeNode<TPixel, TIndex, TValue>::Merge( ComponentTreeNode<TPixel,
 	  }
 	// clear the child list to be sure they will not be accidentally used
 	// so node will have no children and no index after this method
-	// node->GetChildrenList().clear();
+	node->GetChildrenList().clear();
 }
 
 template <typename TPixel, typename TIndex, typename TValue>
-void ComponentTreeNode<TPixel, TIndex, TValue>::MergeChildren() 
+void ComponentTreeNode<TPixel, TIndex, TValue>
+::MergeChildren() 
 {
   for( typename ChildrenListType::iterator it=this->GetChildren().begin(); it!=this->GetChildren().end(); it++ )
     {
@@ -174,7 +180,8 @@ void ComponentTreeNode<TPixel, TIndex, TValue>::MergeChildren()
 
 template <typename TPixel, typename TIndex, typename TValue>
 typename ComponentTreeNode<TPixel, TIndex, TValue>::Pointer
-ComponentTreeNode<TPixel, TIndex, TValue>::Clone() 
+ComponentTreeNode<TPixel, TIndex, TValue>
+::Clone() 
 {
 	// create a new node to clone this one
 	Pointer node = Self::New();
@@ -198,13 +205,15 @@ ComponentTreeNode<TPixel, TIndex, TValue>::Clone()
 }
 
 template <typename TPixel, typename TIndex, typename TValue>
-bool ComponentTreeNode<TPixel, TIndex, TValue>::HasChild( ComponentTreeNode<TPixel, TIndex, TValue> *node ) 
+bool ComponentTreeNode<TPixel, TIndex, TValue>
+::HasChild( ComponentTreeNode<TPixel, TIndex, TValue> *node ) 
 {
 	return std::find(m_Children.begin(), m_Children.end(), node ) != m_Children.end();
 }
 
 template <typename TPixel, typename TIndex, typename TValue>
-const void ComponentTreeNode<TPixel, TIndex, TValue>::print( int indent ) const
+const void ComponentTreeNode<TPixel, TIndex, TValue>
+::print( int indent ) const
 {
 	for( int i=0; i<indent; i++)
 	  {
