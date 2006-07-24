@@ -51,18 +51,24 @@ AttributeFilteringComponentTreeFilter<TInputImage, TAttribute, TCompare>
 {
 	assert(node != NULL);
 	TCompare compare;
-  const typename NodeType::ChildrenListType * childrenList = & node->GetChildren();
-	for( typename NodeType::ChildrenListType::const_iterator it=childrenList->begin(); it!=childrenList->end(); it++ )
+  typename NodeType::ChildrenListType * childrenList = & node->GetChildren();
+  typename NodeType::ChildrenListType::iterator it=childrenList->begin();
+	while( it!=childrenList->end() )
     {
 	  if( compare( (*it)->GetAttribute(), m_Threshold ) )
 	    {
 		  (*it)->MergeChildren();
 		  node->Merge( *it );
-		  node->RemoveChild( *it );
+		  // must store the iterator, because once the element
+                  // erased, it is invalidated
+		  typename NodeType::ChildrenListType::iterator toRemove = it;
+		  it++;
+		  childrenList->erase( toRemove );
       }
     else
       {
 			this->ThresholdComponents( *it );
+			it++;
       }
 	  }
 }
