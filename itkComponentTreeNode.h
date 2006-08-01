@@ -21,7 +21,7 @@
 #include <list>
 #include <algorithm>
 #include <iostream>
-#include <itkObject.h>
+#include <itkLightObject.h>
 
 namespace itk
 {
@@ -39,7 +39,7 @@ namespace itk
  * \ingroup DataRepresentation 
  */
 template <typename TPixel, typename TIndex, typename TAttribute>
-class ComponentTreeNode : public Object
+class ComponentTreeNode : public LightObject
 {
 
 public:
@@ -63,9 +63,18 @@ public:
   itkTypeMacro( ComponentTreeNode, Object );
 
   /* Get/Set Attribute */
-  itkGetConstReferenceMacro(Attribute, TAttribute);
-  itkSetMacro(Attribute, TAttribute);
-
+//   itkGetConstReferenceMacro(Attribute, TAttribute);
+  const TAttribute & GetAttribute() const
+     {
+	m_Attribute;
+     }
+//  itkSetMacro(Attribute, TAttribute);
+  void SetAttribute( TAttribute a )
+     {
+	m_Attribute = a;
+     }
+   
+   
   /** Get the parent node */
   ComponentTreeNode<TPixel, TIndex, TAttribute>* GetParent( ) const;
 
@@ -107,8 +116,17 @@ public:
   //virtual void SetData(TAttribute data) {m_Data = data;}
 
   /** Get the pixel value */
-  itkGetConstReferenceMacro(Pixel, PixelType);
-  itkSetMacro(Pixel, PixelType);
+//   itkGetConstReferenceMacro(Pixel, PixelType);
+  const PixelType& GetPixel() const
+     {
+	return m_Pixel;
+     }
+//  itkSetMacro(Pixel, PixelType);
+  void SetPixel( PixelType p )
+     {
+	m_Pixel = p;
+     }
+   
 
   /** Get the index list */
   const IndexListType& GetIndexes() const
