@@ -50,37 +50,17 @@ ComponentTreeNode<TPixel, TIndex, TValue>
   m_Attribute = 0; */
 }
 
-/** Return the parent node */
-template <typename TPixel, typename TIndex, typename TValue>
-ComponentTreeNode<TPixel, TIndex, TValue>* 
-ComponentTreeNode<TPixel, TIndex, TValue>
-::GetParent( ) const 
-{
-  return m_Parent;
-}
-
-/** Set the parent node */
-template <typename TPixel, typename TIndex, typename TValue>
-void 
-ComponentTreeNode<TPixel, TIndex, TValue>
-::SetParent( ComponentTreeNode<TPixel, TIndex, TValue>* node) 
-{
-	assert( node != this );
-	// assert( node->GetPixel() < this->GetPixel() );
-  m_Parent = node;
-}
-
 /** Return the number of children */
 template <typename TPixel, typename TIndex, typename TValue>
 int 
 ComponentTreeNode<TPixel, TIndex, TValue>
 ::CountChildren( ) const 
 {
-	int size = 1;
-	for( typename ChildrenListType::const_iterator it=m_Children.begin(); it!=m_Children.end(); it++ )
-	  {
-		size += (*it)->CountChildren();
-  	}
+  int size = 1;
+  for( typename ChildrenListType::const_iterator it=m_Children.begin(); it!=m_Children.end(); it++ )
+    {
+    size += (*it)->CountChildren();
+    }
   return size;
 }
 
@@ -90,11 +70,11 @@ int
 ComponentTreeNode<TPixel, TIndex, TValue>
 ::CountPixels( ) const 
 {
-	int size = this->GetIndexes().size();
-	for( typename ChildrenListType::const_iterator it=m_Children.begin(); it!=m_Children.end(); it++ )
-	  {
-		size += (*it)->CountPixels();
-  	}
+  int size = this->GetIndexes().size();
+  for( typename ChildrenListType::const_iterator it=m_Children.begin(); it!=m_Children.end(); it++ )
+    {
+    size += (*it)->CountPixels();
+    }
   return size;
 }
 
@@ -104,11 +84,11 @@ int
 ComponentTreeNode<TPixel, TIndex, TValue>
 ::Depth( ) const 
 {
-	int depth = 0;
-	for( typename ChildrenListType::const_iterator it=m_Children.begin(); it!=m_Children.end(); it++ )
-	  {
-		depth = std::max( depth, (*it)->Depth() );
-  	}
+  int depth = 0;
+  for( typename ChildrenListType::const_iterator it=m_Children.begin(); it!=m_Children.end(); it++ )
+    {
+    depth = std::max( depth, (*it)->Depth() );
+    }
   return depth + 1;
 }
 
@@ -146,19 +126,19 @@ template <typename TPixel, typename TIndex, typename TValue>
 void ComponentTreeNode<TPixel, TIndex, TValue>
 ::Merge( ComponentTreeNode<TPixel, TIndex, TValue> *node ) 
 {
-	assert( node != this );
-	// assert( this->GetPixel() <= node->GetPixel() );
-	// merge the index list
+  assert( node != this );
+  // assert( this->GetPixel() <= node->GetPixel() );
+  // merge the index list
   m_Indexes.splice( m_Indexes.begin(), node->GetIndexes() );
   // and add each child from node to the current child list
   for( typename ChildrenListType::iterator it=node->GetChildren().begin(); it!=node->GetChildren().end(); it++ )
     {
-	  assert( (*it)->GetParent() == node );
-	  this->AddChild( *it );
-	  }
-	// clear the child list to be sure they will not be accidentally used
-	// so node will have no children and no index after this method
-	node->GetChildren().clear();
+    assert( (*it)->GetParent() == node );
+    this->AddChild( *it );
+    }
+  // clear the child list to be sure they will not be accidentally used
+  // so node will have no children and no index after this method
+  node->GetChildren().clear();
 }
 
 template <typename TPixel, typename TIndex, typename TValue>
@@ -167,15 +147,15 @@ void ComponentTreeNode<TPixel, TIndex, TValue>
 {
   for( typename ChildrenListType::iterator it=this->GetChildren().begin(); it!=this->GetChildren().end(); it++ )
     {
-	  assert( (*it)->GetParent() == this );
-		// assert( this->GetPixel() < (*it)->GetPixel() );
-	  // merge the children of the children
-	  (*it)->MergeChildren();
-	  // and merge this children
-	  this->Merge( *it );
-	  }
-	// clear the child list 
-	this->GetChildren().clear();
+    assert( (*it)->GetParent() == this );
+    // assert( this->GetPixel() < (*it)->GetPixel() );
+    // merge the children of the children
+    (*it)->MergeChildren();
+    // and merge this children
+    this->Merge( *it );
+    }
+  // clear the child list 
+  this->GetChildren().clear();
 }
 
 template <typename TPixel, typename TIndex, typename TValue>
@@ -183,25 +163,25 @@ typename ComponentTreeNode<TPixel, TIndex, TValue>::Pointer
 ComponentTreeNode<TPixel, TIndex, TValue>
 ::Clone() 
 {
-	// create a new node to clone this one
-	Pointer node = Self::New();
-	// copy the ivars
-	node->SetAttribute( m_Attribute );
+  // create a new node to clone this one
+  Pointer node = Self::New();
+  // copy the ivars
+  node->SetAttribute( m_Attribute );
   // node->SetParent( NULL );
   node->SetPixel( m_Pixel );
   IndexListType  m_IndexList;
   
   for( typename ChildrenListType::iterator it=this->GetChildren().begin(); it!=this->GetChildren().end(); it++ )
     {
-	  assert( (*it)->GetParent() == this );
-		assert( this->GetPixel() < (*it)->GetPixel() );
-	  // merge the children of the children
-	  (*it)->MergeChildren();
-	  // and merge this children
-	  this->Merge( *it );
-	  }
-	// clear the child list 
-	this->GetChildren().clear();
+    assert( (*it)->GetParent() == this );
+    assert( this->GetPixel() < (*it)->GetPixel() );
+    // merge the children of the children
+    (*it)->MergeChildren();
+    // and merge this children
+    this->Merge( *it );
+    }
+  // clear the child list 
+  this->GetChildren().clear();
 }
 
 template <typename TPixel, typename TIndex, typename TValue>
@@ -215,20 +195,21 @@ template <typename TPixel, typename TIndex, typename TValue>
 const void ComponentTreeNode<TPixel, TIndex, TValue>
 ::print( int indent ) const
 {
-	for( int i=0; i<indent; i++)
-	  {
+  assert( this != NULL );
+  for( int i=0; i<indent; i++)
+    {
     std::cout << "  ";
     }
-  std::cout << "+ " << this->GetPixel()+0.0 << ":" << this->GetAttribute() << " ";
+  std::cout << "+ " << this->GetPixel()+0.0 << ":" /*<< this->GetAttribute()*/ << " ";
   for( typename IndexListType::const_iterator it=this->GetIndexes().begin(); it!=this->GetIndexes().end(); it++ )
     {
-	  std::cout << *it << " ";
+    std::cout << *it << " ";
     }
   std::cout << std::endl;
   for( typename ChildrenListType::const_iterator it=this->GetChildren().begin(); it!=this->GetChildren().end(); it++ )
     {
-	  (*it)->print( indent+1 );
-	  }
+    (*it)->print( indent+1 );
+    }
   
 }
 

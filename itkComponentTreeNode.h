@@ -64,25 +64,38 @@ public:
 
   /* Get/Set Attribute */
 //   itkGetConstReferenceMacro(Attribute, TAttribute);
-  const TAttribute & GetAttribute() const
+  inline const TAttribute & GetAttribute() const
      {
 	m_Attribute;
      }
-//  itkSetMacro(Attribute, TAttribute);
-  void SetAttribute( TAttribute a )
+
+  inline TAttribute & GetAttribute()
+     {
+	m_Attribute;
+     }
+
+  inline void SetAttribute( const TAttribute & a )
      {
 	m_Attribute = a;
      }
    
    
   /** Get the parent node */
-  ComponentTreeNode<TPixel, TIndex, TAttribute>* GetParent( ) const;
+  inline Self* GetParent() const
+    {
+    return m_Parent;
+    }
 
   /** Return true if the node has a parent */
   bool HasParent( ) const;
 
   /** Set the parent of the node */
-  void SetParent( ComponentTreeNode<TPixel, TIndex, TAttribute>* n );
+  inline void SetParent( Self* n )
+    {
+    assert( n != this );
+    // assert( node->GetPixel() < this->GetPixel() );
+    m_Parent = n;
+    }
 
   /** Return the number of children */
   int CountChildren( ) const;
@@ -117,22 +130,33 @@ public:
 
   /** Get the pixel value */
 //   itkGetConstReferenceMacro(Pixel, PixelType);
-  const PixelType& GetPixel() const
+  inline const PixelType& GetPixel() const
+     {
+	return m_Pixel;
+     }
+
+  inline PixelType& GetPixel()
      {
 	return m_Pixel;
      }
 //  itkSetMacro(Pixel, PixelType);
-  void SetPixel( PixelType p )
+  inline void SetPixel( const PixelType & p )
      {
 	m_Pixel = p;
      }
    
 
   /** Get the index list */
-  const IndexListType& GetIndexes() const
-    { return m_Indexes; }
-  IndexListType& GetIndexes()
-    { return m_Indexes; }
+  inline const IndexListType& GetIndexes() const
+    {
+    return m_Indexes;
+    }
+
+  inline IndexListType& GetIndexes()
+    {
+    return m_Indexes;
+    }
+
 //  itkGetMacro(IndexList, IndexListType&);
 
   const void print( int indent=0 ) const;
