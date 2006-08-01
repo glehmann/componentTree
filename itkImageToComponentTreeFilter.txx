@@ -142,8 +142,8 @@ ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>
     // iterate over pixel indexes, and build the tree !
     for ( typename IndexListType::iterator idxIt = indexes->begin(); idxIt != indexes->end(); ++idxIt )
       {
-		  // std::cout << "*idxIt: " << *idxIt << std::endl;
-	
+      // std::cout << "*idxIt: " << *idxIt << std::endl;
+
       // shift output and mask iterators to new location
       nIt += *idxIt - nIt.GetIndex();
       iIt += *idxIt - iIt.GetIndex();
@@ -169,7 +169,7 @@ ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>
             }
           else
             {
-			      // std::cout << nn << " -> " << n << "   " << *idxIt << "   " << equiv->RecursiveLookup( nn ) << std::endl;
+            // std::cout << nn << " -> " << n << "   " << *idxIt << "   " << equiv->RecursiveLookup( nn ) << std::endl;
             // we have found an equivalent node
             // they must be merged
             this->LightMerge( n, nn );
@@ -222,17 +222,17 @@ ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>
             // don't use AddChild to avoid setting parent for now
             // the parent will be set later
             // n->AddChild( nn );
-            std::cout <<  "+ size: " << n->GetChildren().size() << std::endl;
+//             std::cout <<  "+ size: " << n->GetChildren().size() << std::endl;
             n->GetChildren().push_back( nn );
-            std::cout <<  "- size: " << n->GetChildren().size() << std::endl << std::endl;
+//             std::cout <<  "- size: " << n->GetChildren().size() << std::endl << std::endl;
             }
           else if( nn != n )
             {
-			// std::cout << nn << " => " << n << "   " << *idxIt << "   " << equiv->RecursiveLookup( nn ) << std::endl;
-	        this->LightMerge( n, nn );
-	        // n->Merge( nn );
-	        equiv->Add(nn, n);
-	        // equiv->Add(n, NULL);
+            // std::cout << nn << " => " << n << "   " << *idxIt << "   " << equiv->RecursiveLookup( nn ) << std::endl;
+            this->LightMerge( n, nn );
+            // n->Merge( nn );
+            equiv->Add(nn, n);
+            // equiv->Add(n, NULL);
             }
           }
         }
@@ -266,13 +266,13 @@ void
 ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>
 ::LightMerge( NodeType* node1, NodeType* node2)
 {
-	assert( node1 != node2 );
-	// assert( this->GetPixel() <= node->GetPixel() );
-	// merge the index list
-	typename NodeType::IndexListType & node1Indexes = node1->GetIndexes();
+  assert( node1 != node2 );
+  // assert( this->GetPixel() <= node->GetPixel() );
+  // merge the index list
+  typename NodeType::IndexListType & node1Indexes = node1->GetIndexes();
   node1Indexes.splice( node1Indexes.begin(), node2->GetIndexes() );
-    // merge the children
-	typename NodeType::ChildrenListType & node1Children = node1->GetChildren();
+  // merge the children
+  typename NodeType::ChildrenListType & node1Children = node1->GetChildren();
   node1Children.splice( node1Children.begin(), node2->GetChildren() );
 }
 
@@ -286,7 +286,7 @@ ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>
     {
     (*it)->SetParent( node );
     this->SetChildrenParent( *it );
-	}
+    }
 }
 
 
