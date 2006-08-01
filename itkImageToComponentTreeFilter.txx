@@ -274,6 +274,9 @@ ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>
   // merge the children
   typename NodeType::ChildrenListType & node1Children = node1->GetChildren();
   node1Children.splice( node1Children.begin(), node2->GetChildren() );
+  assert( node2->GetIndexes().empty() );
+  assert( node2->GetChildren().empty() );
+  assert( !node1->GetIndexes().empty() );
 }
 
 
