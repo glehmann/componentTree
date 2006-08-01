@@ -295,14 +295,16 @@ typename ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>::NodeTy
 ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>
 ::GetAncestor( NodeType* node, EquivType* equiv )
 {
-  while( node->GetParent() != NULL )
+  NodeType * equivNode = equiv->RecursiveLookup( node );
+  if( equivNode->GetParent() == NULL )
     {
-    // std::cout << "nn: " << nn << std::endl;
-    assert(compare ( node->GetPixel(), equiv->RecursiveLookup( node->GetParent() )->GetPixel() ) );
-    node = equiv->RecursiveLookup( node->GetParent() ); 
-    // std::cout << "  " << nn->GetPixel() << std::endl;
+    // we got the root node
+    return equivNode;
     }
-  return node;
+
+  NodeType * ancestor = this->GetAncestor( equivNode->GetParent(), equiv );
+  equivNode->SetParent( ancestor );
+  return ancestor;
 }
 
 
