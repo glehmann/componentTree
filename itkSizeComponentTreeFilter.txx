@@ -48,15 +48,15 @@ void
 SizeComponentTreeFilter<TInputImage, TSize>
 ::SetComponentSize( NodeType* node )
 {
-	assert(node != NULL);
-	SizeType size = 0;
+  assert(node != NULL);
+  SizeType size = 0;
   const typename NodeType::ChildrenListType * childrenList = & node->GetChildren();
-	for( typename NodeType::ChildrenListType::const_iterator it=childrenList->begin(); it!=childrenList->end(); it++ )
+  for( typename NodeType::ChildrenListType::const_iterator it=childrenList->begin(); it!=childrenList->end(); it++ )
     {
-	  this->SetComponentSize( *it );
-	  size += (*it)->GetAttribute();
-	  }
-	size += node->GetIndexes().size();
+    this->SetComponentSize( *it );
+    size += (*it)->GetAttribute();
+    }
+  size += node->GetIndexes().size();
   assert( size > 0 );
   node->SetAttribute( size );
 }
