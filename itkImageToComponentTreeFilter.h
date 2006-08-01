@@ -115,6 +115,14 @@ protected:
    * to GrayscaleGeodesicErodeImageFilter. */
   void GenerateData();
   
+  /** Merge node2 in node1 without setting the parent. This operation is
+    * performed in constant time
+    */
+  void LightMerge( NodeType* node1, NodeType* node2 );
+  
+  /** Set the parent of all the nodes of the tree */
+  void SetChildrenParent( NodeType* node );
+  
 
 private:
   ImageToComponentTreeFilter(const Self&); //purposely not implemented
