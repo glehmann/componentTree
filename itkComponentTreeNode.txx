@@ -158,7 +158,7 @@ void ComponentTreeNode<TPixel, TIndex, TValue>
 	  }
 	// clear the child list to be sure they will not be accidentally used
 	// so node will have no children and no index after this method
-	node->GetChildrenList().clear();
+	node->GetChildren().clear();
 }
 
 template <typename TPixel, typename TIndex, typename TValue>
