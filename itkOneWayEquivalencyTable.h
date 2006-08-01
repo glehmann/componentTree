@@ -44,12 +44,12 @@ namespace itk
  * \ingroup WatershedSegmentation
  *
  * \sa EquivalencyTable  */
-template < typename TValueType=unsigned long, typename THash=hash<TValueType> >
+template < typename TValueType=unsigned long, unsigned long FlattenPeriod=0, typename THash=hash<TValueType> >
 class ITKCommon_EXPORT OneWayEquivalencyTable : public DataObject
 {
 public:
   /**  Standard typedefs and smart pointer declarations.   */
-  typedef OneWayEquivalencyTable<TValueType, THash> Self;
+  typedef OneWayEquivalencyTable Self;
   typedef DataObject Superclass;
   typedef SmartPointer<Self> Pointer;
   typedef SmartPointer<const Self> ConstPointer;
@@ -124,13 +124,18 @@ public:
   //  void PrintHashTable();
   
 protected:
-  OneWayEquivalencyTable()  {}
+  OneWayEquivalencyTable()
+    {
+    m_Count = 0;
+    }
   virtual ~OneWayEquivalencyTable() {}
   OneWayEquivalencyTable(const Self&); // purposely not implemented
   void operator=(const Self&); // purposely not implemented
   void PrintSelf(std::ostream& os, Indent indent) const;
 
   HashTableType m_HashMap;
+
+  unsigned long m_Count;
 };
 
 }// end namespace itk

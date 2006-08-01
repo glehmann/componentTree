@@ -19,9 +19,9 @@
 namespace itk
 {
   
-template <typename TValueType, typename THash>
+template <typename TValueType, unsigned long FlattenPeriod, typename THash>
 bool 
-OneWayEquivalencyTable <TValueType, THash>
+OneWayEquivalencyTable <TValueType, FlattenPeriod, THash>
 ::Add(TValueType a, TValueType b)
 {
   //
@@ -30,6 +30,16 @@ OneWayEquivalencyTable <TValueType, THash>
   std::pair<Iterator, bool> result;
   if (a == b) return false;
   result = m_HashMap.insert( ValueType(a, b) );
+
+  if( FlattenPeriod != 0 )
+    {
+    m_Count++;
+    if( m_Count == FlattenPeriod )
+      {
+      m_Count = 0;
+      this->Flatten();
+      }
+    }
 
   return result.second;
 }
@@ -44,9 +54,9 @@ OneWayEquivalencyTable <TValueType, THash>
 //    }
 //}
 
-template <typename TValueType, typename THash>
+template <typename TValueType, unsigned long FlattenPeriod, typename THash>
 void 
-OneWayEquivalencyTable <TValueType, THash>
+OneWayEquivalencyTable <TValueType, FlattenPeriod, THash>
 ::Flatten()
 {
   Iterator it = this->Begin();
@@ -57,9 +67,9 @@ OneWayEquivalencyTable <TValueType, THash>
     }
 }
 
-template <typename TValueType, typename THash>
+template <typename TValueType, unsigned long FlattenPeriod, typename THash>
 TValueType 
-OneWayEquivalencyTable <TValueType, THash>
+OneWayEquivalencyTable <TValueType, FlattenPeriod, THash>
 ::RecursiveLookup(const TValueType a) const
 {
   TValueType ans = a;
@@ -77,9 +87,9 @@ OneWayEquivalencyTable <TValueType, THash>
   return ans;
 }
 
-template <typename TValueType, typename THash>
+template <typename TValueType, unsigned long FlattenPeriod, typename THash>
 void 
-OneWayEquivalencyTable <TValueType, THash>
+OneWayEquivalencyTable <TValueType, FlattenPeriod, THash>
 ::PrintSelf(std::ostream& os, Indent indent) const
 {
   Superclass::PrintSelf(os,indent);

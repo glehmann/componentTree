@@ -128,7 +128,7 @@ ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>
   NodePointerList tempNodeList;
 
   NodeType* n = NULL;
-  typedef OneWayEquivalencyTable< NodeType*, typename Function::PointerHash< NodeType* > > EquivType;
+  typedef OneWayEquivalencyTable< NodeType*, 300, typename Function::PointerHash< NodeType* > > EquivType;
   typename EquivType::Pointer equiv = EquivType::New();
 
   // iterate over pixel values, from high to low
