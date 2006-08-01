@@ -216,15 +216,13 @@ ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>
           // and if n and nn are different, set n as parent of nn
           if( n->GetPixel() != nn->GetPixel() )
             {
-            assert( n->GetParent() == NULL );
-            assert( n->GetParent() != nn );
             assert( compare( nn->GetPixel(), n->GetPixel() ) || nn->GetPixel() == n->GetPixel() );
+            assert( !n->HasChild( nn ) );
             // don't use AddChild to avoid setting parent for now
             // the parent will be set later
-            // n->AddChild( nn );
-//             std::cout <<  "+ size: " << n->GetChildren().size() << std::endl;
-            n->GetChildren().push_back( nn );
-//             std::cout <<  "- size: " << n->GetChildren().size() << std::endl << std::endl;
+            n->AddChild( nn );
+//             n->GetChildren().push_back( nn );
+            assert(n->HasChild( nn ) );
             }
           else if( nn != n )
             {
@@ -232,7 +230,6 @@ ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>
             this->LightMerge( n, nn );
             // n->Merge( nn );
             equiv->Add(nn, n);
-            // equiv->Add(n, NULL);
             }
           }
         }

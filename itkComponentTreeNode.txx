@@ -120,6 +120,9 @@ void ComponentTreeNode<TPixel, TIndex, TValue>
 
   node->SetParent(this);
   m_Children.push_back(node);
+
+  assert( this->HasChild( node ) );
+  assert( node->GetParent() == this );
 }
 
 template <typename TPixel, typename TIndex, typename TValue>
@@ -188,7 +191,7 @@ template <typename TPixel, typename TIndex, typename TValue>
 bool ComponentTreeNode<TPixel, TIndex, TValue>
 ::HasChild( ComponentTreeNode<TPixel, TIndex, TValue> *node ) 
 {
-	return std::find(m_Children.begin(), m_Children.end(), node ) != m_Children.end();
+  return std::find(m_Children.begin(), m_Children.end(), node ) != m_Children.end();
 }
 
 template <typename TPixel, typename TIndex, typename TValue>
