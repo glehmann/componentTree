@@ -93,7 +93,7 @@ ComponentTree<TPixel, VImageDimension, TValue>
       {
       // Now copy anything remaining that is needed
       this->SetRoot( const_cast< NodeType * >
-                                  (imgData->GetRoot().GetPointer() ) );
+                                  (imgData->GetRoot() ) );
       }
     else
       {

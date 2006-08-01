@@ -123,7 +123,7 @@ ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>
   iIt.GoToBegin();
 
   // a list to temporary store the node's SmartPointers
-  typedef typename std::list< NodePointer > NodePointerList;
+  typedef typename std::list< NodeType * > NodePointerList;
   NodePointerList tempNodeList;
 
   NodeType* n = NULL;
@@ -174,7 +174,8 @@ ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>
             // n->Merge( nn );
             // store the equivalency to avoid resetting all the nodes in temp image with the new
             // one.
-            equiv->Add(nn, n);
+            equiv->Add( nn, n );
+            tempNodeList.push_back( nn );
             }
           }
         }
@@ -185,9 +186,7 @@ ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>
 
         // std::cout << iIt.GetIndex() << std::endl;
 
-        NodePointer newNode = NodeType::New();
-        tempNodeList.push_back( newNode );
-        n = newNode.GetPointer();
+        n = new NodeType();
         n->SetPixel( p );
         n->GetIndexes().push_back( iIt.GetIndex() );
         }
@@ -222,20 +221,28 @@ ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>
             // the parent will be set later
             n->AddChild( nn );
 //             n->GetChildren().push_back( nn );
-            assert(n->HasChild( nn ) );
+            assert( n->HasChild( nn ) );
             }
           else if( nn != n )
             {
             // std::cout << nn << " => " << n << "   " << *idxIt << "   " << equiv->RecursiveLookup( nn ) << std::endl;
             this->LightMerge( n, nn );
             // n->Merge( nn );
-            equiv->Add(nn, n);
+            equiv->Add( nn, n );
+            tempNodeList.push_back( nn );
             }
           }
         }
 
       }
     }
+
+  // clean the tempList
+  for( typename NodePointerList::iterator it=tempNodeList.begin(); it!=tempNodeList.end(); it++ )
+    {
+    delete (*it);
+    }
+  tempNodeList.clear();
     
   std::cout << "SetChildrenParent()" << std::endl;
 
@@ -282,6 +289,7 @@ void
 ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>
 ::SetChildrenParent( NodeType* node )
 {
+  assert( node != NULL );
   for( typename NodeType::ChildrenListType::iterator it=node->GetChildren().begin(); it!=node->GetChildren().end(); it++ )
     {
     (*it)->SetParent( node );

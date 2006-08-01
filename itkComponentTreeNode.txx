@@ -162,12 +162,12 @@ void ComponentTreeNode<TPixel, TIndex, TValue>
 }
 
 template <typename TPixel, typename TIndex, typename TValue>
-typename ComponentTreeNode<TPixel, TIndex, TValue>::Pointer
+typename ComponentTreeNode<TPixel, TIndex, TValue>::Self *
 ComponentTreeNode<TPixel, TIndex, TValue>
 ::Clone() 
 {
   // create a new node to clone this one
-  Pointer node = Self::New();
+  Self * node = new Self;
   // copy the ivars
   node->SetAttribute( m_Attribute );
   // node->SetParent( NULL );

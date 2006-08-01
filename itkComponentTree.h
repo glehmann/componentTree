@@ -88,7 +88,6 @@ public:
 
   /** Node type */
   typedef ComponentTreeNode< PixelType, IndexType, AttributeType > NodeType;
-  typedef SmartPointer< NodeType > NodePointer;
   typedef std::list< NodeType* > NodeListType;
 
   /** Convenience methods to set the LargestPossibleRegion,
@@ -110,9 +109,13 @@ public:
     };
 
   /** Set/Get the root node */
-	  itkGetMacro(Root, NodePointer);
-	  itkGetConstMacro(Root, NodePointer);
-	  itkSetMacro(Root, NodePointer);
+  itkGetMacro(Root, NodeType *);
+  itkGetConstMacro(Root, NodeType *);
+//   itkSetMacro(Root, NodeType *);
+  void SetRoot( NodeType * node )
+    {
+    m_Root = node;
+    }
 
   /** Restore the data object to its initial state. This means releasing
    * memory. */
@@ -137,7 +140,7 @@ private:
   void operator=(const Self&); //purposely not implemented
 
   /** The root node */
-  NodePointer m_Root;
+  NodeType * m_Root;
 
   NodeListType m_Leaf;
 

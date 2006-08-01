@@ -50,7 +50,6 @@ public:
   typedef typename OutputImageType::RegionType     OutputImageRegionType;
   typedef typename OutputImageType::PixelType      OutputImagePixelType;
   typedef typename InputImageType::NodeType        NodeType;
-  typedef typename InputImageType::NodePointer     NodePointer;
   typedef typename OutputImageType::IndexType      IndexType;
   
   /** ImageDimension constants */

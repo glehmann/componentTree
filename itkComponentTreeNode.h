@@ -39,7 +39,7 @@ namespace itk
  * \ingroup DataRepresentation 
  */
 template <typename TPixel, typename TIndex, typename TAttribute>
-class ComponentTreeNode : public LightObject
+class ComponentTreeNode
 {
 
 public:
@@ -47,18 +47,13 @@ public:
   /** Standard typedefs */
   typedef Object                    Superclass;
   typedef ComponentTreeNode<TPixel, TIndex, TAttribute>      Self;
-  typedef SmartPointer<Self>        Pointer;
-  typedef SmartPointer<const Self>  ConstPointer;
-  typedef std::list<Pointer>      ChildrenListType;
+  typedef std::list<Self *>      ChildrenListType;
 
   typedef TIndex                     IndexType;
   typedef typename std::list<IndexType>      IndexListType;
   typedef TPixel                     PixelType;
   typedef TAttribute AttributeType;
 
-  /** Method for creation through the object factory. */
-  itkNewMacro( Self );
- 
   /** Run-time type information (and related methods). */ 
   itkTypeMacro( ComponentTreeNode, Object );
 
@@ -161,12 +156,14 @@ public:
 
   const void print( int indent=0 ) const;
 
-  Pointer Clone();
+  Self * Clone();
 
-protected:
 
   ComponentTreeNode();
-  virtual ~ComponentTreeNode();
+
+  ~ComponentTreeNode();
+
+protected:
   TAttribute m_Attribute;
   Self* m_Parent;
   ChildrenListType m_Children;
