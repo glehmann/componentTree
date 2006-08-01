@@ -28,7 +28,6 @@
 #include "itkConstShapedNeighborhoodIterator.h"
 #include "itkShapedNeighborhoodIterator.h"
 #include "itkConstantBoundaryCondition.h"
-#include "itkOneWayEquivalencyTable.h"
 
 namespace itk {
 
@@ -128,7 +127,6 @@ ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>
   NodePointerList tempNodeList;
 
   NodeType* n = NULL;
-  typedef OneWayEquivalencyTable< NodeType*, 300, typename Function::PointerHash< NodeType* > > EquivType;
   typename EquivType::Pointer equiv = EquivType::New();
 
   // iterate over pixel values, from high to low
@@ -205,13 +203,15 @@ ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>
         if( nn != NULL &&  compare ( nn->GetPixel(), pixelValue ) )
           {
           // find nn deepest current parent
-          while( nn->GetParent() != NULL )
-            {
-            // std::cout << "nn: " << nn << std::endl;
-            assert(compare ( nn->GetPixel(), equiv->RecursiveLookup( nn->GetParent() )->GetPixel() ) );
-            nn = equiv->RecursiveLookup( nn->GetParent() ); 
-            // std::cout << "  " << nn->GetPixel() << std::endl;
-            }
+//           while( nn->GetParent() != NULL )
+//             {
+//             // std::cout << "nn: " << nn << std::endl;
+//             assert(compare ( nn->GetPixel(), equiv->RecursiveLookup( nn->GetParent() )->GetPixel() ) );
+//             nn = equiv->RecursiveLookup( nn->GetParent() ); 
+//             // std::cout << "  " << nn->GetPixel() << std::endl;
+//             }
+
+          nn = this->GetAncestor( nn, equiv );
 
           // and if n and nn are different, set n as parent of nn
           if( n->GetPixel() != nn->GetPixel() )
@@ -287,6 +287,22 @@ ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>
     (*it)->SetParent( node );
     this->SetChildrenParent( *it );
     }
+}
+
+
+template<class TInputImage, class TOutputImage, class TCompare>
+typename ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>::NodeType *
+ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>
+::GetAncestor( NodeType* node, EquivType* equiv )
+{
+  while( node->GetParent() != NULL )
+    {
+    // std::cout << "nn: " << nn << std::endl;
+    assert(compare ( node->GetPixel(), equiv->RecursiveLookup( node->GetParent() )->GetPixel() ) );
+    node = equiv->RecursiveLookup( node->GetParent() ); 
+    // std::cout << "  " << nn->GetPixel() << std::endl;
+    }
+  return node;
 }
 
 
