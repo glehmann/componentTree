@@ -134,7 +134,14 @@ public:
 protected:
   ComponentTree();
   void PrintSelf(std::ostream& os, Indent indent) const;
-  virtual ~ComponentTree() {};
+  virtual ~ComponentTree()
+    {
+    if( m_Root )
+      {
+      delete m_Root;
+      }
+    }
+
 private:
   ComponentTree(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented

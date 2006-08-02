@@ -35,19 +35,11 @@ template <typename TPixel, typename TIndex, typename TValue>
 ComponentTreeNode<TPixel, TIndex, TValue>
 ::~ComponentTreeNode() 
 {
-/*  if ( m_Parent )
+  for( typename ChildrenListType::const_iterator it=m_Children.begin(); it!=m_Children.end(); it++ )
     {
-    m_Parent->Remove(this);
+    delete *it;
     }
-    
- for ( int i=m_Children.size() ; i > 0; i-- )
-   {
-   m_Children[i-1]->SetParent(NULL);
-   m_Children[i-1] = 0;
-   }
   m_Children.clear();
-  m_Parent = NULL;
-  m_Attribute = 0; */
 }
 
 /** Return the number of children */
@@ -156,6 +148,7 @@ void ComponentTreeNode<TPixel, TIndex, TValue>
     (*it)->MergeChildren();
     // and merge this children
     this->Merge( *it );
+    delete *it;
     }
   // clear the child list 
   this->GetChildren().clear();
@@ -167,7 +160,7 @@ ComponentTreeNode<TPixel, TIndex, TValue>
 ::Clone() 
 {
   // create a new node to clone this one
-  Self * node = new Self;
+  Self * node = new Self();
   // copy the ivars
   node->SetAttribute( m_Attribute );
   // node->SetParent( NULL );

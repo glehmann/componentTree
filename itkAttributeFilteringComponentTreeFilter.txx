@@ -67,6 +67,7 @@ AttributeFilteringComponentTreeFilter<TInputImage, TAttribute, TCompare>
       typename NodeType::ChildrenListType::iterator toRemove = it;
       it++;
       childrenList->erase( toRemove );
+      delete *toRemove;
       }
     else
       {
