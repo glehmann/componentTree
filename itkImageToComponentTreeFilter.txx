@@ -127,7 +127,6 @@ ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>
   NodePointerList tempNodeList;
 
   NodeType* n = NULL;
-  typename EquivType::Pointer equiv = EquivType::New();
 
   // iterate over pixel values, from high to low
   for ( typename PixelMapType::iterator pixelMapIt=pixelMap.begin(); pixelMapIt!=pixelMap.end(); ++pixelMapIt )
@@ -155,7 +154,7 @@ ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>
       // search the neighbors which can get this pixel
       for ( nnIt = nIt.Begin(),  niIt = iIt.Begin(); nnIt != nIt.End() /*&& niIt != iIt.End()*/; nnIt++, niIt++)
         {
-        NodeType* nn = equiv->RecursiveLookup( nnIt.Get() );
+        NodeType* nn = this->GetReference( nnIt.Get() );
         InputImagePixelType np = niIt.Get();
 
         if( nn != NULL &&  n != nn && np == p )
@@ -167,14 +166,9 @@ ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>
             }
           else
             {
-            // std::cout << nn << " -> " << n << "   " << *idxIt << "   " << equiv->RecursiveLookup( nn ) << std::endl;
             // we have found an equivalent node
             // they must be merged
             this->LightMerge( n, nn );
-            // n->Merge( nn );
-            // store the equivalency to avoid resetting all the nodes in temp image with the new
-            // one.
-            equiv->Add( nn, n );
             tempNodeList.push_back( nn );
             }
           }
@@ -183,9 +177,6 @@ ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>
       // if no node has been found, create a new one
       if( n == NULL )
         {
-
-        // std::cout << iIt.GetIndex() << std::endl;
-
         n = new NodeType();
         n->SetPixel( p );
         n->GetIndexes().push_back( iIt.GetIndex() );
@@ -197,38 +188,23 @@ ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>
       // the deepest parent of the neighbor
       for( nnIt = nIt.Begin(); nnIt != nIt.End(); nnIt++ )
         {
-        NodeType* nn = equiv->RecursiveLookup( nnIt.Get() );
+        NodeType* nn = this->GetReference( nnIt.Get() );
 
         if( nn != NULL &&  compare ( nn->GetPixel(), pixelValue ) )
           {
           // find nn deepest current parent
-//           while( nn->GetParent() != NULL )
-//             {
-//             // std::cout << "nn: " << nn << std::endl;
-//             assert(compare ( nn->GetPixel(), equiv->RecursiveLookup( nn->GetParent() )->GetPixel() ) );
-//             nn = equiv->RecursiveLookup( nn->GetParent() ); 
-//             // std::cout << "  " << nn->GetPixel() << std::endl;
-//             }
-
-          nn = this->GetAncestor( nn, equiv );
+          nn = this->GetAncestor( nn );
 
           // and if n and nn are different, set n as parent of nn
           if( n->GetPixel() != nn->GetPixel() )
             {
             assert( compare( nn->GetPixel(), n->GetPixel() ) || nn->GetPixel() == n->GetPixel() );
             assert( !n->HasChild( nn ) );
-            // don't use AddChild to avoid setting parent for now
-            // the parent will be set later
             n->AddChild( nn );
-//             n->GetChildren().push_back( nn );
-            assert( n->HasChild( nn ) );
             }
           else if( nn != n )
             {
-            // std::cout << nn << " => " << n << "   " << *idxIt << "   " << equiv->RecursiveLookup( nn ) << std::endl;
             this->LightMerge( n, nn );
-            // n->Merge( nn );
-            equiv->Add( nn, n );
             tempNodeList.push_back( nn );
             }
           }
@@ -248,7 +224,7 @@ ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>
 
   this->SetChildrenParent( n );
 
-  n->print();
+//   n->print();
   std::cout << "tempNodeList: " << tempNodeList.size() << std::endl;
   std::cout << "chilren: " << n->CountChildren() << std::endl;
   std::cout << "pixels: " << n->CountPixels() << std::endl;
@@ -278,6 +254,10 @@ ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>
   // merge the children
   typename NodeType::ChildrenListType & node1Children = node1->GetChildren();
   node1Children.splice( node1Children.begin(), node2->GetChildren() );
+  // set the node1 as parent of node2, to indicate that node1 is the reference
+  // for node2
+  node2->SetParent( node1 );
+
   assert( node2->GetIndexes().empty() );
   assert( node2->GetChildren().empty() );
   assert( !node1->GetIndexes().empty() );
@@ -301,18 +281,41 @@ ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>
 template<class TInputImage, class TOutputImage, class TCompare>
 typename ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>::NodeType *
 ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>
-::GetAncestor( NodeType* node, EquivType* equiv )
+::GetAncestor( NodeType* node )
 {
-  NodeType * equivNode = equiv->RecursiveLookup( node );
+  NodeType * equivNode = this->GetReference( node );
   if( equivNode->GetParent() == NULL )
     {
     // we got the root node
     return equivNode;
     }
 
-  NodeType * ancestor = this->GetAncestor( equivNode->GetParent(), equiv );
+  NodeType * ancestor = this->GetAncestor( equivNode->GetParent() );
   equivNode->SetParent( ancestor );
   return ancestor;
+}
+
+
+template<class TInputImage, class TOutputImage, class TCompare>
+typename ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>::NodeType *
+ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>
+::GetReference( NodeType* node )
+{
+  if( node == NULL )
+    {
+    return NULL;
+    }
+
+  if( !node->GetIndexes().empty() )
+    {
+    // we got the reference node
+    return node;
+    }
+
+  // index list is empty, so we need to find the reference node
+  NodeType * ref = this->GetReference( node->GetParent() );
+  node->SetParent( ref );
+  return ref;
 }
 
 

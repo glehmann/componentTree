@@ -18,7 +18,6 @@
 #define __itkImageToComponentTreeFilter_h
 
 #include "itkImageToImageFilter.h"
-#include "itkOneWayEquivalencyTable.h"
 
 namespace itk {
 	
@@ -65,7 +64,6 @@ public:
   typedef typename OutputImageType::PixelType      OutputImagePixelType;
   typedef typename OutputImageType::NodeType       NodeType;
   typedef typename OutputImageType::IndexType      IndexType;
-  typedef OneWayEquivalencyTable< NodeType*, 600, typename Function::PointerHash< NodeType* > > EquivType;
   
   /** ImageDimension constants */
   itkStaticConstMacro(ImageDimension, unsigned int,
@@ -124,7 +122,9 @@ protected:
   /** Set the parent of all the nodes of the tree */
   void SetChildrenParent( NodeType* node );
 
-  NodeType * GetAncestor( NodeType * node, EquivType * );
+  NodeType * GetAncestor( NodeType * node );
+
+  NodeType * GetReference( NodeType * node );
 
 private:
   ImageToComponentTreeFilter(const Self&); //purposely not implemented
