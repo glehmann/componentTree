@@ -74,8 +74,8 @@ public:
   /** End concept checking */
 #endif
 
-	  itkSetMacro(Threshold, unsigned long);
-	  itkGetMacro(Threshold, unsigned long);
+  itkSetMacro(Threshold, unsigned long);
+  itkGetMacro(Threshold, unsigned long);
 
 protected:
   AttributeFilteringComponentTreeFilter();
