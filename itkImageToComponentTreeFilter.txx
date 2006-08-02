@@ -238,6 +238,9 @@ ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>
 
   assert( n->CountPixels() == this->GetOutput()->GetRequestedRegion().GetNumberOfPixels() );
 
+  // to be sure that root parent is NULL
+  n->SetParent( NULL );
+
   // keep a pointer on the root node
   this->GetOutput()->SetRoot( n );
 
