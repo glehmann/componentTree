@@ -58,21 +58,21 @@ public:
   itkTypeMacro( ComponentTreeNode, Object );
 
   /* Get/Set Attribute */
-//   itkGetConstReferenceMacro(Attribute, TAttribute);
-  inline const TAttribute & GetAttribute() const
-     {
-	m_Attribute;
-     }
+//   itkGetConstReferenceMacro(Attribute, AttributeType);
+  const AttributeType & GetAttribute() const
+    {
+    m_Attribute;
+    }
 
-  inline TAttribute & GetAttribute()
-     {
-	m_Attribute;
-     }
+  AttributeType & GetAttribute()
+    {
+    m_Attribute;
+    }
 
-  inline void SetAttribute( const TAttribute & a )
-     {
-	m_Attribute = a;
-     }
+  void SetAttribute( const AttributeType & a )
+    {
+    m_Attribute = a;
+    }
    
    
   /** Get the parent node */
@@ -102,43 +102,46 @@ public:
   int Depth( ) const;
 
   /** Remove a node from the node */
-  bool RemoveChild( ComponentTreeNode<TPixel, TIndex, TAttribute> *n );
+  bool RemoveChild( Self *node );
 
   /** Add a child to the node */
-  void AddChild( ComponentTreeNode<TPixel, TIndex, TAttribute> *node );
+  void AddChild( Self *node );
 
   /**  */
-  bool HasChild( ComponentTreeNode<TPixel, TIndex, TAttribute> *node );
+  bool HasChild( Self *node );
 
   /** Merge node */
-  virtual void Merge( ComponentTreeNode<TPixel, TIndex, TAttribute> *node );
+  void Merge( Self *node );
 
   /** Merge node */
-  virtual void MergeChildren();
+  void MergeChildren();
 
   /** Get the internal list of children */
-  virtual ChildrenListType& GetChildren() {return m_Children;}
-  virtual const ChildrenListType& GetChildren() const {return m_Children;}
-
-  /** Set the data of the node */
-  //virtual void SetData(TAttribute data) {m_Data = data;}
+  ChildrenListType& GetChildren()
+    {
+    return m_Children;
+    }
+  const ChildrenListType& GetChildren() const
+    {
+    return m_Children;
+    }
 
   /** Get the pixel value */
 //   itkGetConstReferenceMacro(Pixel, PixelType);
   inline const PixelType& GetPixel() const
-     {
-	return m_Pixel;
-     }
+    {
+    return m_Pixel;
+    }
 
   inline PixelType& GetPixel()
-     {
-	return m_Pixel;
-     }
+    {
+    return m_Pixel;
+    }
 //  itkSetMacro(Pixel, PixelType);
   inline void SetPixel( const PixelType & p )
-     {
-	m_Pixel = p;
-     }
+    {
+    m_Pixel = p;
+    }
    
 
   /** Get the index list */
@@ -158,13 +161,13 @@ public:
 
   Self * Clone();
 
-
   ComponentTreeNode();
 
   ~ComponentTreeNode();
 
-protected:
   TAttribute m_Attribute;
+
+protected:
   Self* m_Parent;
   ChildrenListType m_Children;
 

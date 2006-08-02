@@ -49,28 +49,28 @@ void
 AttributeFilteringComponentTreeFilter<TInputImage, TAttribute, TCompare>
 ::ThresholdComponents( NodeType* node )
 {
-	assert(node != NULL);
-	TCompare compare;
+  assert(node != NULL);
+  TCompare compare;
   typename NodeType::ChildrenListType * childrenList = & node->GetChildren();
   typename NodeType::ChildrenListType::iterator it=childrenList->begin();
-	while( it!=childrenList->end() )
+  while( it!=childrenList->end() )
     {
-	  if( compare( (*it)->GetAttribute(), m_Threshold ) )
-	    {
-		  (*it)->MergeChildren();
-		  node->Merge( *it );
-		  // must store the iterator, because once the element
-                  // erased, it is invalidated
-		  typename NodeType::ChildrenListType::iterator toRemove = it;
-		  it++;
-		  childrenList->erase( toRemove );
+    if( compare( (*it)->m_Attribute, m_Threshold ) )
+      {
+      (*it)->MergeChildren();
+      node->Merge( *it );
+      // must store the iterator, because once the element
+      // erased, it is invalidated
+      typename NodeType::ChildrenListType::iterator toRemove = it;
+      it++;
+      childrenList->erase( toRemove );
       }
     else
       {
-			this->ThresholdComponents( *it );
-			it++;
+      this->ThresholdComponents( *it );
+      it++;
       }
-	  }
+    }
 }
 
 

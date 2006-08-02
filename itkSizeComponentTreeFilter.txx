@@ -54,11 +54,13 @@ SizeComponentTreeFilter<TInputImage, TSize>
   for( typename NodeType::ChildrenListType::const_iterator it=childrenList->begin(); it!=childrenList->end(); it++ )
     {
     this->SetComponentSize( *it );
-    size += (*it)->GetAttribute();
+    size += (*it)->m_Attribute;
     }
   size += node->GetIndexes().size();
+  node->m_Attribute = size;
   assert( size > 0 );
-  node->SetAttribute( size );
+  // GetAttribute() is broken, but why ??
+  // assert( node->GetAttribute() == size );
 }
 
 

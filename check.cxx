@@ -26,37 +26,20 @@ int main(int, char * argv[])
   typedef itk::ImageToMaximumTreeFilter< IType, TreeType > FilterType;
   FilterType::Pointer filter = FilterType::New();
   filter->SetInput( reader->GetOutput() );
-//  filter->Update();
 
   typedef itk::SizeComponentTreeFilter< TreeType > SizeType;
   SizeType::Pointer size = SizeType::New();
   size->SetInput( filter->GetOutput() );
-  size->Update();
-  std::cout << "InPlace: " << size->GetInPlace() << std::endl;
-
-//  size->GetOutput()->GetRoot()->print();
-
 
   typedef itk::AttributeFilteringComponentTreeFilter< TreeType > InPlaceType;
   InPlaceType::Pointer inplace = InPlaceType::New();
   inplace->SetInput( size->GetOutput() );
   inplace->SetInPlace( true );
   inplace->SetThreshold( atoi(argv[3]) );
-  
-//  (*filter->GetOutput()->GetRoot()->GetChildrenList().begin())->MergeChildren();
 
- 
-
-/*	std::cout << filter << std::endl;
-  std::cout << filter->GetOutput() << std::endl;
-	std::cout << filter->GetOutput()->GetRoot()->CountChildren() << std::endl;
-	std::cout << filter->GetOutput()->GetRoot()->Depth() << std::endl;
-*/
-	
-	typedef itk::ComponentTreeToImageFilter< TreeType, IType > T2IType;
-	T2IType::Pointer filter2 = T2IType::New();
-	filter2->SetInput( inplace->GetOutput() );
-//	filter2->Update();
+  typedef itk::ComponentTreeToImageFilter< TreeType, IType > T2IType;
+  T2IType::Pointer filter2 = T2IType::New();
+  filter2->SetInput( inplace->GetOutput() );
 	
 //  itk::SimpleFilterWatcher watcher(filter, "filter");
 

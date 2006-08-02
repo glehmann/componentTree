@@ -203,7 +203,8 @@ const void ComponentTreeNode<TPixel, TIndex, TValue>
     {
     std::cout << "  ";
     }
-  std::cout << "+ " << this->GetPixel()+0.0 << ":" /*<< this->GetAttribute()*/ << " ";
+  std::cout << "+ " << static_cast<typename NumericTraits<PixelType>::PrintType>(this->GetPixel())
+            << ":" << this->m_Attribute << " ";
   for( typename IndexListType::const_iterator it=this->GetIndexes().begin(); it!=this->GetIndexes().end(); it++ )
     {
     std::cout << *it << " ";

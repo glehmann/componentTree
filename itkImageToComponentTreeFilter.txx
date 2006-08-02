@@ -122,7 +122,9 @@ ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>
   setConnectivity( &iIt, m_FullyConnected );
   iIt.GoToBegin();
 
-  // a list to temporary store the node's SmartPointers
+  // a list to store the node merged with other nodes, and that we'll have to
+  // delete later. They are not destructed immediately because they keep a pointer
+  // on the reference node
   typedef typename std::list< NodeType * > NodePointerList;
   NodePointerList tempNodeList;
 
@@ -133,8 +135,6 @@ ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>
     {
     InputImagePixelType pixelValue = pixelMapIt->first;
     IndexListType* indexes = &(pixelMapIt->second);
-
-    std::cout << "pixelValue: " << pixelValue+0.0 << std::endl;
 
     // iterate over pixel indexes, and build the tree !
     for ( typename IndexListType::iterator idxIt = indexes->begin(); idxIt != indexes->end(); ++idxIt )
@@ -219,25 +219,21 @@ ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>
     delete (*it);
     }
   tempNodeList.clear();
-    
-  std::cout << "SetChildrenParent()" << std::endl;
 
+  // Now set the real parent of the child, and no more the ancestor, or the reference.
   this->SetChildrenParent( n );
 
 //   n->print();
-  std::cout << "tempNodeList: " << tempNodeList.size() << std::endl;
-  std::cout << "chilren: " << n->CountChildren() << std::endl;
-  std::cout << "pixels: " << n->CountPixels() << std::endl;
-  std::cout << "p: " << n->GetPixel()+0.0 << std::endl;
+//   std::cout << "tempNodeList: " << tempNodeList.size() << std::endl;
+//   std::cout << "chilren: " << n->CountChildren() << std::endl;
+//   std::cout << "pixels: " << n->CountPixels() << std::endl;
+//   std::cout << "p: " << n->GetPixel()+0.0 << std::endl;
 
   assert( n->CountPixels() == this->GetOutput()->GetRequestedRegion().GetNumberOfPixels() );
 
+  // keep a pointer on the root node
   this->GetOutput()->SetRoot( n );
 
-/* for( int i=0; i<n->CountChildren() ; i++ )
-  {
-  std::cout <<   n->GetChildrenList()[i]->GetPixel() << std::endl;
-  }*/
 }
 
 
@@ -283,6 +279,7 @@ typename ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>::NodeTy
 ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>
 ::GetAncestor( NodeType* node )
 {
+  assert( node != NULL );
   NodeType * equivNode = this->GetReference( node );
   if( equivNode->GetParent() == NULL )
     {
@@ -291,6 +288,8 @@ ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>
     }
 
   NodeType * ancestor = this->GetAncestor( equivNode->GetParent() );
+  // path compression: we keep a pointer to the ancestor so when we
+  // will have to search it again, the path will be a lot shorter
   equivNode->SetParent( ancestor );
   return ancestor;
 }
@@ -314,6 +313,10 @@ ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>
 
   // index list is empty, so we need to find the reference node
   NodeType * ref = this->GetReference( node->GetParent() );
+  // store the reference node, to avoid searching it next time
+  // TODO: it is not needed to perform a path compression here.
+  // It is possible to have only one reference node, by choosing
+  // which node will be kept as reference node during the merge
   node->SetParent( ref );
   return ref;
 }
