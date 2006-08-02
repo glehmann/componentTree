@@ -38,8 +38,9 @@ AttributeFilteringComponentTreeFilter<TInputImage, TAttribute, TCompare>
   // Allocate the output
   this->AllocateOutputs();
 
-  // this->GetOutput()->GetRoot()->MergeChildren();
   this->ThresholdComponents( this->GetOutput()->GetRoot() );
+
+  // TODO: how to generate progress ??
 
 }
 

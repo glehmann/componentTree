@@ -28,6 +28,7 @@
 #include "itkConstShapedNeighborhoodIterator.h"
 #include "itkShapedNeighborhoodIterator.h"
 #include "itkConstantBoundaryCondition.h"
+#include "itkProgressReporter.h"
 
 namespace itk {
 
@@ -77,6 +78,9 @@ ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>
   // instantiate the comparator
   TCompare compare;
   
+  // setup the progress reporter
+  ProgressReporter progress(this, 0, this->GetInput()->GetRequestedRegion().GetNumberOfPixels()*2);
+
   // sort the pixel by gray level
 
   // iterator for the marker image
@@ -92,6 +96,7 @@ ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>
     {
     // store index of current pixel value
     pixelMap[inputIt.Get()].push_back( inputIt.GetIndex() );
+    progress.CompletedPixel();
     }
 
   // we need, to construct the full build tree, to know to which node a pixel
@@ -209,6 +214,8 @@ ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>
             }
           }
         }
+
+      progress.CompletedPixel();
 
       }
     }

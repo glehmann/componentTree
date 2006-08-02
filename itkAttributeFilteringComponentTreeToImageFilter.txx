@@ -38,9 +38,10 @@ AttributeFilteringComponentTreeToImageFilter<TInputImage, TOutputImage, TAttribu
   // Allocate the output
   this->AllocateOutputs();
 
-  // this->GetOutput()->GetRoot()->MergeChildren();
+  m_Progress = new ProgressReporter(this, 0, this->GetOutput()->GetRequestedRegion().GetNumberOfPixels());
   this->ThresholdComponents( this->GetInput()->GetRoot() );
-
+  delete m_Progress;
+  m_Progress = NULL;
 }
 
 
@@ -59,6 +60,7 @@ AttributeFilteringComponentTreeToImageFilter<TInputImage, TOutputImage, TAttribu
     {
     // std::cout << *it << ": " << v << std::endl;
     output->SetPixel( *it, v );
+    m_Progress->CompletedPixel();
     }
 
   TCompare compare;
@@ -89,6 +91,7 @@ AttributeFilteringComponentTreeToImageFilter<TInputImage, TOutputImage, TAttribu
   for( typename NodeType::IndexListType::const_iterator it=indexList->begin(); it!=indexList->end(); it++ )
     {
     output->SetPixel( *it, v );
+    m_Progress->CompletedPixel();
     }
   
   const typename NodeType::ChildrenListType * childrenList = & node->GetChildren();

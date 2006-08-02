@@ -40,6 +40,8 @@ SizeComponentTreeFilter<TInputImage, TSize>
   // this->GetOutput()->GetRoot()->MergeChildren();
   this->SetComponentSize( this->GetOutput()->GetRoot() );
 
+  // TODO: how to generate progress ??
+
 }
 
 

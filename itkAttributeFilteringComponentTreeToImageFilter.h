@@ -18,6 +18,7 @@
 #define __itkAttributeFilteringComponentTreeToImageFilter_h
 
 #include "itkInPlaceComponentTreeFilter.h"
+#include "itkProgressReporter.h"
 
 namespace itk {
 /** \class AttributeFilteringComponentTreeToImageFilter
@@ -94,6 +95,8 @@ private:
   void operator=(const Self&); //purposely not implemented
 
   unsigned long m_Threshold;
+
+  ProgressReporter * m_Progress;
 
 } ; // end of class
 
