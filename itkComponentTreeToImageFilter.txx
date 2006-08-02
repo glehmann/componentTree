@@ -23,7 +23,6 @@
 #include "itkImageRegionConstIteratorWithIndex.h"
 #include <algorithm>
 #include <list>
-#include "itkPreOrderTreeIterator.h"
 
 
 namespace itk {
@@ -69,7 +68,10 @@ ComponentTreeToImageFilter<TInputImage, TOutputImage>
 {
   // Allocate the output
   this->AllocateOutputs();
+  m_Progress = new ProgressReporter(this, 0, this->GetOutput()->GetRequestedRegion().GetNumberOfPixels());
   this->WriteNodes( this->GetInput()->GetRoot() );
+  delete m_Progress;
+  m_Progress = NULL;
     
   
 }
@@ -88,6 +90,7 @@ ComponentTreeToImageFilter<TInputImage, TOutputImage>
     {
     // std::cout << *it << ": " << v << std::endl;
     output->SetPixel( *it, v );
+    m_Progress->CompletedPixel();
     }
   
   const typename NodeType::ChildrenListType * childrenList = & node->GetChildren();

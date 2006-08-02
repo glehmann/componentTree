@@ -18,6 +18,7 @@
 #define __itkComponentTreeToImageFilter_h
 
 #include "itkImageToImageFilter.h"
+#include "itkProgressReporter.h"
 
 namespace itk {
 
@@ -97,6 +98,8 @@ protected:
 private:
   ComponentTreeToImageFilter(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
+
+  ProgressReporter * m_Progress;
 
 } ; // end of class
 

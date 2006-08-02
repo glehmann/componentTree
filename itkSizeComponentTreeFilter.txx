@@ -18,6 +18,7 @@
 #define __itkSizeComponentTreeFilter_txx
 
 #include "itkSizeComponentTreeFilter.h"
+#include "itkProgressReporter.h"
 
 
 namespace itk {
@@ -37,7 +38,7 @@ SizeComponentTreeFilter<TInputImage, TSize>
   // Allocate the output
   this->AllocateOutputs();
 
-  // this->GetOutput()->GetRoot()->MergeChildren();
+  ProgressReporter progress(this, 0, this->GetOutput()->GetRequestedRegion().GetNumberOfPixels()*2);
   this->SetComponentSize( this->GetOutput()->GetRoot() );
 
   // TODO: how to generate progress ??

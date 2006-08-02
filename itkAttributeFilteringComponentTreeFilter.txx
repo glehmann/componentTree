@@ -18,6 +18,7 @@
 #define __itkAttributeFilteringComponentTreeFilter_txx
 
 #include "itkAttributeFilteringComponentTreeFilter.h"
+#include "itkProgressReporter.h"
 
 
 namespace itk {
@@ -38,6 +39,7 @@ AttributeFilteringComponentTreeFilter<TInputImage, TAttribute, TCompare>
   // Allocate the output
   this->AllocateOutputs();
 
+  ProgressReporter progress(this, 0, this->GetOutput()->GetRequestedRegion().GetNumberOfPixels()*2);
   this->ThresholdComponents( this->GetOutput()->GetRoot() );
 
   // TODO: how to generate progress ??
