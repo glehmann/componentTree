@@ -45,7 +45,6 @@ class ComponentTreeNode
 public:
 
   /** Standard typedefs */
-  typedef Object                    Superclass;
   typedef ComponentTreeNode<TPixel, TIndex, TAttribute>      Self;
   typedef std::list<Self *>      ChildrenListType;
 
@@ -54,11 +53,7 @@ public:
   typedef TPixel                     PixelType;
   typedef TAttribute AttributeType;
 
-  /** Run-time type information (and related methods). */ 
-  itkTypeMacro( ComponentTreeNode, Object );
-
-  /* Get/Set Attribute */
-//   itkGetConstReferenceMacro(Attribute, AttributeType);
+  /** get/set the attribute */
   const AttributeType & GetAttribute() const
     {
     m_Attribute;
@@ -107,7 +102,7 @@ public:
   /** Add a child to the node */
   void AddChild( Self *node );
 
-  /**  */
+  /** return true if node is in the children list */
   bool HasChild( Self *node );
 
   /** Merge node */
@@ -121,13 +116,13 @@ public:
     {
     return m_Children;
     }
+
   const ChildrenListType& GetChildren() const
     {
     return m_Children;
     }
 
   /** Get the pixel value */
-//   itkGetConstReferenceMacro(Pixel, PixelType);
   inline const PixelType& GetPixel() const
     {
     return m_Pixel;
@@ -137,7 +132,7 @@ public:
     {
     return m_Pixel;
     }
-//  itkSetMacro(Pixel, PixelType);
+
   inline void SetPixel( const PixelType & p )
     {
     m_Pixel = p;
@@ -155,23 +150,30 @@ public:
     return m_Indexes;
     }
 
-//  itkGetMacro(IndexList, IndexListType&);
-
+  /** a convenient method to print the tree on std::out.
+   * To be used only on small trees !
+   */ 
   const void print( int indent=0 ) const;
 
+  /** return a clone of the current tree */
   Self * Clone();
 
   ComponentTreeNode();
 
   ~ComponentTreeNode();
 
+  /** the attribute */
+  // TODO: make it go back to protected - once found why Get/SetAttribute() are broken
   TAttribute m_Attribute;
 
 protected:
-  Self* m_Parent;
-  ChildrenListType m_Children;
-
+  /** the pixel value associated with the node */
   PixelType m_Pixel;
+  /** a pointer to the parent node */
+  Self* m_Parent;
+  /** the list of children */
+  ChildrenListType m_Children;
+  /** the list of indexs of the node */
   IndexListType  m_Indexes;
 
 private:

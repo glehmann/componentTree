@@ -34,8 +34,7 @@ class ITK_EXPORT ComponentTreeToImageFilter :
 public:
   /** Standard class typedefs. */
   typedef ComponentTreeToImageFilter Self;
-  typedef ImageToImageFilter<TInputImage, TOutputImage>
-  Superclass;
+  typedef ImageToImageFilter<TInputImage, TOutputImage> Superclass;
   typedef SmartPointer<Self>        Pointer;
   typedef SmartPointer<const Self>  ConstPointer;
 
@@ -51,6 +50,7 @@ public:
   typedef typename OutputImageType::RegionType     OutputImageRegionType;
   typedef typename OutputImageType::PixelType      OutputImagePixelType;
   typedef typename InputImageType::NodeType        NodeType;
+  typedef typename InputImageType::AttributeType   AttributeType;
   typedef typename OutputImageType::IndexType      IndexType;
   
   /** ImageDimension constants */

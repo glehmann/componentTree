@@ -23,23 +23,23 @@
 
 namespace itk {
 
-template <class TInputImage, class TAttribute, class TCompare>
-AttributeFilteringComponentTreeFilter<TInputImage, TAttribute, TCompare>
+template <class TInputImage, class TCompare>
+AttributeFilteringComponentTreeFilter<TInputImage, TCompare>
 ::AttributeFilteringComponentTreeFilter()
 {
-  m_Threshold = itk::NumericTraits<TAttribute>::Zero;
+  m_Threshold = itk::NumericTraits< AttributeType >::Zero;
 }
 
 
-template<class TInputImage, class TAttribute, class TCompare>
+template<class TInputImage, class TCompare>
 void
-AttributeFilteringComponentTreeFilter<TInputImage, TAttribute, TCompare>
+AttributeFilteringComponentTreeFilter<TInputImage, TCompare>
 ::GenerateData()
 {
   // Allocate the output
   this->AllocateOutputs();
 
-  ProgressReporter progress(this, 0, this->GetOutput()->GetRequestedRegion().GetNumberOfPixels()*2);
+  ProgressReporter progress(this, 0, this->GetOutput()->GetRequestedRegion().GetNumberOfPixels());
   this->ThresholdComponents( this->GetOutput()->GetRoot() );
 
   // TODO: how to generate progress ??
@@ -47,13 +47,13 @@ AttributeFilteringComponentTreeFilter<TInputImage, TAttribute, TCompare>
 }
 
 
-template<class TInputImage, class TAttribute, class TCompare>
+template<class TInputImage, class TCompare>
 void
-AttributeFilteringComponentTreeFilter<TInputImage, TAttribute, TCompare>
+AttributeFilteringComponentTreeFilter<TInputImage, TCompare>
 ::ThresholdComponents( NodeType* node )
 {
   assert(node != NULL);
-  TCompare compare;
+  CompareType compare;
   typename NodeType::ChildrenListType * childrenList = & node->GetChildren();
   typename NodeType::ChildrenListType::iterator it=childrenList->begin();
   while( it!=childrenList->end() )
@@ -78,12 +78,14 @@ AttributeFilteringComponentTreeFilter<TInputImage, TAttribute, TCompare>
 }
 
 
-template<class TInputImage, class TAttribute, class TCompare>
+template<class TInputImage, class TCompare>
 void
-AttributeFilteringComponentTreeFilter<TInputImage, TAttribute, TCompare>
+AttributeFilteringComponentTreeFilter<TInputImage, TCompare>
 ::PrintSelf(std::ostream &os, Indent indent) const
 {
   Superclass::PrintSelf(os, indent);
+  os << indent << "Threshold: " 
+     << static_cast<typename NumericTraits< AttributeType >::PrintType>( m_Threshold ) << std::endl;
 }
   
 }// end namespace itk

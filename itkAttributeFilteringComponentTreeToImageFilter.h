@@ -26,8 +26,7 @@ namespace itk {
  *
  * \ingroup ImageEnhancement  MathematicalMorphologyImageFilters
  */
-template<class TInputImage, class TOutputImage,
-         class TAttribute=typename TInputImage::AttributeType, class TCompare=std::less<TAttribute> >
+template<class TInputImage, class TOutputImage,class TCompare=std::less< typename TInputImage::AttributeType > >
 class ITK_EXPORT AttributeFilteringComponentTreeToImageFilter : 
     public ImageToImageFilter<TInputImage, TOutputImage>
 {
@@ -39,6 +38,7 @@ public:
   typedef SmartPointer<const Self>  ConstPointer;
 
   /** Some convenient typedefs. */
+  typedef TCompare CompareType;
   typedef TInputImage InputImageType;
   typedef TOutputImage OutputImageType;
   typedef typename InputImageType::Pointer         InputImagePointer;
@@ -49,8 +49,9 @@ public:
   typedef typename OutputImageType::ConstPointer   OutputImageConstPointer;
   typedef typename OutputImageType::RegionType     OutputImageRegionType;
   typedef typename OutputImageType::PixelType      OutputImagePixelType;
-  typedef typename InputImageType::NodeType       NodeType;
-  typedef typename OutputImageType::IndexType      IndexType;
+  typedef typename InputImageType::NodeType        NodeType;
+  typedef typename InputImageType::IndexType       IndexType;
+  typedef typename InputImageType::AttributeType   AttributeType;
   
   /** ImageDimension constants */
   itkStaticConstMacro(ImageDimension, unsigned int,
@@ -74,8 +75,8 @@ public:
   /** End concept checking */
 #endif
 
-  itkSetMacro(Threshold, TAttribute);
-  itkGetMacro(Threshold, TAttribute);
+  itkSetMacro(Threshold, AttributeType);
+  itkGetMacro(Threshold, AttributeType);
 
 protected:
   AttributeFilteringComponentTreeToImageFilter();
@@ -94,7 +95,7 @@ private:
   AttributeFilteringComponentTreeToImageFilter(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
 
-  TAttribute m_Threshold;
+  AttributeType m_Threshold;
 
   ProgressReporter * m_Progress;
 

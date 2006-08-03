@@ -23,16 +23,16 @@
 
 namespace itk {
 
-template <class TInputImage, class TSize>
-SizeComponentTreeFilter<TInputImage, TSize>
+template <class TImage>
+SizeComponentTreeFilter<TImage>
 ::SizeComponentTreeFilter()
 {
 }
 
 
-template<class TInputImage, class TSize>
+template<class TImage>
 void
-SizeComponentTreeFilter<TInputImage, TSize>
+SizeComponentTreeFilter<TImage>
 ::GenerateData()
 {
   // Allocate the output
@@ -46,13 +46,13 @@ SizeComponentTreeFilter<TInputImage, TSize>
 }
 
 
-template<class TInputImage, class TSize>
+template<class TImage>
 void
-SizeComponentTreeFilter<TInputImage, TSize>
+SizeComponentTreeFilter<TImage>
 ::SetComponentSize( NodeType* node )
 {
   assert(node != NULL);
-  SizeType size = 0;
+  AttributeType size = 0;
   const typename NodeType::ChildrenListType * childrenList = & node->GetChildren();
   for( typename NodeType::ChildrenListType::const_iterator it=childrenList->begin(); it!=childrenList->end(); it++ )
     {
@@ -61,15 +61,16 @@ SizeComponentTreeFilter<TInputImage, TSize>
     }
   size += node->GetIndexes().size();
   node->m_Attribute = size;
-  assert( size > 0 );
   // GetAttribute() is broken, but why ??
+
+  assert( size > 0 );
   // assert( node->GetAttribute() == size );
 }
 
 
-template<class TInputImage, class TSize>
+template<class TImage>
 void
-SizeComponentTreeFilter<TInputImage, TSize>
+SizeComponentTreeFilter<TImage>
 ::PrintSelf(std::ostream &os, Indent indent) const
 {
   Superclass::PrintSelf(os, indent);

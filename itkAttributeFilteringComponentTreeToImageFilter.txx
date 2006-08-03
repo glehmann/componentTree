@@ -22,17 +22,17 @@
 
 namespace itk {
 
-template <class TInputImage, class TOutputImage, class TAttribute, class TCompare>
-AttributeFilteringComponentTreeToImageFilter<TInputImage, TOutputImage, TAttribute, TCompare>
+template <class TInputImage, class TOutputImage, class TCompare>
+AttributeFilteringComponentTreeToImageFilter<TInputImage, TOutputImage, TCompare>
 ::AttributeFilteringComponentTreeToImageFilter()
 {
-  m_Threshold = itk::NumericTraits<TAttribute>::Zero;
+  m_Threshold = itk::NumericTraits< AttributeType >::Zero;
 }
 
 
-template<class TInputImage, class TOutputImage, class TAttribute, class TCompare>
+template<class TInputImage, class TOutputImage, class TCompare>
 void
-AttributeFilteringComponentTreeToImageFilter<TInputImage, TOutputImage, TAttribute, TCompare>
+AttributeFilteringComponentTreeToImageFilter<TInputImage, TOutputImage, TCompare>
 ::GenerateData()
 {
   // Allocate the output
@@ -45,9 +45,9 @@ AttributeFilteringComponentTreeToImageFilter<TInputImage, TOutputImage, TAttribu
 }
 
 
-template<class TInputImage, class TOutputImage, class TAttribute, class TCompare>
+template<class TInputImage, class TOutputImage, class TCompare>
 void
-AttributeFilteringComponentTreeToImageFilter<TInputImage, TOutputImage, TAttribute, TCompare>
+AttributeFilteringComponentTreeToImageFilter<TInputImage, TOutputImage, TCompare>
 ::ThresholdComponents( NodeType* node )
 {
   assert(node != NULL);
@@ -63,7 +63,7 @@ AttributeFilteringComponentTreeToImageFilter<TInputImage, TOutputImage, TAttribu
     m_Progress->CompletedPixel();
     }
 
-  TCompare compare;
+  CompareType compare;
   const typename NodeType::ChildrenListType * childrenList = & node->GetChildren();
   for( typename NodeType::ChildrenListType::const_iterator it=childrenList->begin(); it!=childrenList->end(); it++ )
     {
@@ -80,9 +80,9 @@ AttributeFilteringComponentTreeToImageFilter<TInputImage, TOutputImage, TAttribu
 }
 
 
-template<class TInputImage, class TOutputImage, class TAttribute, class TCompare>
+template<class TInputImage, class TOutputImage, class TCompare>
 void
-AttributeFilteringComponentTreeToImageFilter<TInputImage, TOutputImage, TAttribute, TCompare>
+AttributeFilteringComponentTreeToImageFilter<TInputImage, TOutputImage, TCompare>
 ::WriteNodes( const NodeType* node, OutputImagePixelType & v )
 {
   assert(node != NULL);
@@ -102,12 +102,14 @@ AttributeFilteringComponentTreeToImageFilter<TInputImage, TOutputImage, TAttribu
 }
 
 
-template<class TInputImage, class TOutputImage, class TAttribute, class TCompare>
+template<class TInputImage, class TOutputImage, class TCompare>
 void
-AttributeFilteringComponentTreeToImageFilter<TInputImage, TOutputImage, TAttribute, TCompare>
+AttributeFilteringComponentTreeToImageFilter<TInputImage, TOutputImage, TCompare>
 ::PrintSelf(std::ostream &os, Indent indent) const
 {
   Superclass::PrintSelf(os, indent);
+  os << indent << "Threshold: " 
+     << static_cast<typename NumericTraits< AttributeType >::PrintType>( m_Threshold ) << std::endl;
 }
   
 }// end namespace itk

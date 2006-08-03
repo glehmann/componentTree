@@ -23,6 +23,7 @@ namespace itk {
 	
   namespace Function {
 
+  /** a functor to make std::map accept pointers as key */
   template <class TYPE>
   class PointerHash
   {
@@ -63,6 +64,7 @@ public:
   typedef typename OutputImageType::RegionType     OutputImageRegionType;
   typedef typename OutputImageType::PixelType      OutputImagePixelType;
   typedef typename OutputImageType::NodeType       NodeType;
+  typedef typename OutputImageType::AttributeType  AttributeType;
   typedef typename OutputImageType::IndexType      IndexType;
   
   /** ImageDimension constants */
@@ -122,8 +124,12 @@ protected:
   /** Set the parent of all the nodes of the tree */
   void SetChildrenParent( NodeType* node );
 
+  /** return the ancestor (deepest parent) of a node and perform path
+   *  compression on all the node on the path
+   */
   NodeType * GetAncestor( NodeType * node );
 
+  /** return the reference node of a node */
   NodeType * GetReference( NodeType * node );
 
 private:

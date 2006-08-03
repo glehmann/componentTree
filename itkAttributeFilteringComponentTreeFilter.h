@@ -25,43 +25,37 @@ namespace itk {
  *
  * \ingroup ImageEnhancement  MathematicalMorphologyImageFilters
  */
-template<class TInputImage, class TAttribute=typename TInputImage::AttributeType, class TCompare=std::less<TAttribute> >
+template<class TImage, class TCompare=std::less< typename TImage::AttributeType > >
 class ITK_EXPORT AttributeFilteringComponentTreeFilter : 
-    public InPlaceComponentTreeFilter<TInputImage>
+    public InPlaceComponentTreeFilter<TImage>
 {
 public:
   /** Standard class typedefs. */
   typedef AttributeFilteringComponentTreeFilter Self;
-  typedef InPlaceComponentTreeFilter<TInputImage>
-  Superclass;
+  typedef InPlaceComponentTreeFilter<TImage> Superclass;
   typedef SmartPointer<Self>        Pointer;
   typedef SmartPointer<const Self>  ConstPointer;
 
   /** Some convenient typedefs. */
-  typedef TInputImage InputImageType;
-  typedef TInputImage TOutputImage;
-  typedef TOutputImage OutputImageType;
-  typedef typename InputImageType::Pointer         InputImagePointer;
-  typedef typename InputImageType::ConstPointer    InputImageConstPointer;
-  typedef typename InputImageType::RegionType      InputImageRegionType;
-  typedef typename InputImageType::PixelType       InputImagePixelType;
-  typedef typename OutputImageType::Pointer        OutputImagePointer;
-  typedef typename OutputImageType::ConstPointer   OutputImageConstPointer;
-  typedef typename OutputImageType::RegionType     OutputImageRegionType;
-  typedef typename OutputImageType::PixelType      OutputImagePixelType;
-  typedef typename OutputImageType::NodeType       NodeType;
-  typedef typename OutputImageType::IndexType      IndexType;
+  typedef TImage ImageType;
+  typedef TCompare CompareType;
+  typedef typename ImageType::Pointer         ImagePointer;
+  typedef typename ImageType::ConstPointer    ImageConstPointer;
+  typedef typename ImageType::PixelType       PixelType;
+  typedef typename ImageType::NodeType        NodeType;
+  typedef typename ImageType::IndexType       IndexType;
+  typedef typename ImageType::AttributeType   AttributeType;
   
   /** ImageDimension constants */
   itkStaticConstMacro(ImageDimension, unsigned int,
-                      TInputImage::ImageDimension);
+                      TImage::ImageDimension);
 
   /** Standard New method. */
   itkNewMacro(Self);  
 
   /** Runtime information support. */
   itkTypeMacro(AttributeFilteringComponentTreeFilter, 
-               ImageToImageFilter);
+               InPlaceComponentTreeFilter);
 
 #ifdef ITK_USE_CONCEPT_CHECKING
   /** Begin concept checking */
@@ -74,8 +68,8 @@ public:
   /** End concept checking */
 #endif
 
-  itkSetMacro(Threshold, TAttribute);
-  itkGetMacro(Threshold, TAttribute);
+  itkSetMacro(Threshold, AttributeType);
+  itkGetMacro(Threshold, AttributeType);
 
 protected:
   AttributeFilteringComponentTreeFilter();
@@ -92,7 +86,7 @@ private:
   AttributeFilteringComponentTreeFilter(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
 
-  TAttribute m_Threshold;
+  AttributeType m_Threshold;
 
 } ; // end of class
 

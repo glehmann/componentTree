@@ -50,10 +50,10 @@ ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>
   // We need all the input.
   InputImagePointer input = const_cast<InputImageType *>(this->GetInput());
   
-  if ( !input )
-    { return; }
-
-  input->SetRequestedRegion( input->GetLargestPossibleRegion() );
+  if ( input )
+    {
+    input->SetRequestedRegion( input->GetLargestPossibleRegion() );
+    }
 }
 
 

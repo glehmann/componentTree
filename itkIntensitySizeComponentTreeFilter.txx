@@ -23,16 +23,16 @@
 
 namespace itk {
 
-template <class TInputImage, class TSize>
-IntensitySizeComponentTreeFilter<TInputImage, TSize>
+template <class TInputImage>
+IntensitySizeComponentTreeFilter<TInputImage>
 ::IntensitySizeComponentTreeFilter()
 {
 }
 
 
-template<class TInputImage, class TSize>
+template<class TInputImage>
 void
-IntensitySizeComponentTreeFilter<TInputImage, TSize>
+IntensitySizeComponentTreeFilter<TInputImage>
 ::GenerateData()
 {
   // Allocate the output
@@ -46,9 +46,9 @@ IntensitySizeComponentTreeFilter<TInputImage, TSize>
 }
 
 
-template<class TInputImage, class TSize>
-typename IntensitySizeComponentTreeFilter<TInputImage, TSize>::IntensitySize
-IntensitySizeComponentTreeFilter<TInputImage, TSize>
+template<class TInputImage>
+typename IntensitySizeComponentTreeFilter<TInputImage>::IntensitySize
+IntensitySizeComponentTreeFilter<TInputImage>
 ::SetComponentIntensitySize( NodeType* node )
 {
   assert(node != NULL);
@@ -79,9 +79,9 @@ IntensitySizeComponentTreeFilter<TInputImage, TSize>
 }
 
 
-template<class TInputImage, class TSize>
+template<class TInputImage>
 void
-IntensitySizeComponentTreeFilter<TInputImage, TSize>
+IntensitySizeComponentTreeFilter<TInputImage>
 ::PrintSelf(std::ostream &os, Indent indent) const
 {
   Superclass::PrintSelf(os, indent);

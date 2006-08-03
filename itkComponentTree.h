@@ -88,7 +88,6 @@ public:
 
   /** Node type */
   typedef ComponentTreeNode< PixelType, IndexType, AttributeType > NodeType;
-  typedef std::list< NodeType* > NodeListType;
 
   /** Convenience methods to set the LargestPossibleRegion,
    *  BufferedRegion and RequestedRegion. Allocate must still be called.
@@ -128,9 +127,6 @@ public:
 
   virtual void Graft(const DataObject *data);
 
-  /** Get the leaf list */
-//   itkGetMacro(Leaf, NodeListType);
-
 protected:
   ComponentTree();
   void PrintSelf(std::ostream& os, Indent indent) const;
@@ -148,8 +144,6 @@ private:
 
   /** The root node */
   NodeType * m_Root;
-
-  NodeListType m_Leaf;
 
 };
 
