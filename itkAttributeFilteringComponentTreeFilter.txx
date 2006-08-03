@@ -27,7 +27,7 @@ template <class TInputImage, class TAttribute, class TCompare>
 AttributeFilteringComponentTreeFilter<TInputImage, TAttribute, TCompare>
 ::AttributeFilteringComponentTreeFilter()
 {
-	m_Threshold = itk::NumericTraits<TAttribute>::Zero;
+  m_Threshold = itk::NumericTraits<TAttribute>::Zero;
 }
 
 

@@ -74,8 +74,8 @@ public:
   /** End concept checking */
 #endif
 
-  itkSetMacro(Threshold, unsigned long);
-  itkGetMacro(Threshold, unsigned long);
+  itkSetMacro(Threshold, TAttribute);
+  itkGetMacro(Threshold, TAttribute);
 
 protected:
   AttributeFilteringComponentTreeToImageFilter();
@@ -94,7 +94,7 @@ private:
   AttributeFilteringComponentTreeToImageFilter(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
 
-  unsigned long m_Threshold;
+  TAttribute m_Threshold;
 
   ProgressReporter * m_Progress;
 
