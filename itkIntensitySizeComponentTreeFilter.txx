@@ -64,13 +64,13 @@ IntensitySizeComponentTreeFilter<TInputImage>
     size += is.size;
     }
 
-  if( node->GetParent() )
+  if( node->IsRoot() )
     {
-    intensity = intensity + ( node->GetPixel() - node->GetParent()->GetPixel() );
+    intensity = NumericTraits<PixelType>::max();
     }
   else
     {
-    intensity = NumericTraits<PixelType>::max();
+    intensity = intensity + ( node->GetPixel() - node->GetParent()->GetPixel() );
     }
 
   node->m_Attribute = static_cast< AttributeType >( intensity * size );

@@ -59,13 +59,13 @@ IntensityComponentTreeFilter<TInputImage, TSize>
     this->SetComponentIntensity( *it );
     intensity = std::max( intensity, (*it)->m_Attribute );
     }
-  if( node->GetParent() )
+  if( node->IsRoot() )
     {
-    node->m_Attribute = intensity + ( node->GetPixel() - node->GetParent()->GetPixel() );
+    node->m_Attribute = NumericTraits<IntensityType>::max();
     }
   else
     {
-    node->m_Attribute = NumericTraits<IntensityType>::max();
+    node->m_Attribute = intensity + ( node->GetPixel() - node->GetParent()->GetPixel() );
     }
 }
 

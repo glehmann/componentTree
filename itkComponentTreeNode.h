@@ -162,6 +162,16 @@ public:
 
   ~ComponentTreeNode();
 
+  inline bool IsLeaf() const
+    {
+    return m_Children.empty();
+    }
+
+  inline bool IsRoot() const
+    {
+    return m_Parent == NULL;
+    }
+
   /** the attribute */
   // TODO: make it go back to protected - once found why Get/SetAttribute() are broken
   TAttribute m_Attribute;
