@@ -101,10 +101,6 @@ protected:
   
   void PutLeavesInQueue( NodeType* node );
 
-  inline void AddToQueue( NodeType* node )
-    {
-    m_Queue->push( node );
-    }
 
 private:
   KeepNLobesComponentTreeFilter(const Self&); //purposely not implemented

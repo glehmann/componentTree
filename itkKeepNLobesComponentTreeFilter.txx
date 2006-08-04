@@ -85,7 +85,7 @@ KeepNLobesComponentTreeFilter<TImage>
 
   if( node->IsLeaf() )
     {
-    this->AddToQueue( node );
+    m_Queue->push( node );
     }
   else
     {
