@@ -18,7 +18,9 @@
 #define __itkKeepNLobesComponentTreeFilter_h
 
 #include "itkInPlaceComponentTreeFilter.h"
-#include <queue>
+// #include <queue>
+#include <map>
+#include <list>
 
 namespace itk {
 
@@ -64,7 +66,10 @@ public:
   typedef typename ImageType::IndexType       IndexType;
   typedef typename ImageType::AttributeType   AttributeType;
   
-  typedef typename std::priority_queue< NodeType*, typename std::vector< NodeType* >, typename Function::CompareComponentTreeNoneAttribute< NodeType, typename std::greater< AttributeType > > > PriorityQueueType;
+  typedef typename std::list< NodeType* > NodeListType;
+  typedef typename std::map< AttributeType, NodeListType, typename std::less< AttributeType > > PriorityQueueType;
+
+//   typedef typename std::priority_queue< NodeType*, typename std::vector< NodeType* >, typename Function::CompareComponentTreeNoneAttribute< NodeType, typename std::greater< AttributeType > > > PriorityQueueType;
   /** ImageDimension constants */
   itkStaticConstMacro(ImageDimension, unsigned int,
                       TImage::ImageDimension);
@@ -109,6 +114,7 @@ private:
   unsigned long m_NumberOfLobes;
 
   PriorityQueueType * m_Queue;
+  unsigned long m_QueueSize;
 
 } ; // end of class
 
