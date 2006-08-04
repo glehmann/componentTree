@@ -19,7 +19,6 @@
 
 #include "itkInPlaceComponentTreeFilter.h"
 #include <queue>
-#include <list>
 
 namespace itk {
 
@@ -100,13 +99,20 @@ protected:
    * to GrayscaleGeodesicErodeImageFilter. */
   void GenerateData();
   
-  void PutLeavesInQueue( NodeType* node, PriorityQueueType * queue );
+  void PutLeavesInQueue( NodeType* node );
+
+  inline void AddToQueue( NodeType* node )
+    {
+    m_Queue->push( node );
+    }
 
 private:
   KeepNLobesComponentTreeFilter(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
 
   unsigned long m_NumberOfLobes;
+
+  PriorityQueueType * m_Queue;
 
 } ; // end of class
 

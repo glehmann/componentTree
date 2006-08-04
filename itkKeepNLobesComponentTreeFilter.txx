@@ -42,19 +42,19 @@ KeepNLobesComponentTreeFilter<TImage>
   ProgressReporter progress(this, 0, this->GetOutput()->GetRequestedRegion().GetNumberOfPixels()*2);
 
   // setup the priority queue
-  PriorityQueueType queue;
+  m_Queue = new PriorityQueueType();
 
   // put all the leaves in the queue
-  this->PutLeavesInQueue( this->GetOutput()->GetRoot(), &queue );
+  this->PutLeavesInQueue( this->GetOutput()->GetRoot() );
 
   // now drop the smallest leaves untill the number of leaves is the desired number
-  while( queue.size() > m_NumberOfLobes && !queue.empty() )
+  while( m_Queue->size() > m_NumberOfLobes && !m_Queue->empty() )
     {
-    NodeType * node = queue.top();
-    queue.pop();
+    NodeType * node = m_Queue->top();
+    m_Queue->pop();
     NodeType * parent = node->GetParent();
     
-// std::cout << "queue.size(): " << queue.size() << "  node->m_Attribute: " <<  node->m_Attribute << std::endl;
+// std::cout << "m_Queue->size(): " << m_Queue->size() << "  node->m_Attribute: " <<  node->m_Attribute << std::endl;
 
     // merge the node in its parent
     parent->Merge( node );
@@ -65,11 +65,13 @@ KeepNLobesComponentTreeFilter<TImage>
     // also, take care to never push the root to the queue !
     if( parent->IsLeaf() && !parent->IsRoot() )
       {
-      queue.push( parent );
+      m_Queue->push( parent );
       }
     }
 
   // TODO: how to generate progress ??
+  delete m_Queue;
+  m_Queue = NULL;
 
 }
 
@@ -77,20 +79,20 @@ KeepNLobesComponentTreeFilter<TImage>
 template<class TImage>
 void
 KeepNLobesComponentTreeFilter<TImage>
-::PutLeavesInQueue( NodeType* node, PriorityQueueType * queue )
+::PutLeavesInQueue( NodeType* node )
 {
   assert(node != NULL);
 
   if( node->IsLeaf() )
     {
-    queue->push( node );
+    this->AddToQueue( node );
     }
   else
     {
     const typename NodeType::ChildrenListType * childrenList = & node->GetChildren();
     for( typename NodeType::ChildrenListType::const_iterator it=childrenList->begin(); it!=childrenList->end(); it++ )
       {
-      this->PutLeavesInQueue( *it, queue );
+      this->PutLeavesInQueue( *it );
       }
     }
 }
