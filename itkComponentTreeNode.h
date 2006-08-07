@@ -76,9 +76,6 @@ public:
     return m_Parent;
     }
 
-  /** Return true if the node has a parent */
-  bool HasParent( ) const;
-
   /** Set the parent of the node */
   inline void SetParent( Self* n )
     {
