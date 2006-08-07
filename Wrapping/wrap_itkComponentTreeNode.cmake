@@ -1,0 +1,10 @@
+WRAP_INCLUDE("itkIndex.h")
+
+WRAP_CLASS("itk::ComponentTreeNode")
+  FOREACH(t ${WRAP_ITK_SCALAR})
+    FOREACH(d ${WRAP_ITK_DIMS})
+      WRAP_TEMPLATE("${ITKM_${t}}I${d}${ITKM_UL}" "${ITKT_${t}}, itk::Index<${d}>, ${ITKT_UL}")
+      WRAP_TEMPLATE("${ITKM_${t}}I${d}${ITKM_D}" "${ITKT_${t}}, itk::Index<${d}>, ${ITKT_D}")
+    ENDFOREACH(d)
+  ENDFOREACH(t)
+END_WRAP_CLASS()
