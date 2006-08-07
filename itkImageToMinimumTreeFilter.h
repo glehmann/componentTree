@@ -32,8 +32,7 @@ class ITK_EXPORT ImageToMinimumTreeFilter :
 public:
   /** Standard class typedefs. */
   typedef ImageToMinimumTreeFilter Self;
-  typedef ImageToImageFilter<TInputImage, TOutputImage>
-  Superclass;
+  typedef ImageToComponentTreeFilter<TInputImage, TOutputImage, std::less<typename TInputImage::PixelType> > Superclass;
   typedef SmartPointer<Self>        Pointer;
   typedef SmartPointer<const Self>  ConstPointer;
 

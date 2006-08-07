@@ -32,8 +32,7 @@ class ITK_EXPORT ImageToMaximumTreeFilter :
 public:
   /** Standard class typedefs. */
   typedef ImageToMaximumTreeFilter Self;
-  typedef ImageToImageFilter<TInputImage, TOutputImage>
-  Superclass;
+  typedef ImageToComponentTreeFilter<TInputImage, TOutputImage, std::greater<typename TInputImage::PixelType> > Superclass;
   typedef SmartPointer<Self>        Pointer;
   typedef SmartPointer<const Self>  ConstPointer;
 
