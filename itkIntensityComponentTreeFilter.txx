@@ -23,16 +23,16 @@
 
 namespace itk {
 
-template <class TInputImage, class TSize>
-IntensityComponentTreeFilter<TInputImage, TSize>
+template <class TInputImage>
+IntensityComponentTreeFilter<TInputImage>
 ::IntensityComponentTreeFilter()
 {
 }
 
 
-template<class TInputImage, class TSize>
+template<class TInputImage>
 void
-IntensityComponentTreeFilter<TInputImage, TSize>
+IntensityComponentTreeFilter<TInputImage>
 ::GenerateData()
 {
   // Allocate the output
@@ -46,13 +46,13 @@ IntensityComponentTreeFilter<TInputImage, TSize>
 }
 
 
-template<class TInputImage, class TSize>
+template<class TInputImage>
 void
-IntensityComponentTreeFilter<TInputImage, TSize>
+IntensityComponentTreeFilter<TInputImage>
 ::SetComponentIntensity( NodeType* node )
 {
   assert(node != NULL);
-  IntensityType intensity = NumericTraits<IntensityType>::Zero;
+  AttributeType intensity = NumericTraits<AttributeType>::Zero;
   const typename NodeType::ChildrenListType * childrenList = & node->GetChildren();
   for( typename NodeType::ChildrenListType::const_iterator it=childrenList->begin(); it!=childrenList->end(); it++ )
     {
@@ -61,18 +61,18 @@ IntensityComponentTreeFilter<TInputImage, TSize>
     }
   if( node->IsRoot() )
     {
-    node->m_Attribute = NumericTraits<IntensityType>::max();
+    node->m_Attribute = NumericTraits<AttributeType>::max();
     }
   else
     {
-    node->m_Attribute = intensity + ( node->GetPixel() - node->GetParent()->GetPixel() );
+    node->m_Attribute = static_cast< AttributeType >( intensity + ( node->GetPixel() - node->GetParent()->GetPixel() ) );
     }
 }
 
 
-template<class TInputImage, class TSize>
+template<class TInputImage>
 void
-IntensityComponentTreeFilter<TInputImage, TSize>
+IntensityComponentTreeFilter<TInputImage>
 ::PrintSelf(std::ostream &os, Indent indent) const
 {
   Superclass::PrintSelf(os, indent);

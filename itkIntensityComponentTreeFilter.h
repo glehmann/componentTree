@@ -25,37 +25,30 @@ namespace itk {
  *
  * \ingroup ImageEnhancement  MathematicalMorphologyImageFilters
  */
-template<class TInputImage, class TIntensity=typename TInputImage::AttributeType>
+template<class TImage>
 class ITK_EXPORT IntensityComponentTreeFilter : 
-    public InPlaceComponentTreeFilter<TInputImage>
+    public InPlaceComponentTreeFilter<TImage>
 {
 public:
   /** Standard class typedefs. */
   typedef IntensityComponentTreeFilter Self;
-  typedef InPlaceComponentTreeFilter<TInputImage>
+  typedef InPlaceComponentTreeFilter<TImage>
   Superclass;
   typedef SmartPointer<Self>        Pointer;
   typedef SmartPointer<const Self>  ConstPointer;
 
   /** Some convenient typedefs. */
-  typedef TInputImage InputImageType;
-  typedef TInputImage TOutputImage;
-  typedef TOutputImage OutputImageType;
-  typedef typename InputImageType::Pointer         InputImagePointer;
-  typedef typename InputImageType::ConstPointer    InputImageConstPointer;
-  typedef typename InputImageType::RegionType      InputImageRegionType;
-  typedef typename InputImageType::PixelType       InputImagePixelType;
-  typedef typename OutputImageType::Pointer        OutputImagePointer;
-  typedef typename OutputImageType::ConstPointer   OutputImageConstPointer;
-  typedef typename OutputImageType::RegionType     OutputImageRegionType;
-  typedef typename OutputImageType::PixelType      OutputImagePixelType;
-  typedef typename OutputImageType::NodeType       NodeType;
-  typedef typename OutputImageType::IndexType      IndexType;
-  typedef TIntensity IntensityType;
+  typedef TImage ImageType;
+  typedef typename ImageType::Pointer         ImagePointer;
+  typedef typename ImageType::ConstPointer    ImageConstPointer;
+  typedef typename ImageType::PixelType       PixelType;
+  typedef typename ImageType::NodeType        NodeType;
+  typedef typename ImageType::IndexType       IndexType;
+  typedef typename ImageType::AttributeType   AttributeType;
   
   /** ImageDimension constants */
   itkStaticConstMacro(ImageDimension, unsigned int,
-                      TInputImage::ImageDimension);
+                      TImage::ImageDimension);
 
   /** Standard New method. */
   itkNewMacro(Self);  
