@@ -1,7 +1,7 @@
 /*=========================================================================
 
   Program:   Insight Segmentation & Registration Toolkit
-  Module:    $RCSfile: itkIntensitySizeComponentTreeFilter.txx,v $
+  Module:    $RCSfile: itkIntegratedIntensityComponentTreeFilter.txx,v $
   Language:  C++
   Date:      $Date: 2005/08/23 15:09:03 $
   Version:   $Revision: 1.6 $
@@ -14,25 +14,25 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef __itkIntensitySizeComponentTreeFilter_txx
-#define __itkIntensitySizeComponentTreeFilter_txx
+#ifndef __itkIntegratedIntensityComponentTreeFilter_txx
+#define __itkIntegratedIntensityComponentTreeFilter_txx
 
-#include "itkIntensitySizeComponentTreeFilter.h"
+#include "itkIntegratedIntensityComponentTreeFilter.h"
 #include "itkProgressReporter.h"
 
 
 namespace itk {
 
 template <class TInputImage>
-IntensitySizeComponentTreeFilter<TInputImage>
-::IntensitySizeComponentTreeFilter()
+IntegratedIntensityComponentTreeFilter<TInputImage>
+::IntegratedIntensityComponentTreeFilter()
 {
 }
 
 
 template<class TInputImage>
 void
-IntensitySizeComponentTreeFilter<TInputImage>
+IntegratedIntensityComponentTreeFilter<TInputImage>
 ::GenerateData()
 {
   // Allocate the output
@@ -47,8 +47,8 @@ IntensitySizeComponentTreeFilter<TInputImage>
 
 
 template<class TInputImage>
-typename IntensitySizeComponentTreeFilter<TInputImage>::IntensitySize
-IntensitySizeComponentTreeFilter<TInputImage>
+typename IntegratedIntensityComponentTreeFilter<TInputImage>::IntensitySize
+IntegratedIntensityComponentTreeFilter<TInputImage>
 ::SetComponentIntensitySize( NodeType* node )
 {
   assert(node != NULL);
@@ -81,7 +81,7 @@ IntensitySizeComponentTreeFilter<TInputImage>
 
 template<class TInputImage>
 void
-IntensitySizeComponentTreeFilter<TInputImage>
+IntegratedIntensityComponentTreeFilter<TInputImage>
 ::PrintSelf(std::ostream &os, Indent indent) const
 {
   Superclass::PrintSelf(os, indent);

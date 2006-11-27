@@ -1,7 +1,7 @@
 /*=========================================================================
 
   Program:   Insight Segmentation & Registration Toolkit
-  Module:    $RCSfile: itkIntensitySizeComponentTreeFilter.h,v $
+  Module:    $RCSfile: itkIntegratedIntensityComponentTreeFilter.h,v $
   Language:  C++
   Date:      $Date: 2006/03/28 19:59:05 $
   Version:   $Revision: 1.6 $
@@ -14,24 +14,24 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef __itkIntensitySizeComponentTreeFilter_h
-#define __itkIntensitySizeComponentTreeFilter_h
+#ifndef __itkIntegratedIntensityComponentTreeFilter_h
+#define __itkIntegratedIntensityComponentTreeFilter_h
 
 #include "itkInPlaceComponentTreeFilter.h"
 
 namespace itk {
-/** \class IntensitySizeComponentTreeFilter
+/** \class IntegratedIntensityComponentTreeFilter
  * \brief 
  *
  * \ingroup ImageEnhancement  MathematicalMorphologyImageFilters
  */
 template< class TImage >
-class ITK_EXPORT IntensitySizeComponentTreeFilter : 
+class ITK_EXPORT IntegratedIntensityComponentTreeFilter : 
     public InPlaceComponentTreeFilter<TImage>
 {
 public:
   /** Standard class typedefs. */
-  typedef IntensitySizeComponentTreeFilter Self;
+  typedef IntegratedIntensityComponentTreeFilter Self;
   typedef InPlaceComponentTreeFilter<TImage>
   Superclass;
   typedef SmartPointer<Self>        Pointer;
@@ -54,7 +54,7 @@ public:
   itkNewMacro(Self);  
 
   /** Runtime information support. */
-  itkTypeMacro(IntensitySizeComponentTreeFilter, 
+  itkTypeMacro(IntegratedIntensityComponentTreeFilter, 
                InPlaceComponentTreeFilter);
 
 #ifdef ITK_USE_CONCEPT_CHECKING
@@ -69,8 +69,8 @@ public:
 #endif
 
 protected:
-  IntensitySizeComponentTreeFilter();
-  ~IntensitySizeComponentTreeFilter() {};
+  IntegratedIntensityComponentTreeFilter();
+  ~IntegratedIntensityComponentTreeFilter() {};
   void PrintSelf(std::ostream& os, Indent indent) const;
 
   /** Single-threaded version of GenerateData.  This filter delegates
@@ -92,7 +92,7 @@ protected:
   IntensitySize SetComponentIntensitySize( NodeType* );
 
 private:
-  IntensitySizeComponentTreeFilter(const Self&); //purposely not implemented
+  IntegratedIntensityComponentTreeFilter(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
 
 } ; // end of class
@@ -100,7 +100,7 @@ private:
 } // end namespace itk
   
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkIntensitySizeComponentTreeFilter.txx"
+#include "itkIntegratedIntensityComponentTreeFilter.txx"
 #endif
 
 #endif
