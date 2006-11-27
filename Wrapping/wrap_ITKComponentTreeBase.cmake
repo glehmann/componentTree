@@ -30,6 +30,13 @@ WRAP_CLASS("itk::ImageToImageFilter" POINTER)
         ENDIF(NOT t1 STREQUAL t2)
       ENDFOREACH(t2)
 
+      FOREACH(t2 ${WRAP_ITK_USIGN_INT})
+        IF(NOT t1 STREQUAL t2)
+          WRAP_TEMPLATE("${ITKM_CT${t}${d}D}${ITKM_I${t2}${d}}" "${ITKT_CT${t}${d}D}, ${ITKT_I${t2}${d}}")
+          WRAP_TEMPLATE("${ITKM_CT${t}${d}UL}${ITKM_I${t2}${d}}" "${ITKT_CT${t}${d}UL}, ${ITKT_I${t2}${d}}")
+        ENDIF(NOT t1 STREQUAL t2)
+      ENDFOREACH(t2)
+
     ENDFOREACH(d)
   ENDFOREACH(t)
 END_WRAP_CLASS()
