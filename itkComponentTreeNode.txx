@@ -111,7 +111,7 @@ void ComponentTreeNode<TPixel, TIndex, TValue>
   assert( !this->HasChild( node ) );
 
   node->SetParent(this);
-  m_Children.push_back(node);
+  m_Children.push_front(node);
 
   assert( this->HasChild( node ) );
   assert( node->GetParent() == this );

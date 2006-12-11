@@ -18,7 +18,7 @@
 #define __itkComponentTreeNode_h
 
 #include <vector>
-#include <list>
+#include <ext/slist>
 #include <algorithm>
 #include <iostream>
 #include <itkLightObject.h>
@@ -46,7 +46,7 @@ public:
 
   /** Standard typedefs */
   typedef ComponentTreeNode<TPixel, TIndex, TAttribute>      Self;
-  typedef std::list<Self *>      ChildrenListType;
+  typedef __gnu_cxx::slist<Self *>      ChildrenListType;
 
   typedef TIndex                     IndexType;
   typedef typename std::list<IndexType>      IndexListType;
