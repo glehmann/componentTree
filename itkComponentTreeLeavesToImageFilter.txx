@@ -94,7 +94,7 @@ ComponentTreeLeavesToImageFilter<TInputImage, TOutputImage>
     for( typename NodeType::IndexListType::const_iterator it=indexList->begin(); it!=indexList->end(); it++ )
       {
       // std::cout << *it << ": " << v << std::endl;
-      output->SetPixel( *it, m_ForegroundValue );
+      output->SetPixel( output->ComputeIndex( *it ), m_ForegroundValue );
       m_Progress->CompletedPixel();
       }
     }
@@ -103,7 +103,7 @@ ComponentTreeLeavesToImageFilter<TInputImage, TOutputImage>
     for( typename NodeType::IndexListType::const_iterator it=indexList->begin(); it!=indexList->end(); it++ )
       {
       // std::cout << *it << ": " << v << std::endl;
-      output->SetPixel( *it, m_BackgroundValue );
+      output->SetPixel( output->ComputeIndex( *it ), m_BackgroundValue );
       m_Progress->CompletedPixel();
       }
 

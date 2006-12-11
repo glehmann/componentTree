@@ -87,7 +87,7 @@ public:
   typedef TAttribute AttributeType;
 
   /** Node type */
-  typedef ComponentTreeNode< PixelType, IndexType, AttributeType > NodeType;
+  typedef ComponentTreeNode< PixelType, OffsetValueType, AttributeType > NodeType;
 
   /** Convenience methods to set the LargestPossibleRegion,
    *  BufferedRegion and RequestedRegion. Allocate must still be called.

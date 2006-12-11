@@ -59,7 +59,7 @@ AttributeFilteringComponentTreeToImageFilter<TInputImage, TOutputImage, TCompare
   for( typename NodeType::IndexListType::const_iterator it=indexList->begin(); it!=indexList->end(); it++ )
     {
     // std::cout << *it << ": " << v << std::endl;
-    output->SetPixel( *it, v );
+    output->SetPixel( output->ComputeIndex( *it ), v );
     m_Progress->CompletedPixel();
     }
 
@@ -90,7 +90,7 @@ AttributeFilteringComponentTreeToImageFilter<TInputImage, TOutputImage, TCompare
   OutputImageType* output = this->GetOutput();
   for( typename NodeType::IndexListType::const_iterator it=indexList->begin(); it!=indexList->end(); it++ )
     {
-    output->SetPixel( *it, v );
+    output->SetPixel( output->ComputeIndex( *it ), v );
     m_Progress->CompletedPixel();
     }
   

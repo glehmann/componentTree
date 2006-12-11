@@ -74,6 +74,7 @@ ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>
 {
   // Allocate the output
   this->AllocateOutputs();
+  OutputImageType * output = this->GetOutput();
 
   // instantiate the comparator
   TCompare compare;
@@ -185,7 +186,7 @@ ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>
           {
           if( n == NULL )
             {
-            nn->GetIndexes().push_back( iIt.GetIndex() );
+            nn->GetIndexes().push_back( output->ComputeOffset( iIt.GetIndex() ) );
             n = nn;
             }
           else
@@ -203,7 +204,7 @@ ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>
         {
         n = new NodeType();
         n->SetPixel( p );
-        n->GetIndexes().push_back( iIt.GetIndex() );
+        n->GetIndexes().push_back( output->ComputeOffset( iIt.GetIndex() ) );
         }
 
       nIt.SetCenterPixel( n );
@@ -261,7 +262,7 @@ ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>
   n->SetParent( NULL );
 
   // keep a pointer on the root node
-  this->GetOutput()->SetRoot( n );
+  output->SetRoot( n );
 
 }
 
