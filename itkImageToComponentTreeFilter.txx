@@ -156,8 +156,9 @@ ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>
   NodeType* n = NULL;
 
   // iterate over pixel values, from high to low
-  for ( typename PixelMapType::iterator pixelMapIt=pixelMap.begin(); pixelMapIt!=pixelMap.end(); ++pixelMapIt )
+  while( !pixelMap.empty() )
     {
+    typename PixelMapType::iterator pixelMapIt=pixelMap.begin();
     InputImagePixelType pixelValue = pixelMapIt->first;
     IndexListType* indexes = &(pixelMapIt->second);
 
@@ -239,6 +240,9 @@ ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>
       progress.CompletedPixel();
 
       }
+
+    // release the memory used by the vector once processed
+    pixelMap.erase( pixelMapIt );
     }
 
   // clean the tempList
