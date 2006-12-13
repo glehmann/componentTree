@@ -101,7 +101,7 @@ ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>
     }
 
   // create map to store     pixel value -> [pos1, pos2 .. posn]
-  typedef std::vector<IndexType> IndexListType;
+  typedef std::vector< typename InputImageType::OffsetValueType > IndexListType;
   typedef std::map <InputImagePixelType, IndexListType, TCompare> PixelMapType;
   PixelMapType pixelMap;
 
@@ -115,7 +115,7 @@ ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>
   for( inputIt.GoToBegin(); !inputIt.IsAtEnd(); ++inputIt )
     {
     // store index of current pixel value
-    pixelMap[inputIt.Get()].push_back( inputIt.GetIndex() );
+    pixelMap[inputIt.Get()].push_back( output->ComputeOffset( inputIt.GetIndex() ) );
     progress.CompletedPixel();
     }
 
@@ -164,11 +164,12 @@ ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>
     // iterate over pixel indexes, and build the tree !
     for ( typename IndexListType::iterator idxIt = indexes->begin(); idxIt != indexes->end(); ++idxIt )
       {
-      // std::cout << "*idxIt: " << *idxIt << std::endl;
+      // std::cout << "idx: " << idx << std::endl;
+      IndexType idx = output->ComputeIndex( *idxIt );
 
       // shift output and mask iterators to new location
-      nIt += *idxIt - nIt.GetIndex();
-      iIt += *idxIt - iIt.GetIndex();
+      nIt += idx - nIt.GetIndex();
+      iIt += idx - iIt.GetIndex();
       
       InputImagePixelType p = iIt.GetCenterPixel();
       n = NULL;
