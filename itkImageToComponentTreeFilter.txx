@@ -188,7 +188,7 @@ ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>
           {
           if( n == NULL )
             {
-            nn->GetIndexes().push_back( output->ComputeOffset( iIt.GetIndex() ) );
+            nn->AddIndex( output->ComputeOffset( iIt.GetIndex() ) );
             n = nn;
             }
           else
@@ -206,7 +206,7 @@ ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>
         {
         n = new NodeType();
         n->SetPixel( p );
-        n->GetIndexes().push_back( output->ComputeOffset( iIt.GetIndex() ) );
+        n->AddIndex( output->ComputeOffset( iIt.GetIndex() ) );
         }
 
       nIt.SetCenterPixel( n );
@@ -255,13 +255,13 @@ ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>
   // Now set the real parent of the child, and no more the ancestor, or the reference.
   this->SetChildrenParent( n );
 
-//   n->print();
+//   n->Print();
 //   std::cout << "tempNodeList: " << tempNodeList.size() << std::endl;
 //   std::cout << "chilren: " << n->CountChildren() << std::endl;
 //   std::cout << "pixels: " << n->CountPixels() << std::endl;
 //   std::cout << "p: " << n->GetPixel()+0.0 << std::endl;
 
-  assert( n->CountPixels() == this->GetOutput()->GetRequestedRegion().GetNumberOfPixels() );
+  assert( n->CountIndexes() == this->GetOutput()->GetRequestedRegion().GetNumberOfPixels() );
 
   // to be sure that root parent is NULL
   n->SetParent( NULL );
@@ -278,13 +278,13 @@ ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>
 ::LightMerge( NodeType* node1, NodeType* node2)
 {
   assert( node1 != node2 );
+  assert( !node1->GetIndexes().empty() );
+  assert( !node2->GetIndexes().empty() );
   // assert( this->GetPixel() <= node->GetPixel() );
-  // merge the index list
-  typename NodeType::IndexListType & node1Indexes = node1->GetIndexes();
-  node1Indexes.splice( node1Indexes.begin(), node2->GetIndexes() );
-  // merge the children
-  typename NodeType::ChildrenListType & node1Children = node1->GetChildren();
-  node1Children.splice( node1Children.begin(), node2->GetChildren() );
+  
+  // merge the index and the children list
+  node1->TakeIndexesFrom( node2 );
+  node1->TakeChildrenFrom( node2 );
   // set the node1 as parent of node2, to indicate that node1 is the reference
   // for node2
   node2->SetParent( node1 );

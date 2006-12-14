@@ -47,9 +47,11 @@ public:
   /** Standard typedefs */
   typedef ComponentTreeNode<TPixel, TIndex, TAttribute>      Self;
   typedef __gnu_cxx::slist<Self *>      ChildrenListType;
+  typedef typename ChildrenListType::iterator ChildrenListIteratorType;
 
   typedef TIndex                     IndexType;
-  typedef typename std::list<IndexType>      IndexListType;
+  typedef typename __gnu_cxx::slist<IndexType>      IndexListType;
+  typedef typename IndexListType::iterator IndexListIteratorType;
   typedef TPixel                     PixelType;
   typedef TAttribute AttributeType;
 
@@ -87,9 +89,6 @@ public:
   /** Return the number of children */
   int CountChildren( ) const;
 
-  /**  */
-  int CountPixels( ) const;
-
   /** Return the depth of the tree */
   int Depth( ) const;
 
@@ -100,13 +99,15 @@ public:
   void AddChild( Self *node );
 
   /** return true if node is in the children list */
-  bool HasChild( Self *node );
+  bool HasChild( Self *node ) const;
+
+  void TakeChildrenFrom( Self * node );
 
   /** Merge node */
   void Merge( Self *node );
 
   /** Merge node */
-  void MergeChildren();
+  void Flatten();
 
   /** Get the internal list of children */
   ChildrenListType& GetChildren()
@@ -147,17 +148,28 @@ public:
     return m_Indexes;
     }
 
+  void AddIndex( const IndexType & idx );
+
+  bool RemoveIndex( const IndexType & idx );
+
+  bool HasIndex( const IndexType & idx ) const;
+
+  void TakeIndexesFrom( Self * node );
+
+  /** Return the number of children */
+  int CountIndexes( ) const;
+
   /** a convenient method to print the tree on std::out.
    * To be used only on small trees !
    */ 
-  const void print( int indent=0 ) const;
+  const void Print( int indent=0 ) const;
 
   /** return a clone of the current tree */
   Self * Clone();
 
-  ComponentTreeNode();
+  inline ComponentTreeNode();
 
-  ~ComponentTreeNode();
+  inline ~ComponentTreeNode();
 
   inline bool IsLeaf() const
     {
@@ -168,6 +180,8 @@ public:
     {
     return m_Parent == NULL;
     }
+    
+  
 
   /** the attribute */
   // TODO: make it go back to protected - once found why Get/SetAttribute() are broken
@@ -180,8 +194,10 @@ protected:
   Self* m_Parent;
   /** the list of children */
   ChildrenListType m_Children;
+  ChildrenListIteratorType m_LastChild;
   /** the list of indexs of the node */
   IndexListType  m_Indexes;
+  IndexListIteratorType  m_LastIndex;
 
 private:
   ComponentTreeNode(const Self&); //purposely not implemented

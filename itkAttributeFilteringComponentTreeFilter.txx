@@ -60,7 +60,7 @@ AttributeFilteringComponentTreeFilter<TInputImage, TCompare>
     {
     if( compare( (*it)->m_Attribute, m_Threshold ) )
       {
-      (*it)->MergeChildren();
+      (*it)->Flatten();
       node->Merge( *it );
       // must store the iterator, because once the element
       // erased, it is invalidated
