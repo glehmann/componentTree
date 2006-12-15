@@ -19,6 +19,7 @@
 
 #include <vector>
 #include <ext/slist>
+#include <list>
 #include <algorithm>
 #include <iostream>
 #include <itkLightObject.h>
@@ -46,7 +47,7 @@ public:
 
   /** Standard typedefs */
   typedef ComponentTreeNode<TPixel, TIndex, TAttribute>      Self;
-  typedef __gnu_cxx::slist<Self *>      ChildrenListType;
+  typedef std::list<Self *>      ChildrenListType;
   typedef typename ChildrenListType::iterator ChildrenListIteratorType;
 
   typedef TIndex                     IndexType;
@@ -194,7 +195,6 @@ protected:
   Self* m_Parent;
   /** the list of children */
   ChildrenListType m_Children;
-  ChildrenListIteratorType m_LastChild;
   /** the list of indexs of the node */
   IndexListType  m_Indexes;
   IndexListIteratorType  m_LastIndex;

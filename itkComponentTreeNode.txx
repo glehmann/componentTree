@@ -28,7 +28,6 @@ ComponentTreeNode<TPixel, TIndex, TValue>
 ::ComponentTreeNode()
 {
   m_Parent = NULL;
-  m_LastChild = m_Children.before_begin();
   m_LastIndex = m_Indexes.before_begin();
 }
 
@@ -81,22 +80,12 @@ bool
 ComponentTreeNode<TPixel, TIndex, TValue>
 ::RemoveChild( ComponentTreeNode<TPixel, TIndex, TValue> *n ) 
 {
-  ChildrenListIteratorType pos = m_Children.begin();
-  ChildrenListIteratorType previous = m_Children.before_begin();
-  while( pos != m_Children.end() )
-  	{
-    if ( *pos == n ) 
-      {
-      if( pos == m_LastChild )
-      	{
-      	m_LastChild = previous;
-      	}
-      m_Children.erase(pos);
-      n->SetParent(NULL);
-      return true;
-      }
-    previous = pos;
-    pos++;
+  typename ChildrenListType::iterator pos = std::find(m_Children.begin(), m_Children.end(), n );
+  if ( pos != m_Children.end() )
+    {
+    m_Children.erase(pos);
+    n->SetParent(NULL);
+    return true;
     }
   return false;
 }
@@ -111,15 +100,7 @@ void ComponentTreeNode<TPixel, TIndex, TValue>
   assert( !this->HasChild( node ) );
 
   node->SetParent(this);
-  if( m_Children.empty() )
-  	{
-    m_Children.push_front(node);
-    m_LastChild = m_Children.begin();
-    }
-  else
-  	{
-    m_Children.push_front(node);
-  	}
+  m_Children.push_back(node);
 
   assert( this->HasChild( node ) );
   assert( node->GetParent() == this );
@@ -138,15 +119,9 @@ void ComponentTreeNode<TPixel, TIndex, TValue>
 {
   assert( node != this );
 
-  if( !node->GetChildren().empty() )
-    {
-	  m_Children.splice_after( m_LastChild, node->GetChildren().before_begin(), node->m_LastChild );
-    m_LastChild = node->m_LastChild;
-    node->m_LastChild = node->GetChildren().before_begin();
-    }
-     
+  m_Children.splice( m_Children.begin(), node->GetChildren() );
+
   assert( node->GetChildren().empty() );
-//  assert( this->HasChild( *(node->m_LastChild) ) );
 }
 
 
