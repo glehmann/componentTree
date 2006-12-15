@@ -153,9 +153,9 @@ ComponentTreeNode<TPixel, TIndex, TValue>
   	{
     if ( *pos == idx ) 
       {
-      if( pos == m_LastChild )
+      if( pos == m_LastIndex )
       	{
-      	m_LastChild = previous;
+      	m_LastIndex = previous;
       	}
       m_Indexes.erase(pos);
       return true;
