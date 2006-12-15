@@ -147,8 +147,8 @@ bool
 ComponentTreeNode<TPixel, TIndex, TValue>
 ::RemoveIndex( const IndexType & idx ) 
 {
-  ChildrenListIteratorType pos = m_Indexes.begin();
-  ChildrenListIteratorType previous = m_Indexes.before_begin();
+  IndexListIteratorType pos = m_Indexes.begin();
+  IndexListIteratorType previous = m_Indexes.before_begin();
   while( pos != m_Indexes.end() )
   	{
     if ( *pos == idx ) 
