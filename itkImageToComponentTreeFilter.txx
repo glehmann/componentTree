@@ -188,7 +188,7 @@ ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>
           {
           if( n == NULL )
             {
-            nn->AddIndex( output->ComputeOffset( iIt.GetIndex() ) );
+            nn->AddIndex( output->ComputeOffset( iIt.GetIndex() ), output->GetLinkedListImage() );
             n = nn;
             }
           else
@@ -206,7 +206,7 @@ ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>
         {
         n = new NodeType();
         n->SetPixel( p );
-        n->AddIndex( output->ComputeOffset( iIt.GetIndex() ) );
+        n->AddIndex( output->ComputeOffset( iIt.GetIndex() ), output->GetLinkedListImage() );
         }
 
       nIt.SetCenterPixel( n );
@@ -278,20 +278,20 @@ ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>
 ::LightMerge( NodeType* node1, NodeType* node2)
 {
   assert( node1 != node2 );
-  assert( !node1->GetIndexes().empty() );
-  assert( !node2->GetIndexes().empty() );
+//   assert( !node1->GetIndexes().empty() );
+//   assert( !node2->GetIndexes().empty() );
   // assert( this->GetPixel() <= node->GetPixel() );
   
   // merge the index and the children list
-  node1->TakeIndexesFrom( node2 );
+  node1->TakeIndexesFrom( node2, this->GetOutput()->GetLinkedListImage() );
   node1->TakeChildrenFrom( node2 );
   // set the node1 as parent of node2, to indicate that node1 is the reference
   // for node2
   node2->SetParent( node1 );
 
-  assert( node2->GetIndexes().empty() );
+//   assert( node2->GetIndexes().empty() );
   assert( node2->GetChildren().empty() );
-  assert( !node1->GetIndexes().empty() );
+//   assert( !node1->GetIndexes().empty() );
 }
 
 
@@ -340,7 +340,7 @@ ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>
     return NULL;
     }
 
-  if( !node->GetIndexes().empty() )
+  if( node->GetFirstIndex() != -1 )
     {
     // we got the reference node
     return node;

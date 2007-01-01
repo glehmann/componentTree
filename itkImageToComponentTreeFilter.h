@@ -20,7 +20,7 @@
 #include "itkImageToImageFilter.h"
 
 namespace itk {
-	
+  
   namespace Function {
 
   /** a functor to make std::map accept pointers as key */

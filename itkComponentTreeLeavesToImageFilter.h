@@ -96,7 +96,7 @@ protected:
   
   /** Single-threaded version of GenerateData.  This filter delegates
    * to GrayscaleGeodesicErodeImageFilter. */
-	  void GenerateData();
+    void GenerateData();
 
   void WriteNodes( const NodeType* );
   

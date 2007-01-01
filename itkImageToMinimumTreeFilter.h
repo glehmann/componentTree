@@ -20,7 +20,7 @@
 #include "itkImageToComponentTreeFilter.h"
 
 namespace itk {
-	/** \class ImageToMinimumTreeFilter
+  /** \class ImageToMinimumTreeFilter
  * \brief 
  *
  * \ingroup ImageEnhancement  MathematicalMorphologyImageFilters

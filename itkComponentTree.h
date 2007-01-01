@@ -86,8 +86,11 @@ public:
   /** the type of data associated with each node */
   typedef TAttribute AttributeType;
 
+  /** linked list array type */
+  typedef Image< OffsetValueType, ImageDimension > LinkedListImageType;
+
   /** Node type */
-  typedef ComponentTreeNode< PixelType, OffsetValueType, AttributeType > NodeType;
+  typedef ComponentTreeNode< PixelType, OffsetValueType, AttributeType, LinkedListImageType > NodeType;
 
   /** Convenience methods to set the LargestPossibleRegion,
    *  BufferedRegion and RequestedRegion. Allocate must still be called.
@@ -120,12 +123,13 @@ public:
    * memory. */
   virtual void Initialize();
 
-  /** This method is here to be usable as an Image. It only calls 
-   * Initialize() */
-  void Allocate()
-    { this->Initialize(); }
+  /**  */
+  void Allocate();
 
   virtual void Graft(const DataObject *data);
+
+  itkGetObjectMacro(LinkedListImage, LinkedListImageType);
+  itkGetConstObjectMacro(LinkedListImage, LinkedListImageType);
 
 protected:
   ComponentTree();
@@ -145,6 +149,7 @@ private:
   /** The root node */
   NodeType * m_Root;
 
+  typename LinkedListImageType::Pointer m_LinkedListImage;
 };
 
 } // end namespace itk

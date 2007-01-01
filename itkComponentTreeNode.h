@@ -39,20 +39,19 @@ namespace itk
  *
  * \ingroup DataRepresentation 
  */
-template <typename TPixel, typename TIndex, typename TAttribute>
+template <typename TPixel, typename TIndex, typename TAttribute, typename TLinkedListImage>
 class ComponentTreeNode
 {
 
 public:
 
   /** Standard typedefs */
-  typedef ComponentTreeNode<TPixel, TIndex, TAttribute>      Self;
+  typedef ComponentTreeNode      Self;
   typedef std::list<Self *>      ChildrenListType;
   typedef typename ChildrenListType::iterator ChildrenListIteratorType;
 
+  typedef TLinkedListImage           LinkedListImageType;
   typedef TIndex                     IndexType;
-  typedef typename __gnu_cxx::slist<IndexType>      IndexListType;
-  typedef typename IndexListType::iterator IndexListIteratorType;
   typedef TPixel                     PixelType;
   typedef TAttribute AttributeType;
 
@@ -105,10 +104,10 @@ public:
   void TakeChildrenFrom( Self * node );
 
   /** Merge node */
-  void Merge( Self *node );
+  void Merge( Self *node, LinkedListImageType * listImg );
 
   /** Merge node */
-  void Flatten();
+  void Flatten(LinkedListImageType * listImg);
 
   /** Get the internal list of children */
   ChildrenListType& GetChildren()
@@ -139,26 +138,26 @@ public:
    
 
   /** Get the index list */
-  inline const IndexListType& GetIndexes() const
+  inline const IndexType& GetFirstIndex() const
     {
-    return m_Indexes;
+    return m_FirstIndex;
     }
 
-  inline IndexListType& GetIndexes()
+  inline const IndexType& GetLastIndex() const
     {
-    return m_Indexes;
+    return m_LastIndex;
     }
 
-  void AddIndex( const IndexType & idx );
+  void AddIndex( const IndexType & idx, LinkedListImageType * listImg );
 
-  bool RemoveIndex( const IndexType & idx );
+  bool RemoveIndex( const IndexType & idx, LinkedListImageType * listImg );
 
-  bool HasIndex( const IndexType & idx ) const;
+  bool HasIndex( const IndexType & idx, const LinkedListImageType * listImg ) const;
 
-  void TakeIndexesFrom( Self * node );
+  void TakeIndexesFrom( Self * node, LinkedListImageType * listImg );
 
   /** Return the number of children */
-  int CountIndexes( ) const;
+  int CountIndexes( const LinkedListImageType * listImg ) const;
 
   /** a convenient method to print the tree on std::out.
    * To be used only on small trees !
@@ -196,8 +195,10 @@ protected:
   /** the list of children */
   ChildrenListType m_Children;
   /** the list of indexs of the node */
-  IndexListType  m_Indexes;
-  IndexListIteratorType  m_LastIndex;
+  IndexType  m_FirstIndex;
+  IndexType  m_LastIndex;
+
+// LinkedListImageType * toto;
 
 private:
   ComponentTreeNode(const Self&); //purposely not implemented

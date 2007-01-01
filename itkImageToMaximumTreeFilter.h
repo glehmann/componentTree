@@ -20,7 +20,7 @@
 #include "itkImageToComponentTreeFilter.h"
 
 namespace itk {
-	/** \class ImageToMaximumTreeFilter
+  /** \class ImageToMaximumTreeFilter
  * \brief 
  *
  * \ingroup ImageEnhancement  MathematicalMorphologyImageFilters

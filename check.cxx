@@ -8,11 +8,17 @@
 #include "itkComponentTreeToImageFilter.h"
 #include "itkComponentTree.h"
 #include "itkSizeComponentTreeFilter.h"
+#include "itkMeanImageFilter.h"
 #include "itkAttributeFilteringComponentTreeFilter.h"
+#include <list>
 
 int main(int, char * argv[])
 {
-  const int dim = 2;
+
+std::cout << sizeof(__gnu_cxx::_Slist_node<long>) << std::endl;
+std::cout << sizeof(_GLIBCXX_STD::_List_node<long>) << std::endl;
+
+  const int dim = 3;
   
   typedef unsigned char PType;
   typedef itk::Image< PType, dim > IType;
@@ -23,11 +29,38 @@ int main(int, char * argv[])
   ReaderType::Pointer reader = ReaderType::New();
   reader->SetFileName( argv[1] );
 
+  typedef itk::MeanImageFilter< IType, IType > MeanType;
+  MeanType::Pointer mean = MeanType::New();
+  mean->SetInput( reader->GetOutput() );
+  itk::Size<3> r;
+  r.Fill(2);
+  mean->SetRadius( r );
+  itk::SimpleFilterWatcher mWatcher(mean, "mean");
+
   typedef itk::ImageToMaximumTreeFilter< IType, TreeType > FilterType;
   FilterType::Pointer filter = FilterType::New();
-  filter->SetInput( reader->GetOutput() );
+  filter->SetInput( mean->GetOutput() );
+  itk::SimpleFilterWatcher watcher(filter, "max-tree");
 
-  typedef itk::SizeComponentTreeFilter< TreeType > SizeType;
+// IType::Pointer img = IType::New();
+// IType::RegionType region;
+// IType::RegionType::SizeType s;
+// s[0]=1024;
+// s[1]=1024;
+// s[2]=70;
+// region.SetSize(s);
+// img->SetRegions(region);
+// img->Allocate();
+// img->FillBuffer(128);
+// filter->SetInput( img );
+
+filter->Update();
+sleep(15);
+std::cout << "children: " << filter->GetOutput()->GetRoot()->CountChildren() << std::endl;
+std::cout << "indexes: " << filter->GetOutput()->GetRoot()->CountIndexes( filter->GetOutput()->GetLinkedListImage() ) << std::endl;
+return 0;
+
+/*  typedef itk::SizeComponentTreeFilter< TreeType > SizeType;
   SizeType::Pointer size = SizeType::New();
   size->SetInput( filter->GetOutput() );
 
@@ -40,8 +73,6 @@ int main(int, char * argv[])
   typedef itk::ComponentTreeToImageFilter< TreeType, IType > T2IType;
   T2IType::Pointer filter2 = T2IType::New();
   filter2->SetInput( inplace->GetOutput() );
-	
-//  itk::SimpleFilterWatcher watcher(filter, "filter");
 
   typedef itk::ImageFileWriter< IType > WriterType;
   WriterType::Pointer writer = WriterType::New();
@@ -49,6 +80,6 @@ int main(int, char * argv[])
   writer->SetFileName( argv[2] );
   writer->Update();
 
-  return 0;
+  return 0;*/
 }
 
