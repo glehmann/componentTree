@@ -24,6 +24,7 @@
 #include <algorithm>
 #include <list>
 #include <map>
+#include <deque>
 #include "itkConnectedComponentAlgorithm.h"
 #include "itkConstShapedNeighborhoodIterator.h"
 #include "itkShapedNeighborhoodIterator.h"
@@ -80,7 +81,7 @@ ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>
   TCompare compare;
   
   // setup the progress reporter
-  ProgressReporter progress(this, 0, this->GetInput()->GetRequestedRegion().GetNumberOfPixels()*3);
+  ProgressReporter progress(this, 0, this->GetInput()->GetRequestedRegion().GetNumberOfPixels()*2);
 
   // sort the pixel by gray level
 
@@ -88,28 +89,10 @@ ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>
   typedef ImageRegionConstIteratorWithIndex<InputImageType> InputIteratorType;
   InputIteratorType inputIt(this->GetInput(), this->GetInput()->GetRequestedRegion());
 
-  // create a map to count how many pixels we have for each value, so we can optimize
-  // the vector size of the really usefull map
-  typedef std::map <InputImagePixelType, unsigned long, TCompare> PixelCountMapType;
-  PixelCountMapType pixelCountMap;
-
-  for( inputIt.GoToBegin(); !inputIt.IsAtEnd(); ++inputIt )
-    {
-    // store index of current pixel value
-    pixelCountMap[inputIt.Get()]++;
-    progress.CompletedPixel();
-    }
-
   // create map to store     pixel value -> [pos1, pos2 .. posn]
-  typedef std::vector< typename InputImageType::OffsetValueType > IndexListType;
+  typedef std::deque< typename InputImageType::OffsetValueType > IndexListType;
   typedef std::map <InputImagePixelType, IndexListType, TCompare> PixelMapType;
   PixelMapType pixelMap;
-
-  // change the vector sizes to exactly fit the number of indexes needed
-  for ( typename PixelCountMapType::iterator pixelCountMapIt=pixelCountMap.begin(); pixelCountMapIt!=pixelCountMap.end(); ++pixelCountMapIt )
-    {
-    pixelMap[pixelCountMapIt->first].reserve( pixelCountMapIt->second );
-    }
 
   // and now fill the map
   for( inputIt.GoToBegin(); !inputIt.IsAtEnd(); ++inputIt )
@@ -150,7 +133,7 @@ ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>
   // a list to store the node merged with other nodes, and that we'll have to
   // delete later. They are not destructed immediately because they keep a pointer
   // on the reference node
-  typedef typename std::vector< NodeType * > NodePointerList;
+  typedef typename std::deque< NodeType * > NodePointerList;
   NodePointerList tempNodeList;
 
   NodeType* n = NULL;
