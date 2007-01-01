@@ -23,8 +23,8 @@ namespace itk
 {
 
 /** Constructor */
-template <typename TPixel, typename TIndex, typename TValue, typename TLinkedListImage>
-ComponentTreeNode<TPixel, TIndex, TValue, TLinkedListImage>
+template <typename TPixel, typename TIndex, typename TValue, typename TLinkedListArray>
+ComponentTreeNode<TPixel, TIndex, TValue, TLinkedListArray>
 ::ComponentTreeNode()
 {
   m_Parent = NULL;
@@ -33,8 +33,8 @@ ComponentTreeNode<TPixel, TIndex, TValue, TLinkedListImage>
 }
 
 /** Destructor */
-template <typename TPixel, typename TIndex, typename TValue, typename TLinkedListImage>
-ComponentTreeNode<TPixel, TIndex, TValue, TLinkedListImage>
+template <typename TPixel, typename TIndex, typename TValue, typename TLinkedListArray>
+ComponentTreeNode<TPixel, TIndex, TValue, TLinkedListArray>
 ::~ComponentTreeNode() 
 {
   for( typename ChildrenListType::const_iterator it=m_Children.begin(); it!=m_Children.end(); it++ )
@@ -48,9 +48,9 @@ ComponentTreeNode<TPixel, TIndex, TValue, TLinkedListImage>
 
 
 /** Return the number of children */
-template <typename TPixel, typename TIndex, typename TValue, typename TLinkedListImage>
+template <typename TPixel, typename TIndex, typename TValue, typename TLinkedListArray>
 int 
-ComponentTreeNode<TPixel, TIndex, TValue, TLinkedListImage>
+ComponentTreeNode<TPixel, TIndex, TValue, TLinkedListArray>
 ::CountChildren( ) const 
 {
   int size = 1;
@@ -62,9 +62,9 @@ ComponentTreeNode<TPixel, TIndex, TValue, TLinkedListImage>
 }
 
 /** Return the number of children */
-template <typename TPixel, typename TIndex, typename TValue, typename TLinkedListImage>
+template <typename TPixel, typename TIndex, typename TValue, typename TLinkedListArray>
 int 
-ComponentTreeNode<TPixel, TIndex, TValue, TLinkedListImage>
+ComponentTreeNode<TPixel, TIndex, TValue, TLinkedListArray>
 ::Depth( ) const 
 {
   int depth = 0;
@@ -76,10 +76,10 @@ ComponentTreeNode<TPixel, TIndex, TValue, TLinkedListImage>
 }
 
 /** Remove a child node from the current node */
-template <typename TPixel, typename TIndex, typename TValue, typename TLinkedListImage>
+template <typename TPixel, typename TIndex, typename TValue, typename TLinkedListArray>
 bool 
-ComponentTreeNode<TPixel, TIndex, TValue, TLinkedListImage>
-::RemoveChild( ComponentTreeNode<TPixel, TIndex, TValue, TLinkedListImage> *n ) 
+ComponentTreeNode<TPixel, TIndex, TValue, TLinkedListArray>
+::RemoveChild( ComponentTreeNode<TPixel, TIndex, TValue, TLinkedListArray> *n ) 
 {
   typename ChildrenListType::iterator pos = std::find(m_Children.begin(), m_Children.end(), n );
   if ( pos != m_Children.end() )
@@ -92,9 +92,9 @@ ComponentTreeNode<TPixel, TIndex, TValue, TLinkedListImage>
 }
 
 /** Add a child node */
-template <typename TPixel, typename TIndex, typename TValue, typename TLinkedListImage>
-void ComponentTreeNode<TPixel, TIndex, TValue, TLinkedListImage>
-::AddChild( ComponentTreeNode<TPixel, TIndex, TValue, TLinkedListImage> *node ) 
+template <typename TPixel, typename TIndex, typename TValue, typename TLinkedListArray>
+void ComponentTreeNode<TPixel, TIndex, TValue, TLinkedListArray>
+::AddChild( ComponentTreeNode<TPixel, TIndex, TValue, TLinkedListArray> *node ) 
 {
   assert( node != this );
   // assert( node->GetPixel() > this->GetPixel() );
@@ -107,16 +107,16 @@ void ComponentTreeNode<TPixel, TIndex, TValue, TLinkedListImage>
   assert( node->GetParent() == this );
 }
 
-template <typename TPixel, typename TIndex, typename TValue, typename TLinkedListImage>
-bool ComponentTreeNode<TPixel, TIndex, TValue, TLinkedListImage>
-::HasChild( ComponentTreeNode<TPixel, TIndex, TValue, TLinkedListImage> *node ) const
+template <typename TPixel, typename TIndex, typename TValue, typename TLinkedListArray>
+bool ComponentTreeNode<TPixel, TIndex, TValue, TLinkedListArray>
+::HasChild( ComponentTreeNode<TPixel, TIndex, TValue, TLinkedListArray> *node ) const
 {
   return std::find(m_Children.begin(), m_Children.end(), node ) != m_Children.end();
 }
 
-template <typename TPixel, typename TIndex, typename TValue, typename TLinkedListImage>
-void ComponentTreeNode<TPixel, TIndex, TValue, TLinkedListImage>
-::TakeChildrenFrom( ComponentTreeNode<TPixel, TIndex, TValue, TLinkedListImage> *node ) 
+template <typename TPixel, typename TIndex, typename TValue, typename TLinkedListArray>
+void ComponentTreeNode<TPixel, TIndex, TValue, TLinkedListArray>
+::TakeChildrenFrom( ComponentTreeNode<TPixel, TIndex, TValue, TLinkedListArray> *node ) 
 {
   assert( node != this );
 
@@ -129,32 +129,32 @@ void ComponentTreeNode<TPixel, TIndex, TValue, TLinkedListImage>
 
 
 /** Return the number of indexes */
-template <typename TPixel, typename TIndex, typename TValue, typename TLinkedListImage>
+template <typename TPixel, typename TIndex, typename TValue, typename TLinkedListArray>
 int 
-ComponentTreeNode<TPixel, TIndex, TValue, TLinkedListImage>
-::CountIndexes( const LinkedListImageType * listImg ) const 
+ComponentTreeNode<TPixel, TIndex, TValue, TLinkedListArray>
+::CountIndexes( const LinkedListArrayType & listArray ) const 
 {
   int size = 0;
   IndexType current = m_FirstIndex;
   while( current != -1 )
     {
     size++;
-    current = listImg->GetPixel( listImg->ComputeIndex( current ) );
+    current = listArray[ current ];
     }
 
   for( typename ChildrenListType::const_iterator it=m_Children.begin(); it!=m_Children.end(); it++ )
     {
-    size += (*it)->CountIndexes(listImg);
+    size += (*it)->CountIndexes( listArray );
     }
 
   return size;
 }
  
 /** Remove an index */
-template <typename TPixel, typename TIndex, typename TValue, typename TLinkedListImage>
+template <typename TPixel, typename TIndex, typename TValue, typename TLinkedListArray>
 bool 
-ComponentTreeNode<TPixel, TIndex, TValue, TLinkedListImage>
-::RemoveIndex( const IndexType & idx, LinkedListImageType * listImg ) 
+ComponentTreeNode<TPixel, TIndex, TValue, TLinkedListArray>
+::RemoveIndex( const IndexType & idx, LinkedListArrayType & listArray ) 
 {
 /*  IndexListIteratorType pos = m_Indexes.begin();
   IndexListIteratorType previous = m_Indexes.before_begin();
@@ -176,9 +176,9 @@ ComponentTreeNode<TPixel, TIndex, TValue, TLinkedListImage>
 }
 
 /** Add an index */
-template <typename TPixel, typename TIndex, typename TValue, typename TLinkedListImage>
-void ComponentTreeNode<TPixel, TIndex, TValue, TLinkedListImage>
-::AddIndex( const IndexType & idx, LinkedListImageType * listImg ) 
+template <typename TPixel, typename TIndex, typename TValue, typename TLinkedListArray>
+void ComponentTreeNode<TPixel, TIndex, TValue, TLinkedListArray>
+::AddIndex( const IndexType & idx, LinkedListArrayType & listArray ) 
 {
   assert( !this->HasIndex( idx ) );
 
@@ -186,19 +186,19 @@ void ComponentTreeNode<TPixel, TIndex, TValue, TLinkedListImage>
     {
     m_FirstIndex = idx;
     m_LastIndex = idx;
-    listImg->SetPixel( listImg->ComputeIndex( idx ), -1 );
+    listArray[ idx ] = -1;
     }
   else
     {
-    listImg->SetPixel( listImg->ComputeIndex( idx ), m_FirstIndex );
+    listArray[ idx ] = m_FirstIndex;
     m_FirstIndex = idx;
     }
   assert( this->HasIndex( idx ) );
 }
 
-template <typename TPixel, typename TIndex, typename TValue, typename TLinkedListImage>
-bool ComponentTreeNode<TPixel, TIndex, TValue, TLinkedListImage>
-::HasIndex( const IndexType & idx, const LinkedListImageType * listImg ) const
+template <typename TPixel, typename TIndex, typename TValue, typename TLinkedListArray>
+bool ComponentTreeNode<TPixel, TIndex, TValue, TLinkedListArray>
+::HasIndex( const IndexType & idx, const LinkedListArrayType & listArray ) const
 {
   IndexType current = m_FirstIndex;
   while( current != -1 )
@@ -207,20 +207,20 @@ bool ComponentTreeNode<TPixel, TIndex, TValue, TLinkedListImage>
       {
       return true;
       }
-    current = listImg->GetPixel( listImg->ComputeIndex( current ) );
+    current = listArray[ current ];
     }
   return false;
 }
 
-template <typename TPixel, typename TIndex, typename TValue, typename TLinkedListImage>
-void ComponentTreeNode<TPixel, TIndex, TValue, TLinkedListImage>
-::TakeIndexesFrom( ComponentTreeNode<TPixel, TIndex, TValue, TLinkedListImage> *node, LinkedListImageType * listImg )
+template <typename TPixel, typename TIndex, typename TValue, typename TLinkedListArray>
+void ComponentTreeNode<TPixel, TIndex, TValue, TLinkedListArray>
+::TakeIndexesFrom( ComponentTreeNode<TPixel, TIndex, TValue, TLinkedListArray> *node, LinkedListArrayType & listArray )
 {
   assert( node != this );
 
   if( node->m_FirstIndex != -1 )
     {
-    listImg->SetPixel( listImg->ComputeIndex( node->m_LastIndex ), m_FirstIndex );
+    listArray[ node->m_LastIndex ] = m_FirstIndex;
     m_FirstIndex = node->m_FirstIndex;
     node->m_FirstIndex = -1;
     node->m_LastIndex = -1;
@@ -231,14 +231,14 @@ void ComponentTreeNode<TPixel, TIndex, TValue, TLinkedListImage>
 
 
 
-template <typename TPixel, typename TIndex, typename TValue, typename TLinkedListImage>
-void ComponentTreeNode<TPixel, TIndex, TValue, TLinkedListImage>
-::Merge( ComponentTreeNode<TPixel, TIndex, TValue, TLinkedListImage> *node, LinkedListImageType * listImg )
+template <typename TPixel, typename TIndex, typename TValue, typename TLinkedListArray>
+void ComponentTreeNode<TPixel, TIndex, TValue, TLinkedListArray>
+::Merge( ComponentTreeNode<TPixel, TIndex, TValue, TLinkedListArray> *node, LinkedListArrayType & listArray )
 {
   assert( node != this );
   // assert( this->GetPixel() <= node->GetPixel() );
   // merge the index list
-  this->TakeIndexesFrom( node, listImg );
+  this->TakeIndexesFrom( node, listArray );
   // and add each child from node to the current child list
   for( ChildrenListIteratorType it=node->GetChildren().begin(); it!=node->GetChildren().end(); it++ )
     {
@@ -250,27 +250,27 @@ void ComponentTreeNode<TPixel, TIndex, TValue, TLinkedListImage>
   node->GetChildren().clear();
 }
 
-template <typename TPixel, typename TIndex, typename TValue, typename TLinkedListImage>
-void ComponentTreeNode<TPixel, TIndex, TValue, TLinkedListImage>
-::Flatten(LinkedListImageType * listImg) 
+template <typename TPixel, typename TIndex, typename TValue, typename TLinkedListArray>
+void ComponentTreeNode<TPixel, TIndex, TValue, TLinkedListArray>
+::Flatten(LinkedListArrayType & listArray) 
 {
   for( ChildrenListIteratorType it=this->GetChildren().begin(); it!=this->GetChildren().end(); it++ )
     {
     assert( (*it)->GetParent() == this );
     // assert( this->GetPixel() < (*it)->GetPixel() );
     // merge the children of the children
-    (*it)->Flatten(listImg);
+    (*it)->Flatten( listArray );
     // and merge this children
-    this->Merge( *it, listImg );
+    this->Merge( *it, listArray );
     delete *it;
     }
   // clear the child list 
   this->GetChildren().clear();
 }
 
-template <typename TPixel, typename TIndex, typename TValue, typename TLinkedListImage>
-typename ComponentTreeNode<TPixel, TIndex, TValue, TLinkedListImage>::Self *
-ComponentTreeNode<TPixel, TIndex, TValue, TLinkedListImage>
+template <typename TPixel, typename TIndex, typename TValue, typename TLinkedListArray>
+typename ComponentTreeNode<TPixel, TIndex, TValue, TLinkedListArray>::Self *
+ComponentTreeNode<TPixel, TIndex, TValue, TLinkedListArray>
 ::Clone() 
 {
 /*  // create a new node to clone this one
@@ -294,8 +294,8 @@ ComponentTreeNode<TPixel, TIndex, TValue, TLinkedListImage>
   this->GetChildren().clear();*/
 }
 
-template <typename TPixel, typename TIndex, typename TValue, typename TLinkedListImage>
-const void ComponentTreeNode<TPixel, TIndex, TValue, TLinkedListImage>
+template <typename TPixel, typename TIndex, typename TValue, typename TLinkedListArray>
+const void ComponentTreeNode<TPixel, TIndex, TValue, TLinkedListArray>
 ::Print( int indent ) const
 {
   assert( this != NULL );

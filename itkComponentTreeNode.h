@@ -39,7 +39,7 @@ namespace itk
  *
  * \ingroup DataRepresentation 
  */
-template <typename TPixel, typename TIndex, typename TAttribute, typename TLinkedListImage>
+template <typename TPixel, typename TIndex, typename TAttribute, typename TLinkedListArray>
 class ComponentTreeNode
 {
 
@@ -50,7 +50,7 @@ public:
   typedef std::list<Self *>      ChildrenListType;
   typedef typename ChildrenListType::iterator ChildrenListIteratorType;
 
-  typedef TLinkedListImage           LinkedListImageType;
+  typedef TLinkedListArray           LinkedListArrayType;
   typedef TIndex                     IndexType;
   typedef TPixel                     PixelType;
   typedef TAttribute AttributeType;
@@ -104,10 +104,10 @@ public:
   void TakeChildrenFrom( Self * node );
 
   /** Merge node */
-  void Merge( Self *node, LinkedListImageType * listImg );
+  void Merge( Self *node, LinkedListArrayType & listImg );
 
   /** Merge node */
-  void Flatten(LinkedListImageType * listImg);
+  void Flatten(LinkedListArrayType & listImg);
 
   /** Get the internal list of children */
   ChildrenListType& GetChildren()
@@ -148,16 +148,16 @@ public:
     return m_LastIndex;
     }
 
-  void AddIndex( const IndexType & idx, LinkedListImageType * listImg );
+  void AddIndex( const IndexType & idx, LinkedListArrayType & listImg );
 
-  bool RemoveIndex( const IndexType & idx, LinkedListImageType * listImg );
+  bool RemoveIndex( const IndexType & idx, LinkedListArrayType & listImg );
 
-  bool HasIndex( const IndexType & idx, const LinkedListImageType * listImg ) const;
+  bool HasIndex( const IndexType & idx, const LinkedListArrayType & listImg ) const;
 
-  void TakeIndexesFrom( Self * node, LinkedListImageType * listImg );
+  void TakeIndexesFrom( Self * node, LinkedListArrayType & listImg );
 
   /** Return the number of children */
-  int CountIndexes( const LinkedListImageType * listImg ) const;
+  int CountIndexes( const LinkedListArrayType & listImg ) const;
 
   /** a convenient method to print the tree on std::out.
    * To be used only on small trees !
@@ -198,7 +198,7 @@ protected:
   IndexType  m_FirstIndex;
   IndexType  m_LastIndex;
 
-// LinkedListImageType * toto;
+// LinkedListArrayType & toto;
 
 private:
   ComponentTreeNode(const Self&); //purposely not implemented

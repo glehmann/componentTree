@@ -87,10 +87,10 @@ public:
   typedef TAttribute AttributeType;
 
   /** linked list array type */
-  typedef Image< OffsetValueType, ImageDimension > LinkedListImageType;
+  typedef std::vector< OffsetValueType > LinkedListArrayType;
 
   /** Node type */
-  typedef ComponentTreeNode< PixelType, OffsetValueType, AttributeType, LinkedListImageType > NodeType;
+  typedef ComponentTreeNode< PixelType, OffsetValueType, AttributeType, LinkedListArrayType > NodeType;
 
   /** Convenience methods to set the LargestPossibleRegion,
    *  BufferedRegion and RequestedRegion. Allocate must still be called.
@@ -128,8 +128,18 @@ public:
 
   virtual void Graft(const DataObject *data);
 
-  itkGetObjectMacro(LinkedListImage, LinkedListImageType);
-  itkGetConstObjectMacro(LinkedListImage, LinkedListImageType);
+//  itkGetMacro(LinkedListArray, LinkedListArrayType);
+//  itkGetConstMacro(LinkedListArray, LinkedListArrayType);
+  const LinkedListArrayType & GetLinkedListArray() const
+    {
+    return m_LinkedListArray;
+    }
+
+  LinkedListArrayType & GetLinkedListArray()
+    {
+    return m_LinkedListArray;
+    }
+
 
 protected:
   ComponentTree();
@@ -149,7 +159,7 @@ private:
   /** The root node */
   NodeType * m_Root;
 
-  typename LinkedListImageType::Pointer m_LinkedListImage;
+  LinkedListArrayType m_LinkedListArray;
 };
 
 } // end namespace itk

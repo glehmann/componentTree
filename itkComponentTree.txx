@@ -63,7 +63,7 @@ ComponentTree<TPixel, VImageDimension, TValue>
 ::Initialize()
 {
   m_Root = NULL;
-  m_LinkedListImage = LinkedListImageType::New();
+  m_LinkedListArray.clear();
 }
 
 
@@ -75,8 +75,7 @@ void
 ComponentTree<TPixel, VImageDimension, TValue>
 ::Allocate()
 {
-  m_LinkedListImage->SetRegions( this->GetLargestPossibleRegion() );
-  m_LinkedListImage->Allocate();
+  m_LinkedListArray.resize( this->GetLargestPossibleRegion().GetNumberOfPixels() );
 }
 
 
@@ -108,7 +107,7 @@ ComponentTree<TPixel, VImageDimension, TValue>
       // Now copy anything remaining that is needed
       this->SetRoot( const_cast< NodeType * >
                                   (imgData->GetRoot() ) );
-      this->m_LinkedListImage = imgData->m_LinkedListImage;
+      this->m_LinkedListArray = imgData->m_LinkedListArray;
       }
     else
       {

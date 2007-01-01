@@ -188,7 +188,7 @@ ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>
           {
           if( n == NULL )
             {
-            nn->AddIndex( output->ComputeOffset( iIt.GetIndex() ), output->GetLinkedListImage() );
+            nn->AddIndex( output->ComputeOffset( iIt.GetIndex() ), output->GetLinkedListArray() );
             n = nn;
             }
           else
@@ -206,7 +206,7 @@ ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>
         {
         n = new NodeType();
         n->SetPixel( p );
-        n->AddIndex( output->ComputeOffset( iIt.GetIndex() ), output->GetLinkedListImage() );
+        n->AddIndex( output->ComputeOffset( iIt.GetIndex() ), output->GetLinkedListArray() );
         }
 
       nIt.SetCenterPixel( n );
@@ -283,7 +283,7 @@ ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>
   // assert( this->GetPixel() <= node->GetPixel() );
   
   // merge the index and the children list
-  node1->TakeIndexesFrom( node2, this->GetOutput()->GetLinkedListImage() );
+  node1->TakeIndexesFrom( node2, this->GetOutput()->GetLinkedListArray() );
   node1->TakeChildrenFrom( node2 );
   // set the node1 as parent of node2, to indicate that node1 is the reference
   // for node2

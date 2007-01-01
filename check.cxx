@@ -57,7 +57,7 @@ std::cout << sizeof(_GLIBCXX_STD::_List_node<long>) << std::endl;
 filter->Update();
 sleep(15);
 std::cout << "children: " << filter->GetOutput()->GetRoot()->CountChildren() << std::endl;
-std::cout << "indexes: " << filter->GetOutput()->GetRoot()->CountIndexes( filter->GetOutput()->GetLinkedListImage() ) << std::endl;
+std::cout << "indexes: " << filter->GetOutput()->GetRoot()->CountIndexes( filter->GetOutput()->GetLinkedListArray() ) << std::endl;
 return 0;
 
 /*  typedef itk::SizeComponentTreeFilter< TreeType > SizeType;
