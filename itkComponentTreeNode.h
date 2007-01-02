@@ -18,7 +18,6 @@
 #define __itkComponentTreeNode_h
 
 #include <vector>
-#include <ext/slist>
 #include <list>
 #include <algorithm>
 #include <iostream>
@@ -180,6 +179,8 @@ public:
     {
     return m_Parent == NULL;
     }
+    
+  static const IndexType EndIndex = -1;
     
   
 

@@ -18,6 +18,7 @@
 #define __itkPhysicalSizeComponentTreeFilter_h
 
 #include "itkInPlaceComponentTreeFilter.h"
+#include "itkProgressReporter.h"
 
 namespace itk {
 /** \class PhysicalSizeComponentTreeFilter
@@ -84,6 +85,8 @@ private:
   void operator=(const Self&); //purposely not implemented
 
   AttributeType m_AttributeValuePerPixel;
+
+  ProgressReporter * m_Progress;
 
 } ; // end of class
 

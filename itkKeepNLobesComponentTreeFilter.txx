@@ -55,7 +55,7 @@ KeepNLobesComponentTreeFilter<TImage>
     NodeType * parent = node->GetParent();
     
     // merge the node in its parent
-    parent->Merge( node );
+    parent->Merge( node, this->GetOutput()->GetLinkedListArray() );
     parent->RemoveChild( node );
     delete node;
 

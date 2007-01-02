@@ -60,8 +60,8 @@ AttributeFilteringComponentTreeFilter<TInputImage, TCompare>
     {
     if( compare( (*it)->m_Attribute, m_Threshold ) )
       {
-      (*it)->Flatten();
-      node->Merge( *it );
+      (*it)->Flatten( this->GetOutput()->GetLinkedListArray() );
+      node->Merge( *it, this->GetOutput()->GetLinkedListArray() );
       // must store the iterator, because once the element
       // erased, it is invalidated
       typename NodeType::ChildrenListType::iterator toRemove = it;

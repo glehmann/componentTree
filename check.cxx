@@ -5,7 +5,7 @@
 
 #include "itkImageToMaximumTreeFilter.h"
 #include "itkImageToMinimumTreeFilter.h"
-#include "itkComponentTreeToImageFilter.h"
+#include "itkComponentTreeAttributeToImageFilter.h"
 #include "itkComponentTree.h"
 #include "itkSizeComponentTreeFilter.h"
 #include "itkMeanImageFilter.h"
@@ -14,14 +14,11 @@
 
 int main(int, char * argv[])
 {
-
-std::cout << sizeof(__gnu_cxx::_Slist_node<long>) << std::endl;
-std::cout << sizeof(_GLIBCXX_STD::_List_node<long>) << std::endl;
-
   const int dim = 3;
   
   typedef unsigned char PType;
   typedef itk::Image< PType, dim > IType;
+  typedef itk::Image< unsigned short, dim > IType2;
 
   typedef itk::ComponentTree< PType, dim, unsigned long > TreeType;
 
@@ -29,17 +26,17 @@ std::cout << sizeof(_GLIBCXX_STD::_List_node<long>) << std::endl;
   ReaderType::Pointer reader = ReaderType::New();
   reader->SetFileName( argv[1] );
 
-  typedef itk::MeanImageFilter< IType, IType > MeanType;
+/*  typedef itk::MeanImageFilter< IType, IType > MeanType;
   MeanType::Pointer mean = MeanType::New();
   mean->SetInput( reader->GetOutput() );
   itk::Size<3> r;
   r.Fill(2);
   mean->SetRadius( r );
-  itk::SimpleFilterWatcher mWatcher(mean, "mean");
+  itk::SimpleFilterWatcher mWatcher(mean, "mean");*/
 
   typedef itk::ImageToMaximumTreeFilter< IType, TreeType > FilterType;
   FilterType::Pointer filter = FilterType::New();
-  filter->SetInput( mean->GetOutput() );
+  filter->SetInput( reader->GetOutput() );
   itk::SimpleFilterWatcher watcher(filter, "max-tree");
 
 // IType::Pointer img = IType::New();
@@ -54,32 +51,35 @@ std::cout << sizeof(_GLIBCXX_STD::_List_node<long>) << std::endl;
 // img->FillBuffer(128);
 // filter->SetInput( img );
 
-filter->Update();
+/*filter->Update();
 sleep(15);
 std::cout << "children: " << filter->GetOutput()->GetRoot()->CountChildren() << std::endl;
 std::cout << "indexes: " << filter->GetOutput()->GetRoot()->CountIndexes( filter->GetOutput()->GetLinkedListArray() ) << std::endl;
-return 0;
+*/
 
-/*  typedef itk::SizeComponentTreeFilter< TreeType > SizeType;
+  typedef itk::SizeComponentTreeFilter< TreeType > SizeType;
   SizeType::Pointer size = SizeType::New();
   size->SetInput( filter->GetOutput() );
+  itk::SimpleFilterWatcher sWatcher(size, "size");
 
   typedef itk::AttributeFilteringComponentTreeFilter< TreeType > InPlaceType;
   InPlaceType::Pointer inplace = InPlaceType::New();
   inplace->SetInput( size->GetOutput() );
   inplace->SetInPlace( true );
   inplace->SetThreshold( atoi(argv[3]) );
+  itk::SimpleFilterWatcher fWatcher(inplace, "attribFilter");
 
-  typedef itk::ComponentTreeToImageFilter< TreeType, IType > T2IType;
+  typedef itk::ComponentTreeAttributeToImageFilter< TreeType, IType2 > T2IType;
   T2IType::Pointer filter2 = T2IType::New();
   filter2->SetInput( inplace->GetOutput() );
+  itk::SimpleFilterWatcher cWatcher(filter2, "tree to img");
 
-  typedef itk::ImageFileWriter< IType > WriterType;
+  typedef itk::ImageFileWriter< IType2 > WriterType;
   WriterType::Pointer writer = WriterType::New();
   writer->SetInput( filter2->GetOutput() );
   writer->SetFileName( argv[2] );
   writer->Update();
 
-  return 0;*/
+  return 0;
 }
 

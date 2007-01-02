@@ -18,7 +18,6 @@
 #define __itkSizeComponentTreeFilter_txx
 
 #include "itkSizeComponentTreeFilter.h"
-#include "itkProgressReporter.h"
 
 
 namespace itk {
@@ -38,10 +37,10 @@ SizeComponentTreeFilter<TImage>
   // Allocate the output
   this->AllocateOutputs();
 
-  ProgressReporter progress(this, 0, this->GetOutput()->GetRequestedRegion().GetNumberOfPixels()*2);
+  m_Progress = new ProgressReporter(this, 0, this->GetOutput()->GetRequestedRegion().GetNumberOfPixels());
   this->SetComponentSize( this->GetOutput()->GetRoot() );
-
-  // TODO: how to generate progress ??
+  delete m_Progress;
+  m_Progress = NULL;
 
 }
 
@@ -52,14 +51,25 @@ SizeComponentTreeFilter<TImage>
 ::SetComponentSize( NodeType* node )
 {
   assert(node != NULL);
-  AttributeType size = 0;
+  
+  AttributeType size = 1;  // 1, for the current node
+  
   const typename NodeType::ChildrenListType * childrenList = & node->GetChildren();
   for( typename NodeType::ChildrenListType::const_iterator it=childrenList->begin(); it!=childrenList->end(); it++ )
     {
     this->SetComponentSize( *it );
     size += (*it)->m_Attribute;
     }
-  size += node->GetIndexes().size();
+    
+  // compute the number of indexes of this node
+  for( typename NodeType::IndexType current=node->GetFirstIndex();
+       current != NodeType::EndIndex;
+       current = this->GetInput()->GetLinkedListArray()[ current ] )
+    {
+    size++;
+    m_Progress->CompletedPixel();
+    }
+
   node->m_Attribute = size;
   // GetAttribute() is broken, but why ??
 

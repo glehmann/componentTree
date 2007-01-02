@@ -18,7 +18,6 @@
 #define __itkPhysicalSizeComponentTreeFilter_txx
 
 #include "itkPhysicalSizeComponentTreeFilter.h"
-#include "itkProgressReporter.h"
 
 
 namespace itk {
@@ -44,10 +43,10 @@ PhysicalSizeComponentTreeFilter<TImage>
     this->m_AttributeValuePerPixel *= this->GetInput()->GetSpacing()[i];
     }
 
-  ProgressReporter progress(this, 0, this->GetOutput()->GetRequestedRegion().GetNumberOfPixels()*2);
+  m_Progress = new ProgressReporter(this, 0, this->GetOutput()->GetRequestedRegion().GetNumberOfPixels());
   this->SetComponentSize( this->GetOutput()->GetRoot() );
-
-  // TODO: how to generate progress ??
+  delete m_Progress;
+  m_Progress = NULL;
 
 }
 
@@ -65,7 +64,17 @@ PhysicalSizeComponentTreeFilter<TImage>
     this->SetComponentSize( *it );
     size += (*it)->m_Attribute;
     }
-  size += node->GetIndexes().size() * this->m_AttributeValuePerPixel;
+
+  unsigned long nb = 1;
+  for( typename NodeType::IndexType current=node->GetFirstIndex();
+       current != NodeType::EndIndex;
+       current = this->GetInput()->GetLinkedListArray()[ current ] )
+    {
+    nb++;
+    m_Progress->CompletedPixel();
+    }
+
+  size += nb * this->m_AttributeValuePerPixel;
   node->m_Attribute = size;
   // GetAttribute() is broken, but why ??
 

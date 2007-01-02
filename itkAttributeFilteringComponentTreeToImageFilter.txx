@@ -54,14 +54,16 @@ AttributeFilteringComponentTreeToImageFilter<TInputImage, TOutputImage, TCompare
   OutputImagePixelType v = static_cast<OutputImagePixelType>( node->GetPixel() );
 
   // write the pixels of the current node to ouput image
-  const typename NodeType::IndexListType * indexList = & node->GetIndexes();
   OutputImageType* output = this->GetOutput();
-  for( typename NodeType::IndexListType::const_iterator it=indexList->begin(); it!=indexList->end(); it++ )
+  for( typename NodeType::IndexType current=node->GetFirstIndex();
+       current != NodeType::EndIndex;
+       current = this->GetInput()->GetLinkedListArray()[ current ] )
     {
     // std::cout << *it << ": " << v << std::endl;
-    output->SetPixel( output->ComputeIndex( *it ), v );
+    output->SetPixel( output->ComputeIndex( current ), v );
     m_Progress->CompletedPixel();
     }
+  
 
   CompareType compare;
   const typename NodeType::ChildrenListType * childrenList = & node->GetChildren();
@@ -86,11 +88,15 @@ AttributeFilteringComponentTreeToImageFilter<TInputImage, TOutputImage, TCompare
 ::WriteNodes( const NodeType* node, OutputImagePixelType & v )
 {
   assert(node != NULL);
-  const typename NodeType::IndexListType * indexList = & node->GetIndexes();
+
   OutputImageType* output = this->GetOutput();
-  for( typename NodeType::IndexListType::const_iterator it=indexList->begin(); it!=indexList->end(); it++ )
+
+  for( typename NodeType::IndexType current=node->GetFirstIndex();
+       current != NodeType::EndIndex;
+       current = this->GetInput()->GetLinkedListArray()[ current ] )
     {
-    output->SetPixel( output->ComputeIndex( *it ), v );
+    // std::cout << *it << ": " << v << std::endl;
+    output->SetPixel( output->ComputeIndex( current ), v );
     m_Progress->CompletedPixel();
     }
   

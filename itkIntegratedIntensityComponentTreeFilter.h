@@ -18,6 +18,7 @@
 #define __itkIntegratedIntensityComponentTreeFilter_h
 
 #include "itkInPlaceComponentTreeFilter.h"
+#include "itkProgressReporter.h"
 
 namespace itk {
 /** \class IntegratedIntensityComponentTreeFilter
@@ -94,6 +95,8 @@ protected:
 private:
   IntegratedIntensityComponentTreeFilter(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
+
+  ProgressReporter * m_Progress;
 
 } ; // end of class
 

@@ -18,7 +18,6 @@
 #define __itkIntegratedIntensityComponentTreeFilter_txx
 
 #include "itkIntegratedIntensityComponentTreeFilter.h"
-#include "itkProgressReporter.h"
 
 
 namespace itk {
@@ -38,10 +37,10 @@ IntegratedIntensityComponentTreeFilter<TInputImage>
   // Allocate the output
   this->AllocateOutputs();
 
-  ProgressReporter progress(this, 0, this->GetOutput()->GetRequestedRegion().GetNumberOfPixels()*2);
+  m_Progress = new ProgressReporter(this, 0, this->GetOutput()->GetRequestedRegion().GetNumberOfPixels());
   this->SetComponentIntensitySize( this->GetOutput()->GetRoot() );
-
-  // TODO: how to generate progress ??
+  delete m_Progress;
+  m_Progress = NULL;
 
 }
 
@@ -54,7 +53,14 @@ IntegratedIntensityComponentTreeFilter<TInputImage>
   assert(node != NULL);
 
   PixelType intensity = NumericTraits<PixelType>::Zero;
-  unsigned long size = node->GetIndexes().size();
+  unsigned long size = 0;
+  for( typename NodeType::IndexType current=node->GetFirstIndex();
+     current != NodeType::EndIndex;
+     current = this->GetInput()->GetLinkedListArray()[ current ] )
+  {
+  size++;
+  m_Progress->CompletedPixel();
+  }
 
   const typename NodeType::ChildrenListType * childrenList = & node->GetChildren();
   for( typename NodeType::ChildrenListType::const_iterator it=childrenList->begin(); it!=childrenList->end(); it++ )

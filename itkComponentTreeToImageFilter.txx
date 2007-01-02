@@ -84,17 +84,21 @@ ComponentTreeToImageFilter<TInputImage, TOutputImage>
 {
   assert(node != NULL);
   OutputImagePixelType v = static_cast<OutputImagePixelType>( node->GetPixel() );
-  const typename NodeType::IndexListType * indexList = & node->GetIndexes();
   OutputImageType* output = this->GetOutput();
-  for( typename NodeType::IndexListType::const_iterator it=indexList->begin(); it!=indexList->end(); it++ )
+  
+  for( typename NodeType::IndexType current=node->GetFirstIndex();
+       current != NodeType::EndIndex;
+       current = this->GetInput()->GetLinkedListArray()[ current ] )
     {
     // std::cout << *it << ": " << v << std::endl;
-    output->SetPixel( output->ComputeIndex( *it ), v );
+    output->SetPixel( output->ComputeIndex( current ), v );
     m_Progress->CompletedPixel();
     }
   
   const typename NodeType::ChildrenListType * childrenList = & node->GetChildren();
-  for( typename NodeType::ChildrenListType::const_iterator it=childrenList->begin(); it!=childrenList->end(); it++ )
+  for( typename NodeType::ChildrenListType::const_iterator it=childrenList->begin();
+       it!=childrenList->end();
+       it++ )
     {
     this->WriteNodes( *it );
     }

@@ -18,6 +18,7 @@
 #define __itkSizeComponentTreeFilter_h
 
 #include "itkInPlaceComponentTreeFilter.h"
+#include "itkProgressReporter.h"
 
 namespace itk {
 /** \class SizeComponentTreeFilter
@@ -82,6 +83,8 @@ protected:
 private:
   SizeComponentTreeFilter(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
+
+  ProgressReporter * m_Progress;
 
 } ; // end of class
 

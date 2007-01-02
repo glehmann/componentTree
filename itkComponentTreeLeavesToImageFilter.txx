@@ -86,26 +86,29 @@ ComponentTreeLeavesToImageFilter<TInputImage, TOutputImage>
 {
   assert(node != NULL);
 
-  const typename NodeType::IndexListType * indexList = & node->GetIndexes();
   OutputImageType* output = this->GetOutput();
 
   if( node->IsLeaf() )
     {
-    for( typename NodeType::IndexListType::const_iterator it=indexList->begin(); it!=indexList->end(); it++ )
-      {
-      // std::cout << *it << ": " << v << std::endl;
-      output->SetPixel( output->ComputeIndex( *it ), m_ForegroundValue );
-      m_Progress->CompletedPixel();
-      }
+  for( typename NodeType::IndexType current=node->GetFirstIndex();
+       current != NodeType::EndIndex;
+       current = this->GetInput()->GetLinkedListArray()[ current ] )
+    {
+    // std::cout << *it << ": " << v << std::endl;
+    output->SetPixel( output->ComputeIndex( current ), m_ForegroundValue );
+    m_Progress->CompletedPixel();
+    }
     }
   else
     {
-    for( typename NodeType::IndexListType::const_iterator it=indexList->begin(); it!=indexList->end(); it++ )
-      {
-      // std::cout << *it << ": " << v << std::endl;
-      output->SetPixel( output->ComputeIndex( *it ), m_BackgroundValue );
-      m_Progress->CompletedPixel();
-      }
+  for( typename NodeType::IndexType current=node->GetFirstIndex();
+       current != NodeType::EndIndex;
+       current = this->GetInput()->GetLinkedListArray()[ current ] )
+    {
+    // std::cout << *it << ": " << v << std::endl;
+    output->SetPixel( output->ComputeIndex( current ), m_BackgroundValue );
+    m_Progress->CompletedPixel();
+    }
 
     const typename NodeType::ChildrenListType * childrenList = & node->GetChildren();
     for( typename NodeType::ChildrenListType::const_iterator it=childrenList->begin(); it!=childrenList->end(); it++ )
