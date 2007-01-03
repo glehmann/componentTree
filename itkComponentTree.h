@@ -90,7 +90,7 @@ public:
   typedef std::vector< OffsetValueType > LinkedListArrayType;
 
   /** Node type */
-  typedef ComponentTreeNode< PixelType, OffsetValueType, AttributeType, LinkedListArrayType > NodeType;
+  typedef ComponentTreeNode< PixelType, OffsetValueType, AttributeType > NodeType;
 
   /** Convenience methods to set the LargestPossibleRegion,
    *  BufferedRegion and RequestedRegion. Allocate must still be called.
@@ -139,6 +139,29 @@ public:
     {
     return m_LinkedListArray;
     }
+
+
+  //methods to manipulate the nodes
+  // those methods are here because they require the access to the linked list array
+  
+  /** Merge nodes */
+  void NodeMerge( NodeType *node, NodeType *obsoletedNode );
+
+  /** Merge node */
+  void NodeFlatten( NodeType *node );
+
+  void NodeAddIndex( NodeType *node, const OffsetValueType & idx );
+
+  bool NodeRemoveIndex( NodeType *node, const OffsetValueType & idx );
+
+  bool NodeHasIndex( const NodeType *node, const OffsetValueType & idx ) const;
+
+  void NodeTakeIndexesFrom( NodeType * node, NodeType *obsoletedNode );
+
+  /** Return the number of children */
+  int NodeCountIndexes( const NodeType *node ) const;
+
+
 
 
 protected:

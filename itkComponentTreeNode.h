@@ -38,7 +38,7 @@ namespace itk
  *
  * \ingroup DataRepresentation 
  */
-template <typename TPixel, typename TIndex, typename TAttribute, typename TLinkedListArray>
+template <typename TPixel, typename TIndex, typename TAttribute>
 class ComponentTreeNode
 {
 
@@ -49,7 +49,6 @@ public:
   typedef std::list<Self *>      ChildrenListType;
   typedef typename ChildrenListType::iterator ChildrenListIteratorType;
 
-  typedef TLinkedListArray           LinkedListArrayType;
   typedef TIndex                     IndexType;
   typedef TPixel                     PixelType;
   typedef TAttribute AttributeType;
@@ -102,12 +101,6 @@ public:
 
   void TakeChildrenFrom( Self * node );
 
-  /** Merge node */
-  void Merge( Self *node, LinkedListArrayType & listImg );
-
-  /** Merge node */
-  void Flatten(LinkedListArrayType & listImg);
-
   /** Get the internal list of children */
   ChildrenListType& GetChildren()
     {
@@ -147,16 +140,15 @@ public:
     return m_LastIndex;
     }
 
-  void AddIndex( const IndexType & idx, LinkedListArrayType & listImg );
+  inline void SetFirstIndex( const IndexType & idx )
+    {
+    m_FirstIndex = idx;
+    }
 
-  bool RemoveIndex( const IndexType & idx, LinkedListArrayType & listImg );
-
-  bool HasIndex( const IndexType & idx, const LinkedListArrayType & listImg ) const;
-
-  void TakeIndexesFrom( Self * node, LinkedListArrayType & listImg );
-
-  /** Return the number of children */
-  int CountIndexes( const LinkedListArrayType & listImg ) const;
+  inline void SetLastIndex( const IndexType & idx )
+    {
+    m_LastIndex = idx;
+    }
 
   /** a convenient method to print the tree on std::out.
    * To be used only on small trees !
@@ -180,8 +172,7 @@ public:
     return m_Parent == NULL;
     }
     
-  static const IndexType EndIndex = -1;
-    
+  itkStaticConstMacro( EndIndex, IndexType, -1 );
   
 
   /** the attribute */
@@ -198,8 +189,6 @@ protected:
   /** the list of indexs of the node */
   IndexType  m_FirstIndex;
   IndexType  m_LastIndex;
-
-// LinkedListArrayType & toto;
 
 private:
   ComponentTreeNode(const Self&); //purposely not implemented
