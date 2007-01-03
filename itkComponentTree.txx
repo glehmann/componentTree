@@ -153,24 +153,31 @@ ComponentTree<TPixel, VImageDimension, TValue>
 ::NodeRemoveIndex( NodeType * node, const OffsetValueType & idx ) 
 {
   assert( node != NULL );
+  assert( idx != NodeType::EndIndex );
+  assert( idx >= 0 );
+  assert( idx < this->GetLargestPossibleRegion().GetNumberOfPixels() );
+  
+  typename NodeType::IndexType current = node->GetFirstIndex();
+  typename NodeType::IndexType previous = NodeType::EndIndex;
 
-/*  IndexListIteratorType pos = m_Indexes.begin();
-  IndexListIteratorType previous = m_Indexes.before_begin();
-  while( pos != m_Indexes.end() )
+  while( current != NodeType::EndIndex )
     {
-    if ( *pos == idx ) 
+    if( current == idx )
       {
-      if( pos == m_LastIndex )
+      previous = m_LinkedListArray[ current ];
+      if( current == node->GetFirstIndex() )
         {
-        m_LastIndex = previous;
+        node->SetFirstIndex( m_LinkedListArray[ current ] );
         }
-      m_Indexes.erase(pos);
+      if( current == node->GetLastIndex() )
+        {
+        node->SetLastIndex( m_LinkedListArray[ current ] );
+        }
       return true;
       }
-    previous = pos;
-    pos++;
+    current = m_LinkedListArray[ current ];
     }
-  return false;*/
+  return false;
 }
 
 template<class TPixel, unsigned int VImageDimension, class TValue>
@@ -190,6 +197,9 @@ ComponentTree<TPixel, VImageDimension, TValue>
 ::NodeAddIndex( NodeType * node, const OffsetValueType & idx ) 
 {
   assert( node != NULL );
+  assert( idx != NodeType::EndIndex );
+  assert( idx >= 0 );
+  assert( idx < this->GetLargestPossibleRegion().GetNumberOfPixels() );
   assert( !this->NodeHasIndex( node, idx ) );
 
   if( node->GetLastIndex() == NodeType::EndIndex )
@@ -222,6 +232,9 @@ ComponentTree<TPixel, VImageDimension, TValue>
 ::NodeHasIndex( const NodeType * node, const OffsetValueType & idx ) const
 {
   assert( node != NULL );
+  assert( idx != NodeType::EndIndex );
+  assert( idx >= 0 );
+  assert( idx < this->GetLargestPossibleRegion().GetNumberOfPixels() );
 
   OffsetValueType current = node->GetFirstIndex();
   while( current != NodeType::EndIndex )
