@@ -42,7 +42,11 @@ IntegratedIntensityComponentTreeFilter<TInputImage>
   delete m_Progress;
   m_Progress = NULL;
   
-  assert( this->IsMonotone() );
+  // usable only with max trees
+  //assert( this->IsMonotone( false, false ) );
+
+  // usable only with min trees
+  // assert( this->IsMonotone( true, false ) );
 
 }
 
@@ -54,7 +58,6 @@ IntegratedIntensityComponentTreeFilter<TInputImage>
 {
   assert(node != NULL);
 
-  AttributeType intensity = NumericTraits<AttributeType>::Zero;
   unsigned long size = 0;
   for( typename NodeType::IndexType current=node->GetFirstIndex();
      current != NodeType::EndIndex;
@@ -64,7 +67,7 @@ IntegratedIntensityComponentTreeFilter<TInputImage>
   m_Progress->CompletedPixel();
   }
 
-  intensity += static_cast<AttributeType>( size * node->GetPixel() );
+  AttributeType intensity = static_cast<AttributeType>( size * node->GetPixel() );
   
   const typename NodeType::ChildrenListType * childrenList = & node->GetChildren();
   for( typename NodeType::ChildrenListType::const_iterator it=childrenList->begin(); it!=childrenList->end(); it++ )
