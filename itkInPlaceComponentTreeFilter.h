@@ -85,6 +85,11 @@ public:
   typedef typename InputImageType::RegionType     InputImageRegionType; 
   typedef typename InputImageType::PixelType      InputImagePixelType;
 
+  typedef typename InputImageType::PixelType       PixelType;
+  typedef typename InputImageType::NodeType        NodeType;
+  typedef typename InputImageType::IndexType       IndexType;
+  typedef typename InputImageType::AttributeType   AttributeType;
+
   typedef TInputImage TOutputImage;
   
   /** ImageDimension constants */
@@ -117,6 +122,14 @@ public:
 
   /** AttributeOpeningComponentTreeFilter will produce the entire output. */
   void EnlargeOutputRequestedRegion(DataObject *itkNotUsed(output));
+  
+  /** Return true if the output tree attribute are monotone.
+   * Set inc to true if the values must increase in the tree.
+   * Set strict to false if the values can be equal from one node to the other
+   */
+  bool IsMonotone( bool inc = false, bool strict = true );
+  
+  bool IsMonotone( const NodeType * node, bool inc = false, bool strict = true );
   
  protected:
   InPlaceComponentTreeFilter();

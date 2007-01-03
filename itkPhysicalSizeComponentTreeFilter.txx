@@ -48,6 +48,7 @@ PhysicalSizeComponentTreeFilter<TImage>
   delete m_Progress;
   m_Progress = NULL;
 
+  assert( this->IsMonotone() );
 }
 
 

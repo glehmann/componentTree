@@ -41,6 +41,8 @@ IntegratedIntensityComponentTreeFilter<TInputImage>
   this->SetComponentIntensitySize( this->GetOutput()->GetRoot() );
   delete m_Progress;
   m_Progress = NULL;
+  
+  assert( this->IsMonotone() );
 
 }
 

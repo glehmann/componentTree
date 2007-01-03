@@ -141,6 +141,49 @@ InPlaceComponentTreeFilter<TInputImage>
     ->SetRequestedRegion( this->GetOutput()->GetLargestPossibleRegion() );
 }
 
+template <class TInputImage>
+bool 
+InPlaceComponentTreeFilter<TInputImage>
+::IsMonotone( bool inc, bool strict )
+{
+  return this->IsMonotone( this->GetOutput()->GetRoot(), inc, strict );
+}
+
+template <class TInputImage>
+bool 
+InPlaceComponentTreeFilter<TInputImage>
+::IsMonotone( const NodeType * node, bool inc, bool strict )
+{
+  const typename NodeType::ChildrenListType * childrenList = & node->GetChildren();
+  for( typename NodeType::ChildrenListType::const_iterator it=childrenList->begin(); it!=childrenList->end(); it++ )
+    {
+    if( inc )
+      {
+      if( node->GetAttribute() > (*it)->GetAttribute() )
+        {
+        return false;
+        }
+      }
+    else
+      {
+      if( node->GetAttribute() < (*it)->GetAttribute() )
+        {
+        return false;
+        }
+      }
+    if( strict && node->GetAttribute() == (*it)->GetAttribute() )
+      {
+      return false;
+      }
+    if( ! this->IsMonotone( *it, inc, strict ) )
+      {
+      return false;
+      }
+    }
+    
+    return true;
+}
+
 } // end namespace itk
 
 #endif
