@@ -150,11 +150,6 @@ public:
     m_LastIndex = idx;
     }
 
-  /** a convenient method to print the tree on std::out.
-   * To be used only on small trees !
-   */ 
-  const void Print( int indent=0 ) const;
-
   /** return a clone of the current tree */
   Self * Clone();
 

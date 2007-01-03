@@ -154,30 +154,6 @@ ComponentTreeNode<TPixel, TIndex, TValue>
   assert( this->CountChildren() == node->CountChildren() );
 }
 
-template <typename TPixel, typename TIndex, typename TValue>
-const void ComponentTreeNode<TPixel, TIndex, TValue>
-::Print( int indent ) const
-{
-  assert( this != NULL );
-/*  for( int i=0; i<indent; i++)
-    {
-    std::cout << "  ";
-    }
-  std::cout << "+ " << static_cast<typename NumericTraits<PixelType>::PrintType>(this->GetPixel())
-            << ":" << this->m_Attribute << " ";
-  for( typename IndexListType::const_iterator it=this->GetIndexes().begin(); it!=this->GetIndexes().end(); it++ )
-    {
-    std::cout << *it << " ";
-    }
-  std::cout << std::endl;
-  for( typename ChildrenListType::const_iterator it=this->GetChildren().begin(); it!=this->GetChildren().end(); it++ )
-    {
-    (*it)->Print( indent+1 );
-    }*/
-  
-}
-
-
 } // namespace itk
 
 #endif
