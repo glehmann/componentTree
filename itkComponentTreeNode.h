@@ -54,17 +54,17 @@ public:
   typedef TAttribute AttributeType;
 
   /** get/set the attribute */
-  const AttributeType & GetAttribute() const
+  inline const AttributeType & GetAttribute() const
     {
-    m_Attribute;
+    return m_Attribute;
     }
 
-  AttributeType & GetAttribute()
+  inline AttributeType & GetAttribute()
     {
-    m_Attribute;
+    return m_Attribute;
     }
 
-  void SetAttribute( const AttributeType & a )
+  inline void SetAttribute( const AttributeType & a )
     {
     m_Attribute = a;
     }
@@ -175,10 +175,6 @@ public:
   itkStaticConstMacro( EndIndex, IndexType, -1 );
   
 
-  /** the attribute */
-  // TODO: make it go back to protected - once found why Get/SetAttribute() are broken
-  TAttribute m_Attribute;
-
 protected:
   /** the pixel value associated with the node */
   PixelType m_Pixel;
@@ -189,6 +185,8 @@ protected:
   /** the list of indexs of the node */
   IndexType  m_FirstIndex;
   IndexType  m_LastIndex;
+  /** the attribute */
+  TAttribute m_Attribute;
 
 private:
   ComponentTreeNode(const Self&); //purposely not implemented

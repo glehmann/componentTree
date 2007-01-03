@@ -58,7 +58,7 @@ AttributeFilteringComponentTreeFilter<TInputImage, TCompare>
   typename NodeType::ChildrenListType::iterator it=childrenList->begin();
   while( it!=childrenList->end() )
     {
-    if( compare( (*it)->m_Attribute, m_Threshold ) )
+    if( compare( (*it)->GetAttribute(), m_Threshold ) )
       {
       this->GetOutput()->NodeFlatten( *it );
       this->GetOutput()->NodeMerge( node, *it );

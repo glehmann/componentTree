@@ -62,7 +62,7 @@ PhysicalSizeComponentTreeFilter<TImage>
   for( typename NodeType::ChildrenListType::const_iterator it=childrenList->begin(); it!=childrenList->end(); it++ )
     {
     this->SetComponentSize( *it );
-    size += (*it)->m_Attribute;
+    size += (*it)->GetAttribute();
     }
 
   unsigned long nb = 0;
@@ -75,7 +75,7 @@ PhysicalSizeComponentTreeFilter<TImage>
     }
 
   size += nb * this->m_AttributeValuePerPixel;
-  node->m_Attribute = size;
+  node->SetAttribute( size );
   // GetAttribute() is broken, but why ??
 
   assert( size > 0 );

@@ -31,7 +31,7 @@ namespace Function {
   inline bool operator()( TComponentTreeNode * n1, TComponentTreeNode * n2 )
     {
     TCompare compare;
-    return compare( n1->m_Attribute, n2->m_Attribute );
+    return compare( n1->GetAttribute(), n2->GetAttribute() );
     }
   };
 

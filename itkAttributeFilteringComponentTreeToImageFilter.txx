@@ -69,7 +69,7 @@ AttributeFilteringComponentTreeToImageFilter<TInputImage, TOutputImage, TCompare
   const typename NodeType::ChildrenListType * childrenList = & node->GetChildren();
   for( typename NodeType::ChildrenListType::const_iterator it=childrenList->begin(); it!=childrenList->end(); it++ )
     {
-    if( compare( (*it)->m_Attribute, m_Threshold ) )
+    if( compare( (*it)->GetAttribute(), m_Threshold ) )
       {
       // write this subtree to the output image with the pixel value of the current node
       this->WriteNodes( *it, v );

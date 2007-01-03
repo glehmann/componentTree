@@ -83,7 +83,7 @@ ComponentTreeAttributeToImageFilter<TInputImage, TOutputImage>
 ::WriteNodes( const NodeType* node )
 {
   assert(node != NULL);
-  OutputImagePixelType v = static_cast<OutputImagePixelType>( node->m_Attribute );
+  OutputImagePixelType v = static_cast<OutputImagePixelType>( node->GetAttribute() );
   OutputImageType* output = this->GetOutput();
 
   for( typename NodeType::IndexType current=node->GetFirstIndex();

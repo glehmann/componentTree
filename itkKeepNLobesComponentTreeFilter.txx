@@ -63,7 +63,7 @@ KeepNLobesComponentTreeFilter<TImage>
     // also, take care to never push the root to the queue !
     if( parent->IsLeaf() && !parent->IsRoot() )
       {
-      m_Queue->Push( parent->m_Attribute, parent );
+      m_Queue->Push( parent->GetAttribute(), parent );
       }
     }
 
@@ -84,7 +84,7 @@ KeepNLobesComponentTreeFilter<TImage>
 
   if( node->IsLeaf() )
     {
-    m_Queue->Push( node->m_Attribute, node );
+    m_Queue->Push( node->GetAttribute(), node );
     }
   else
     {

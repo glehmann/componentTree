@@ -68,10 +68,10 @@ IntegratedIntensityComponentTreeFilter<TInputImage>
   for( typename NodeType::ChildrenListType::const_iterator it=childrenList->begin(); it!=childrenList->end(); it++ )
     {
     this->SetComponentIntensitySize( *it );
-    intensity += (*it)->m_Attribute;
+    intensity += (*it)->GetAttribute();
     }
 
-  node->m_Attribute = intensity;
+  node->SetAttribute( intensity );
 }
 
 
