@@ -134,25 +134,24 @@ typename ComponentTreeNode<TPixel, TIndex, TValue>::Self *
 ComponentTreeNode<TPixel, TIndex, TValue>
 ::Clone() 
 {
-/*  // create a new node to clone this one
+  // create a new node to clone this one
   Self * node = new Self();
   // copy the ivars
   node->SetAttribute( m_Attribute );
-  // node->SetParent( NULL );
+  node->SetParent( NULL );
   node->SetPixel( m_Pixel );
-  IndexListType  m_IndexList;
-  
+  node->SetFirstIndex( m_FirstIndex );
+  node->SetLastIndex( m_LastIndex );
+  // and copy clone the childs
   for( ChildrenListIteratorType it=this->GetChildren().begin(); it!=this->GetChildren().end(); it++ )
     {
     assert( (*it)->GetParent() == this );
-    assert( this->GetPixel() < (*it)->GetPixel() );
-    // merge the children of the children
-    (*it)->Clone();
-    // and merge this children
-    this->Merge( *it );
+
+    Self * child = (*it)->Clone();
+    node->AddChild( child );
     }
-  // clear the child list 
-  this->GetChildren().clear();*/
+    
+  assert( this->CountChildren() == node->CountChildren() );
 }
 
 template <typename TPixel, typename TIndex, typename TValue>
