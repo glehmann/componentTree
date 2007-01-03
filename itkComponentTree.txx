@@ -130,7 +130,7 @@ ComponentTree<TPixel, VImageDimension, TValue>
 
   int size = 0;
   OffsetValueType current = node->GetFirstIndex();
-  while( current != -1 )
+  while( current != NodeType::EndIndex )
     {
     size++;
     current = m_LinkedListArray[ current ];
