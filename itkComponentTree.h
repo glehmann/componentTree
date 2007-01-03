@@ -152,9 +152,15 @@ public:
 
   void NodeAddIndex( NodeType *node, const OffsetValueType & idx );
 
+  void NodeAddIndex( NodeType *node, const IndexType & idx );
+
   bool NodeRemoveIndex( NodeType *node, const OffsetValueType & idx );
 
+  bool NodeRemoveIndex( NodeType *node, const IndexType & idx );
+
   bool NodeHasIndex( const NodeType *node, const OffsetValueType & idx ) const;
+
+  bool NodeHasIndex( const NodeType *node, const IndexType & idx ) const;
 
   void NodeTakeIndexesFrom( NodeType * node, NodeType *obsoletedNode );
 

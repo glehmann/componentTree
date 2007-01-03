@@ -171,7 +171,7 @@ ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>
           {
           if( n == NULL )
             {
-            output->NodeAddIndex( nn, output->ComputeOffset( iIt.GetIndex() ) );
+            output->NodeAddIndex( nn, iIt.GetIndex() );
             n = nn;
             }
           else
@@ -189,7 +189,7 @@ ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>
         {
         n = new NodeType();
         n->SetPixel( p );
-        output->NodeAddIndex( n, output->ComputeOffset( iIt.GetIndex() ) );
+        output->NodeAddIndex( n, iIt.GetIndex() );
         }
 
       nIt.SetCenterPixel( n );

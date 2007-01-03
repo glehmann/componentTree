@@ -173,6 +173,16 @@ ComponentTree<TPixel, VImageDimension, TValue>
   return false;*/
 }
 
+template<class TPixel, unsigned int VImageDimension, class TValue>
+bool 
+ComponentTree<TPixel, VImageDimension, TValue>
+::NodeRemoveIndex( NodeType * node, const IndexType & idx ) 
+{
+  assert( node != NULL );
+  return this->NodeRemoveIndex( node, this->ComputeOffset( idx ) );
+}
+
+
 /** Add an index */
 template<class TPixel, unsigned int VImageDimension, class TValue>
 void 
@@ -197,6 +207,16 @@ ComponentTree<TPixel, VImageDimension, TValue>
 }
 
 template<class TPixel, unsigned int VImageDimension, class TValue>
+void 
+ComponentTree<TPixel, VImageDimension, TValue>
+::NodeAddIndex( NodeType * node, const IndexType & idx ) 
+{
+  assert( node != NULL );
+  this->NodeAddIndex( node, this->ComputeOffset( idx ) );
+}
+
+
+template<class TPixel, unsigned int VImageDimension, class TValue>
 bool 
 ComponentTree<TPixel, VImageDimension, TValue>
 ::NodeHasIndex( const NodeType * node, const OffsetValueType & idx ) const
@@ -214,6 +234,16 @@ ComponentTree<TPixel, VImageDimension, TValue>
     }
   return false;
 }
+
+template<class TPixel, unsigned int VImageDimension, class TValue>
+bool 
+ComponentTree<TPixel, VImageDimension, TValue>
+::NodeHasIndex( const NodeType * node, const IndexType & idx ) const
+{
+  assert( node != NULL );
+  return this->NodeHasIndex( node, this->ComputeOffset( idx ) );
+}
+
 
 template<class TPixel, unsigned int VImageDimension, class TValue>
 void 
