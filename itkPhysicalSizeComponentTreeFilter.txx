@@ -65,7 +65,7 @@ PhysicalSizeComponentTreeFilter<TImage>
     size += (*it)->m_Attribute;
     }
 
-  unsigned long nb = 1;
+  unsigned long nb = 0;
   for( typename NodeType::IndexType current=node->GetFirstIndex();
        current != NodeType::EndIndex;
        current = this->GetInput()->GetLinkedListArray()[ current ] )

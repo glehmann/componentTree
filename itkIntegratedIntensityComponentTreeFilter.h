@@ -78,19 +78,7 @@ protected:
    * to GrayscaleGeodesicErodeImageFilter. */
   void GenerateData();
   
-  class IntensitySize
-    {
-    public:
-    IntensitySize( PixelType i, unsigned long s )
-      {
-      size = s;
-      intensity = i;
-      }
-    unsigned long size;
-    PixelType intensity;
-    };
-
-  IntensitySize SetComponentIntensitySize( NodeType* );
+  void SetComponentIntensitySize( NodeType* );
 
 private:
   IntegratedIntensityComponentTreeFilter(const Self&); //purposely not implemented

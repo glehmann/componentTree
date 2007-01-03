@@ -46,13 +46,13 @@ IntegratedIntensityComponentTreeFilter<TInputImage>
 
 
 template<class TInputImage>
-typename IntegratedIntensityComponentTreeFilter<TInputImage>::IntensitySize
+void
 IntegratedIntensityComponentTreeFilter<TInputImage>
 ::SetComponentIntensitySize( NodeType* node )
 {
   assert(node != NULL);
 
-  PixelType intensity = NumericTraits<PixelType>::Zero;
+  AttributeType intensity = NumericTraits<AttributeType>::Zero;
   unsigned long size = 0;
   for( typename NodeType::IndexType current=node->GetFirstIndex();
      current != NodeType::EndIndex;
@@ -62,26 +62,16 @@ IntegratedIntensityComponentTreeFilter<TInputImage>
   m_Progress->CompletedPixel();
   }
 
+  intensity += static_cast<AttributeType>( size * node->GetPixel() );
+  
   const typename NodeType::ChildrenListType * childrenList = & node->GetChildren();
   for( typename NodeType::ChildrenListType::const_iterator it=childrenList->begin(); it!=childrenList->end(); it++ )
     {
-    IntensitySize is = this->SetComponentIntensitySize( *it );
-    intensity = std::max( intensity, is.intensity );
-    size += is.size;
+    this->SetComponentIntensitySize( *it );
+    intensity += (*it)->m_Attribute;
     }
 
-  if( node->IsRoot() )
-    {
-    intensity = NumericTraits<PixelType>::max();
-    }
-  else
-    {
-    intensity = intensity + ( node->GetPixel() - node->GetParent()->GetPixel() );
-    }
-
-  node->m_Attribute = static_cast< AttributeType >( intensity * size );
-
-  return IntensitySize( intensity, size );
+  node->m_Attribute = intensity;
 }
 
 

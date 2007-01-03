@@ -52,7 +52,7 @@ SizeComponentTreeFilter<TImage>
 {
   assert(node != NULL);
   
-  AttributeType size = 1;  // 1, for the current node
+  AttributeType size = 0;
   
   const typename NodeType::ChildrenListType * childrenList = & node->GetChildren();
   for( typename NodeType::ChildrenListType::const_iterator it=childrenList->begin(); it!=childrenList->end(); it++ )

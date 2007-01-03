@@ -7,7 +7,7 @@
 #include "itkImageToMinimumTreeFilter.h"
 #include "itkComponentTreeAttributeToImageFilter.h"
 #include "itkComponentTree.h"
-#include "itkSizeComponentTreeFilter.h"
+#include "itkIntegratedIntensityComponentTreeFilter.h"
 #include "itkMeanImageFilter.h"
 #include "itkAttributeFilteringComponentTreeFilter.h"
 #include <list>
@@ -57,7 +57,7 @@ std::cout << "children: " << filter->GetOutput()->GetRoot()->CountChildren() << 
 std::cout << "indexes: " << filter->GetOutput()->GetRoot()->CountIndexes( filter->GetOutput()->GetLinkedListArray() ) << std::endl;
 */
 
-  typedef itk::SizeComponentTreeFilter< TreeType > SizeType;
+  typedef itk::IntegratedIntensityComponentTreeFilter< TreeType > SizeType;
   SizeType::Pointer size = SizeType::New();
   size->SetInput( filter->GetOutput() );
   itk::SimpleFilterWatcher sWatcher(size, "size");
