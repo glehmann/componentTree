@@ -224,7 +224,7 @@ ComponentTree<TPixel, VImageDimension, TValue>
   assert( node != NULL );
 
   OffsetValueType current = node->GetFirstIndex();
-  while( current != -1 )
+  while( current != NodeType::EndIndex )
     {
     if( current == idx )
       {
