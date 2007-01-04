@@ -10,7 +10,8 @@ INCLUDE(IJMacros.txt)
 #The following lines are required to use Dart
 ENABLE_TESTING()
 INCLUDE(Dart)
-FIND_PROGRAM(IMAGE_COMPARE ImageCompare)
+FIND_PROGRAM(ITK_TEST_DRIVER itkTestDriver)
+SET(TEST_COMMAND ${ITK_TEST_DRIVER} --add-before-env PATH ${CMAKE_BINARY_DIR})
 
 #Declare any external dependencies that your project may have here.
 #examples include: ITK, VTK, JPEG, PNG, OpenGL, ZLIB, Perl, Java
@@ -62,7 +63,11 @@ ENDIF(BUILD_WRAPPERS)
 
 IF(BUILD_TESTING)
 
-SET(CurrentExe "check")
+SET(CurrentExe "maxtree")
+ADD_EXECUTABLE(${CurrentExe} ${CurrentExe}.cxx)
+TARGET_LINK_LIBRARIES(${CurrentExe} ${Libraries})
+
+SET(CurrentExe "mintree")
 ADD_EXECUTABLE(${CurrentExe} ${CurrentExe}.cxx)
 TARGET_LINK_LIBRARIES(${CurrentExe} ${Libraries})
 
@@ -76,5 +81,22 @@ ENDIF(BUILD_TESTING)
 #any tests you can comment out or delete the following line.
 # ADD_TEST(Testname ExecutableToRun arg1 arg2 arg3)
 
-ADD_TEST(Run check ${INPUT_IMAGE} out.png)
-ADD_TEST(CompareImage ${IMAGE_COMPARE} out.png ${CMAKE_SOURCE_DIR}/images/test.png)
+ADD_TEST(MaxTreeF=0 ${TEST_COMMAND}
+   maxtree ${CMAKE_SOURCE_DIR}/images/cthead1.png maxtreeF=0.png 0
+   --compare maxtreeF=0.png ${CMAKE_SOURCE_DIR}/images/cthead1.png
+)
+
+ADD_TEST(MaxTreeF=1 ${TEST_COMMAND}
+   maxtree ${CMAKE_SOURCE_DIR}/images/cthead1.png maxtreeF=1.png 1
+   --compare maxtreeF=1.png ${CMAKE_SOURCE_DIR}/images/cthead1.png
+)
+
+ADD_TEST(MinTreeF=0 ${TEST_COMMAND}
+   mintree ${CMAKE_SOURCE_DIR}/images/cthead1.png mintreeF=0.png 0
+   --compare mintreeF=0.png ${CMAKE_SOURCE_DIR}/images/cthead1.png
+)
+
+ADD_TEST(MinTreeF=1 ${TEST_COMMAND}
+   mintree ${CMAKE_SOURCE_DIR}/images/cthead1.png mintreeF=1.png 1
+   --compare mintreeF=1.png ${CMAKE_SOURCE_DIR}/images/cthead1.png
+)
