@@ -99,6 +99,10 @@ SET(CurrentExe "physical_size_opening")
 ADD_EXECUTABLE(${CurrentExe} ${CurrentExe}.cxx)
 TARGET_LINK_LIBRARIES(${CurrentExe} ${Libraries})
 
+SET(CurrentExe "keep_n_lobes")
+ADD_EXECUTABLE(${CurrentExe} ${CurrentExe}.cxx)
+TARGET_LINK_LIBRARIES(${CurrentExe} ${Libraries})
+
 ENDIF(BUILD_TESTING)
 
 #the following line is an example of how to add a test to your project.
@@ -190,3 +194,9 @@ FOREACH(s 10 100 1000 10000 100000)
 #     --compare physical_size_openingF=1Size=${s}.png ${CMAKE_SOURCE_DIR}/images/physical_size_openingF=1Size=${s}.png
 #  )
 ENDFOREACH(s)
+
+ADD_TEST(KeepNLobesF=1N=4 ${TEST_COMMAND}
+   keep_n_lobes ${CMAKE_SOURCE_DIR}/images/cthead1.png keep_n_lobesF=1N=4.png 1 4
+   --compare keep_n_lobesF=1N=4.png ${CMAKE_SOURCE_DIR}/images/keep_n_lobesF=1N=4.png
+)
+
