@@ -75,6 +75,10 @@ SET(CurrentExe "size")
 ADD_EXECUTABLE(${CurrentExe} ${CurrentExe}.cxx)
 TARGET_LINK_LIBRARIES(${CurrentExe} ${Libraries})
 
+SET(CurrentExe "physical_size")
+ADD_EXECUTABLE(${CurrentExe} ${CurrentExe}.cxx)
+TARGET_LINK_LIBRARIES(${CurrentExe} ${Libraries})
+
 ENDIF(BUILD_TESTING)
 
 #the following line is an example of how to add a test to your project.
@@ -113,4 +117,14 @@ ADD_TEST(SizeF=0 ${TEST_COMMAND}
 ADD_TEST(SizeF=1 ${TEST_COMMAND}
    size ${CMAKE_SOURCE_DIR}/images/cthead1_small.nrrd sizeF=1.png 1
    --compare sizeF=1.png ${CMAKE_SOURCE_DIR}/images/sizeF=1.png
+)
+
+ADD_TEST(PhysicalSizeF=0 ${TEST_COMMAND}
+   physical_size ${CMAKE_SOURCE_DIR}/images/cthead1_small.nrrd physical_sizeF=0.nrrd 0
+   --compare physical_sizeF=0.nrrd ${CMAKE_SOURCE_DIR}/images/physical_sizeF=0.nrrd
+)
+
+ADD_TEST(PhysicalSizeF=1 ${TEST_COMMAND}
+   physical_size ${CMAKE_SOURCE_DIR}/images/cthead1_small.nrrd physical_sizeF=1.nrrd 1
+   --compare physical_sizeF=1.nrrd ${CMAKE_SOURCE_DIR}/images/physical_sizeF=1.nrrd
 )
