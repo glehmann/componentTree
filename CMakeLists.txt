@@ -95,6 +95,10 @@ SET(CurrentExe "size_opening")
 ADD_EXECUTABLE(${CurrentExe} ${CurrentExe}.cxx)
 TARGET_LINK_LIBRARIES(${CurrentExe} ${Libraries})
 
+SET(CurrentExe "physical_size_opening")
+ADD_EXECUTABLE(${CurrentExe} ${CurrentExe}.cxx)
+TARGET_LINK_LIBRARIES(${CurrentExe} ${Libraries})
+
 ENDIF(BUILD_TESTING)
 
 #the following line is an example of how to add a test to your project.
@@ -173,5 +177,16 @@ FOREACH(s 10 100 1000 10000 100000)
 #  ADD_TEST(SizeOpeningF=1Size=${s} ${TEST_COMMAND}
 #     size_opening ${CMAKE_SOURCE_DIR}/images/cthead1.png size_openingF=1Size=${s}.png 1 ${s}
 #     --compare size_openingF=1Size=${s}.png ${CMAKE_SOURCE_DIR}/images/size_openingF=1Size=${s}.png
+#  )
+ENDFOREACH(s)
+
+FOREACH(s 10 100 1000 10000 100000)
+  ADD_TEST(PhysicalSizeOpeningF=0Size=${s} ${TEST_COMMAND}
+     physical_size_opening ${CMAKE_SOURCE_DIR}/images/cthead1_small.nrrd physical_size_openingF=0Size=${s}.png 0 ${s}
+     --compare physical_size_openingF=0Size=${s}.png ${CMAKE_SOURCE_DIR}/images/physical_size_openingF=0Size=${s}.png
+  )
+#  ADD_TEST(PhysicalSizeOpeningF=1Size=${s} ${TEST_COMMAND}
+#     physical_size_opening ${CMAKE_SOURCE_DIR}/images/cthead1_small.nrrd physical_size_openingF=1Size=${s}.png 1 ${s}
+#     --compare physical_size_openingF=1Size=${s}.png ${CMAKE_SOURCE_DIR}/images/physical_size_openingF=1Size=${s}.png
 #  )
 ENDFOREACH(s)
