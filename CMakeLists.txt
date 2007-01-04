@@ -91,6 +91,10 @@ SET(CurrentExe "binary_leaves")
 ADD_EXECUTABLE(${CurrentExe} ${CurrentExe}.cxx)
 TARGET_LINK_LIBRARIES(${CurrentExe} ${Libraries})
 
+SET(CurrentExe "size_opening")
+ADD_EXECUTABLE(${CurrentExe} ${CurrentExe}.cxx)
+TARGET_LINK_LIBRARIES(${CurrentExe} ${Libraries})
+
 ENDIF(BUILD_TESTING)
 
 #the following line is an example of how to add a test to your project.
@@ -161,3 +165,13 @@ ADD_TEST(BinaryLeavesF=1 ${TEST_COMMAND}
    --compare binary_leavesF=1.png ${CMAKE_SOURCE_DIR}/images/binary_leavesF=1.png
 )
 
+FOREACH(s 10 100 1000 10000 100000)
+  ADD_TEST(SizeOpeningF=0Size=${s} ${TEST_COMMAND}
+     size_opening ${CMAKE_SOURCE_DIR}/images/cthead1.png size_openingF=0Size=${s}.png 0 ${s}
+     --compare size_openingF=0Size=${s}.png ${CMAKE_SOURCE_DIR}/images/size_openingF=0Size=${s}.png
+  )
+#  ADD_TEST(SizeOpeningF=1Size=${s} ${TEST_COMMAND}
+#     size_opening ${CMAKE_SOURCE_DIR}/images/cthead1.png size_openingF=1Size=${s}.png 1 ${s}
+#     --compare size_openingF=1Size=${s}.png ${CMAKE_SOURCE_DIR}/images/size_openingF=1Size=${s}.png
+#  )
+ENDFOREACH(s)
