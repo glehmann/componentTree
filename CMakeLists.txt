@@ -83,6 +83,10 @@ SET(CurrentExe "integrated_intensity")
 ADD_EXECUTABLE(${CurrentExe} ${CurrentExe}.cxx)
 TARGET_LINK_LIBRARIES(${CurrentExe} ${Libraries})
 
+SET(CurrentExe "inplace")
+ADD_EXECUTABLE(${CurrentExe} ${CurrentExe}.cxx)
+TARGET_LINK_LIBRARIES(${CurrentExe} ${Libraries})
+
 ENDIF(BUILD_TESTING)
 
 #the following line is an example of how to add a test to your project.
@@ -134,7 +138,12 @@ ADD_TEST(PhysicalSizeF=1 ${TEST_COMMAND}
 )
 
 ADD_TEST(IntegratedIntensityF=0 ${TEST_COMMAND}
-   physical_size ${CMAKE_SOURCE_DIR}/images/cthead1_small.nrrd integrated_intensityF=0.nrrd 0
+   integrated_intensity ${CMAKE_SOURCE_DIR}/images/cthead1_small.nrrd integrated_intensityF=0.nrrd 0
    --compare integrated_intensityF=0.nrrd ${CMAKE_SOURCE_DIR}/images/integrated_intensityF=0.nrrd
+)
+
+ADD_TEST(InPlaceF=0 ${TEST_COMMAND}
+   inplace ${CMAKE_SOURCE_DIR}/images/cthead1.png inplaceF=0.png 0
+   --compare inplaceF=0.png ${CMAKE_SOURCE_DIR}/images/cthead1.png
 )
 

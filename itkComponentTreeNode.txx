@@ -152,6 +152,8 @@ ComponentTreeNode<TPixel, TIndex, TValue>
     }
     
   assert( this->CountChildren() == node->CountChildren() );
+  
+  return node;
 }
 
 } // namespace itk

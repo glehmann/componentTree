@@ -86,6 +86,7 @@ InPlaceComponentTreeFilter<TInputImage>
     Superclass::AllocateOutputs();
     // copy the content of the input image to the output image
     this->GetOutput()->SetRoot( this->GetInput()->GetRoot()->Clone() );
+    this->GetOutput()->GetLinkedListArray() = this->GetInput()->GetLinkedListArray();
     }
 }
 

@@ -72,6 +72,9 @@ public:
   /** Run-time type information (and related methods). */
   itkTypeMacro(InPlaceComponentTreeFilter,ImageToImageFilter);
 
+  /** Standard New method. */
+  itkNewMacro(Self);  
+
   /** Superclass typedefs. */
   typedef typename Superclass::OutputImageType OutputImageType;
   typedef typename Superclass::OutputImagePointer OutputImagePointer;
@@ -161,6 +164,14 @@ public:
    *
    * \sa ProcessObject::ReleaseInputs() */
   virtual void ReleaseInputs(); 
+  
+  virtual void GenerateData()
+    {
+    // Allocate the output
+    this->AllocateOutputs();
+    // and do nothing much
+    }
+
 
 private:
   InPlaceComponentTreeFilter(const Self&); //purposely not implemented
