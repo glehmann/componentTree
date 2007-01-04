@@ -1,7 +1,7 @@
 /*=========================================================================
 
   Program:   Insight Segmentation & Registration Toolkit
-  Module:    $RCSfile: itkComponentTreeLeavesToImageFilter.h,v $
+  Module:    $RCSfile: itkComponentTreeLeavesToBinaryImageFilter.h,v $
   Language:  C++
   Date:      $Date: 2006/03/28 19:59:05 $
   Version:   $Revision: 1.6 $
@@ -14,26 +14,26 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef __itkComponentTreeLeavesToImageFilter_h
-#define __itkComponentTreeLeavesToImageFilter_h
+#ifndef __itkComponentTreeLeavesToBinaryImageFilter_h
+#define __itkComponentTreeLeavesToBinaryImageFilter_h
 
 #include "itkImageToImageFilter.h"
 #include "itkProgressReporter.h"
 
 namespace itk {
 
-/** \class ComponentTreeLeavesToImageFilter
+/** \class ComponentTreeLeavesToBinaryImageFilter
  * \brief 
  *
  * \ingroup ImageEnhancement  MathematicalMorphologyImageFilters
  */
 template<class TInputImage, class TOutputImage>
-class ITK_EXPORT ComponentTreeLeavesToImageFilter : 
+class ITK_EXPORT ComponentTreeLeavesToBinaryImageFilter : 
     public ImageToImageFilter<TInputImage, TOutputImage>
 {
 public:
   /** Standard class typedefs. */
-  typedef ComponentTreeLeavesToImageFilter Self;
+  typedef ComponentTreeLeavesToBinaryImageFilter Self;
   typedef ImageToImageFilter<TInputImage, TOutputImage> Superclass;
   typedef SmartPointer<Self>        Pointer;
   typedef SmartPointer<const Self>  ConstPointer;
@@ -61,7 +61,7 @@ public:
   itkNewMacro(Self);  
 
   /** Runtime information support. */
-  itkTypeMacro(ComponentTreeLeavesToImageFilter, 
+  itkTypeMacro(ComponentTreeLeavesToBinaryImageFilter, 
                ImageToImageFilter);
 
   itkSetMacro(ForegroundValue, OutputImagePixelType);
@@ -82,16 +82,16 @@ public:
 #endif
 
 protected:
-  ComponentTreeLeavesToImageFilter();
-  ~ComponentTreeLeavesToImageFilter() {};
+  ComponentTreeLeavesToBinaryImageFilter();
+  ~ComponentTreeLeavesToBinaryImageFilter() {};
   void PrintSelf(std::ostream& os, Indent indent) const;
 
-  /** ComponentTreeLeavesToImageFilter needs the entire input be
+  /** ComponentTreeLeavesToBinaryImageFilter needs the entire input be
    * available. Thus, it needs to provide an implementation of
    * GenerateInputRequestedRegion(). */
   void GenerateInputRequestedRegion() ;
 
-  /** ComponentTreeLeavesToImageFilter will produce the entire output. */
+  /** ComponentTreeLeavesToBinaryImageFilter will produce the entire output. */
   void EnlargeOutputRequestedRegion(DataObject *itkNotUsed(output));
   
   /** Single-threaded version of GenerateData.  This filter delegates
@@ -102,7 +102,7 @@ protected:
   
 
 private:
-  ComponentTreeLeavesToImageFilter(const Self&); //purposely not implemented
+  ComponentTreeLeavesToBinaryImageFilter(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
 
   ProgressReporter * m_Progress;
@@ -115,7 +115,7 @@ private:
 } // end namespace itk
   
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkComponentTreeLeavesToImageFilter.txx"
+#include "itkComponentTreeLeavesToBinaryImageFilter.txx"
 #endif
 
 #endif

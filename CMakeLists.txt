@@ -87,6 +87,10 @@ SET(CurrentExe "inplace")
 ADD_EXECUTABLE(${CurrentExe} ${CurrentExe}.cxx)
 TARGET_LINK_LIBRARIES(${CurrentExe} ${Libraries})
 
+SET(CurrentExe "binary_leaves")
+ADD_EXECUTABLE(${CurrentExe} ${CurrentExe}.cxx)
+TARGET_LINK_LIBRARIES(${CurrentExe} ${Libraries})
+
 ENDIF(BUILD_TESTING)
 
 #the following line is an example of how to add a test to your project.
@@ -145,5 +149,15 @@ ADD_TEST(IntegratedIntensityF=0 ${TEST_COMMAND}
 ADD_TEST(InPlaceF=0 ${TEST_COMMAND}
    inplace ${CMAKE_SOURCE_DIR}/images/cthead1.png inplaceF=0.png 0
    --compare inplaceF=0.png ${CMAKE_SOURCE_DIR}/images/cthead1.png
+)
+
+ADD_TEST(BinaryLeavesF=0 ${TEST_COMMAND}
+   binary_leaves ${CMAKE_SOURCE_DIR}/images/cthead1.png binary_leavesF=0.png 0 150 50
+   --compare binary_leavesF=0.png ${CMAKE_SOURCE_DIR}/images/binary_leavesF=0.png
+)
+
+ADD_TEST(BinaryLeavesF=1 ${TEST_COMMAND}
+   binary_leaves ${CMAKE_SOURCE_DIR}/images/cthead1.png binary_leavesF=1.png 1 0 255
+   --compare binary_leavesF=1.png ${CMAKE_SOURCE_DIR}/images/binary_leavesF=1.png
 )
 

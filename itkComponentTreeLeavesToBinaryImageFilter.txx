@@ -1,7 +1,7 @@
 /*=========================================================================
 
   Program:   Insight Segmentation & Registration Toolkit
-  Module:    $RCSfile: itkComponentTreeLeavesToImageFilter.txx,v $
+  Module:    $RCSfile: itkComponentTreeLeavesToBinaryImageFilter.txx,v $
   Language:  C++
   Date:      $Date: 2005/08/23 15:09:03 $
   Version:   $Revision: 1.6 $
@@ -14,12 +14,12 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef __itkComponentTreeLeavesToImageFilter_txx
-#define __itkComponentTreeLeavesToImageFilter_txx
+#ifndef __itkComponentTreeLeavesToBinaryImageFilter_txx
+#define __itkComponentTreeLeavesToBinaryImageFilter_txx
 
 #include "itkImageRegionIterator.h"
 #include "itkImageRegionConstIterator.h"
-#include "itkComponentTreeLeavesToImageFilter.h"
+#include "itkComponentTreeLeavesToBinaryImageFilter.h"
 #include "itkImageRegionConstIteratorWithIndex.h"
 #include <algorithm>
 #include <list>
@@ -28,8 +28,8 @@
 namespace itk {
 
 template <class TInputImage, class TOutputImage>
-ComponentTreeLeavesToImageFilter<TInputImage, TOutputImage>
-::ComponentTreeLeavesToImageFilter()
+ComponentTreeLeavesToBinaryImageFilter<TInputImage, TOutputImage>
+::ComponentTreeLeavesToBinaryImageFilter()
 {
   m_ForegroundValue = NumericTraits< OutputImagePixelType >::max();
   m_BackgroundValue = NumericTraits< OutputImagePixelType >::Zero;
@@ -37,7 +37,7 @@ ComponentTreeLeavesToImageFilter<TInputImage, TOutputImage>
 
 template <class TInputImage, class TOutputImage>
 void 
-ComponentTreeLeavesToImageFilter<TInputImage, TOutputImage>
+ComponentTreeLeavesToBinaryImageFilter<TInputImage, TOutputImage>
 ::GenerateInputRequestedRegion()
 {
   // call the superclass' implementation of this method
@@ -55,7 +55,7 @@ ComponentTreeLeavesToImageFilter<TInputImage, TOutputImage>
 
 template <class TInputImage, class TOutputImage>
 void 
-ComponentTreeLeavesToImageFilter<TInputImage, TOutputImage>
+ComponentTreeLeavesToBinaryImageFilter<TInputImage, TOutputImage>
 ::EnlargeOutputRequestedRegion(DataObject *)
 {
   this->GetOutput()
@@ -65,7 +65,7 @@ ComponentTreeLeavesToImageFilter<TInputImage, TOutputImage>
 
 template<class TInputImage, class TOutputImage>
 void
-ComponentTreeLeavesToImageFilter<TInputImage, TOutputImage>
+ComponentTreeLeavesToBinaryImageFilter<TInputImage, TOutputImage>
 ::GenerateData()
 {
   // Allocate the output
@@ -81,7 +81,7 @@ ComponentTreeLeavesToImageFilter<TInputImage, TOutputImage>
 
 template<class TInputImage, class TOutputImage>
 void
-ComponentTreeLeavesToImageFilter<TInputImage, TOutputImage>
+ComponentTreeLeavesToBinaryImageFilter<TInputImage, TOutputImage>
 ::WriteNodes( const NodeType* node )
 {
   assert(node != NULL);
@@ -121,7 +121,7 @@ ComponentTreeLeavesToImageFilter<TInputImage, TOutputImage>
 
 template<class TInputImage, class TOutputImage>
 void
-ComponentTreeLeavesToImageFilter<TInputImage, TOutputImage>
+ComponentTreeLeavesToBinaryImageFilter<TInputImage, TOutputImage>
 ::PrintSelf(std::ostream &os, Indent indent) const
 {
   Superclass::PrintSelf(os, indent);
