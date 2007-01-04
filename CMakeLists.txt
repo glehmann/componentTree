@@ -71,6 +71,10 @@ SET(CurrentExe "mintree")
 ADD_EXECUTABLE(${CurrentExe} ${CurrentExe}.cxx)
 TARGET_LINK_LIBRARIES(${CurrentExe} ${Libraries})
 
+SET(CurrentExe "size")
+ADD_EXECUTABLE(${CurrentExe} ${CurrentExe}.cxx)
+TARGET_LINK_LIBRARIES(${CurrentExe} ${Libraries})
+
 ENDIF(BUILD_TESTING)
 
 #the following line is an example of how to add a test to your project.
@@ -99,4 +103,14 @@ ADD_TEST(MinTreeF=0 ${TEST_COMMAND}
 ADD_TEST(MinTreeF=1 ${TEST_COMMAND}
    mintree ${CMAKE_SOURCE_DIR}/images/cthead1.png mintreeF=1.png 1
    --compare mintreeF=1.png ${CMAKE_SOURCE_DIR}/images/cthead1.png
+)
+
+ADD_TEST(SizeF=0 ${TEST_COMMAND}
+   size ${CMAKE_SOURCE_DIR}/images/cthead1_small.nrrd sizeF=0.png 0
+   --compare sizeF=0.png ${CMAKE_SOURCE_DIR}/images/sizeF=0.png
+)
+
+ADD_TEST(SizeF=1 ${TEST_COMMAND}
+   size ${CMAKE_SOURCE_DIR}/images/cthead1_small.nrrd sizeF=1.png 1
+   --compare sizeF=1.png ${CMAKE_SOURCE_DIR}/images/sizeF=1.png
 )
