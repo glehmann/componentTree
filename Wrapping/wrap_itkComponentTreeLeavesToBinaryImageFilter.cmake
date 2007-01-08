@@ -1,4 +1,4 @@
-WRAP_CLASS("itk::ComponentTreeLeavesToImageFilter" POINTER)
+WRAP_CLASS("itk::ComponentTreeLeavesToBinaryImageFilter" POINTER)
   FOREACH(t1 ${WRAP_ITK_SCALAR})
     FOREACH(t2 ${WRAP_ITK_USIGN_INT})
       FOREACH(d ${WRAP_ITK_DIMS})
