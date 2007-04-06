@@ -1,7 +1,7 @@
 /*=========================================================================
 
   Program:   Insight Segmentation & Registration Toolkit
-  Module:    $RCSfile: itkIntensityComponentTreeFilter.txx,v $
+  Module:    $RCSfile: itkLocalIntensityComponentTreeFilter.txx,v $
   Language:  C++
   Date:      $Date: 2005/08/23 15:09:03 $
   Version:   $Revision: 1.6 $
@@ -14,25 +14,25 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef __itkIntensityComponentTreeFilter_txx
-#define __itkIntensityComponentTreeFilter_txx
+#ifndef __itkLocalIntensityComponentTreeFilter_txx
+#define __itkLocalIntensityComponentTreeFilter_txx
 
-#include "itkIntensityComponentTreeFilter.h"
+#include "itkLocalIntensityComponentTreeFilter.h"
 #include "itkProgressReporter.h"
 
 
 namespace itk {
 
 template <class TInputImage>
-IntensityComponentTreeFilter<TInputImage>
-::IntensityComponentTreeFilter()
+LocalIntensityComponentTreeFilter<TInputImage>
+::LocalIntensityComponentTreeFilter()
 {
 }
 
 
 template<class TInputImage>
 void
-IntensityComponentTreeFilter<TInputImage>
+LocalIntensityComponentTreeFilter<TInputImage>
 ::GenerateData()
 {
   // Allocate the output
@@ -48,22 +48,31 @@ IntensityComponentTreeFilter<TInputImage>
 
 template<class TInputImage>
 void
-IntensityComponentTreeFilter<TInputImage>
+LocalIntensityComponentTreeFilter<TInputImage>
 ::SetComponentIntensity( NodeType* node )
 {
   assert(node != NULL);
+  AttributeType intensity = NumericTraits<AttributeType>::Zero;
   const typename NodeType::ChildrenListType * childrenList = & node->GetChildren();
   for( typename NodeType::ChildrenListType::const_iterator it=childrenList->begin(); it!=childrenList->end(); it++ )
     {
     this->SetComponentIntensity( *it );
+    intensity = std::max( intensity, (*it)->GetAttribute() );
     }
-  node->SetAttribute( static_cast< AttributeType >( node->GetPixel() ) );
+  if( node->IsRoot() )
+    {
+    node->SetAttribute( NumericTraits<AttributeType>::max() );
+    }
+  else
+    {
+    node->SetAttribute( static_cast< AttributeType >( intensity + ( node->GetPixel() - node->GetParent()->GetPixel() ) ) );
+    }
 }
 
 
 template<class TInputImage>
 void
-IntensityComponentTreeFilter<TInputImage>
+LocalIntensityComponentTreeFilter<TInputImage>
 ::PrintSelf(std::ostream &os, Indent indent) const
 {
   Superclass::PrintSelf(os, indent);
