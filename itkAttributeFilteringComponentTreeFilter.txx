@@ -28,6 +28,7 @@ AttributeFilteringComponentTreeFilter<TInputImage, TCompare>
 ::AttributeFilteringComponentTreeFilter()
 {
   m_Threshold = itk::NumericTraits< AttributeType >::Zero;
+  m_FilteringType = MAXIMUM;
 }
 
 
@@ -40,9 +41,28 @@ AttributeFilteringComponentTreeFilter<TInputImage, TCompare>
   this->AllocateOutputs();
 
   ProgressReporter progress(this, 0, this->GetOutput()->GetRequestedRegion().GetNumberOfPixels());
-  this->ThresholdComponents( this->GetOutput()->GetRoot() );
-
   // TODO: how to generate progress ??
+  
+  if( m_FilteringType == MAXIMUM )
+  	{
+    this->MaximumFiltering( this->GetOutput()->GetRoot() );
+    }
+  else if( m_FilteringType == MINIMUM )
+  	{
+    this->MinimumFiltering( this->GetOutput()->GetRoot() );
+    }
+  else if( m_FilteringType == DIRECT )
+  	{
+    this->DirectFiltering( this->GetOutput()->GetRoot() );
+    }
+  else if( m_FilteringType == SUBTRACT )
+  	{
+    this->SubtractFiltering( this->GetOutput()->GetRoot(), 0 );
+    }
+  else
+  	{
+  	itkExceptionMacro( << "Unknown filtering type" );
+  	}
 
 }
 
@@ -50,7 +70,7 @@ AttributeFilteringComponentTreeFilter<TInputImage, TCompare>
 template<class TInputImage, class TCompare>
 void
 AttributeFilteringComponentTreeFilter<TInputImage, TCompare>
-::ThresholdComponents( NodeType* node )
+::MaximumFiltering( NodeType* node )
 {
   assert(node != NULL);
   CompareType compare;
@@ -71,10 +91,123 @@ AttributeFilteringComponentTreeFilter<TInputImage, TCompare>
       }
     else
       {
-      this->ThresholdComponents( *it );
+      this->MaximumFiltering( *it );
       it++;
       }
     }
+}
+
+
+template<class TInputImage, class TCompare>
+void
+AttributeFilteringComponentTreeFilter<TInputImage, TCompare>
+::DirectFiltering( NodeType* node )
+{
+  assert(node != NULL);
+  CompareType compare;
+  typename NodeType::ChildrenListType * childrenList = & node->GetChildren();
+  typename NodeType::ChildrenListType::iterator it=childrenList->begin();
+  while( it!=childrenList->end() )
+    {
+    if( compare( (*it)->GetAttribute(), m_Threshold ) )
+      {
+      this->GetOutput()->NodeMerge( node, *it );
+      // must store the iterator, because once the element
+      // erased, it is invalidated
+      typename NodeType::ChildrenListType::iterator toRemove = it;
+      it++;
+      childrenList->erase( toRemove );
+      delete *toRemove;
+      }
+    else
+      {
+      this->DirectFiltering( *it );
+      it++;
+      }
+    }
+}
+
+
+template<class TInputImage, class TCompare>
+bool
+AttributeFilteringComponentTreeFilter<TInputImage, TCompare>
+::MinimumFiltering( NodeType* node )
+{
+  assert(node != NULL);
+  CompareType compare;
+  typename NodeType::ChildrenListType * childrenList = & node->GetChildren();
+  typename NodeType::ChildrenListType::iterator it=childrenList->begin();
+  
+  bool nodeCanBeMerged = true;
+  
+  while( it!=childrenList->end() )
+    {
+    if( this->MinimumFiltering( *it ) )
+      {
+      this->GetOutput()->NodeMerge( node, *it );
+      // must store the iterator, because once the element
+      // erased, it is invalidated
+      typename NodeType::ChildrenListType::iterator toRemove = it;
+      it++;
+      childrenList->erase( toRemove );
+      delete *toRemove;
+      }
+    else
+      {
+      nodeCanBeMerged = false;
+      it++;
+      }
+    }
+    
+    return nodeCanBeMerged && compare( node->GetAttribute(), m_Threshold );
+}
+
+
+template<class TInputImage, class TCompare>
+void
+AttributeFilteringComponentTreeFilter<TInputImage, TCompare>
+::SubtractFiltering( NodeType* node, const PixelType & sub )
+{
+  assert(node != NULL);
+  
+  CompareType compare;
+  typename NodeType::ChildrenListType * childrenList = & node->GetChildren();
+  typename NodeType::ChildrenListType::iterator it=childrenList->begin();
+  
+  typename NodeType::ChildrenListType tempNodeList;
+  
+  while( it!=childrenList->end() )
+    {
+    if( compare( (*it)->GetAttribute(), m_Threshold ) )
+      {
+      this->SubtractFiltering( *it, sub + (*it)->GetPixel() - node->GetPixel() );
+      
+      // don't merge now to avoid putting the nodes in the list and avoid processing
+      // their children several times
+      // this->GetOutput()->NodeMerge( node, *it );
+      tempNodeList.push_front( *it );
+      
+      // must store the iterator, because once the element
+      // erased, it is invalidated
+      typename NodeType::ChildrenListType::iterator toRemove = it;
+      it++;
+      childrenList->erase( toRemove );
+      }
+    else
+      {
+      this->SubtractFiltering( *it, sub );
+      it++;
+      }
+    }
+    
+  for( it=tempNodeList.begin(); it!=tempNodeList.end(); it++ )
+    {
+    this->GetOutput()->NodeMerge( node, *it );
+    delete *it;
+    }
+  
+  node->SetPixel( node->GetPixel() - sub );
+  
 }
 
 

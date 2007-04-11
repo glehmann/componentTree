@@ -70,6 +70,16 @@ public:
 
   itkSetMacro(Threshold, AttributeType);
   itkGetMacro(Threshold, AttributeType);
+  
+
+  itkSetMacro(FilteringType, int);
+  itkGetMacro(FilteringType, int);
+  
+  static const int MAXIMUM=0;
+  static const int MINIMUM=1;
+  static const int DIRECT=2;
+  static const int SUBTRACT=3;
+  
 
 protected:
   AttributeFilteringComponentTreeFilter();
@@ -80,13 +90,21 @@ protected:
    * to GrayscaleGeodesicErodeImageFilter. */
   void GenerateData();
   
-  void ThresholdComponents( NodeType* );
+  void MaximumFiltering( NodeType* );
+  
+  bool MinimumFiltering( NodeType* );
+  
+  void DirectFiltering( NodeType* );
+  
+  void SubtractFiltering( NodeType*, const PixelType & );
 
 private:
   AttributeFilteringComponentTreeFilter(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
 
   AttributeType m_Threshold;
+  
+  int m_FilteringType;
 
 } ; // end of class
 
