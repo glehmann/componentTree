@@ -29,6 +29,7 @@ AttributeFilteringComponentTreeFilter<TInputImage, TCompare>
 {
   m_Threshold = itk::NumericTraits< AttributeType >::Zero;
   m_FilteringType = MAXIMUM;
+  m_ReverseOrdering = false;
 }
 
 
@@ -73,12 +74,11 @@ AttributeFilteringComponentTreeFilter<TInputImage, TCompare>
 ::MaximumFiltering( NodeType* node )
 {
   assert(node != NULL);
-  CompareType compare;
   typename NodeType::ChildrenListType * childrenList = & node->GetChildren();
   typename NodeType::ChildrenListType::iterator it=childrenList->begin();
   while( it!=childrenList->end() )
     {
-    if( compare( (*it)->GetAttribute(), m_Threshold ) )
+    if( this->Compare( (*it)->GetAttribute(), m_Threshold ) )
       {
       this->GetOutput()->NodeFlatten( *it );
       this->GetOutput()->NodeMerge( node, *it );
@@ -104,12 +104,11 @@ AttributeFilteringComponentTreeFilter<TInputImage, TCompare>
 ::DirectFiltering( NodeType* node )
 {
   assert(node != NULL);
-  CompareType compare;
   typename NodeType::ChildrenListType * childrenList = & node->GetChildren();
   typename NodeType::ChildrenListType::iterator it=childrenList->begin();
   while( it!=childrenList->end() )
     {
-    if( compare( (*it)->GetAttribute(), m_Threshold ) )
+    if( this->Compare( (*it)->GetAttribute(), m_Threshold ) )
       {
       this->GetOutput()->NodeMerge( node, *it );
       // must store the iterator, because once the element
@@ -134,7 +133,6 @@ AttributeFilteringComponentTreeFilter<TInputImage, TCompare>
 ::MinimumFiltering( NodeType* node )
 {
   assert(node != NULL);
-  CompareType compare;
   typename NodeType::ChildrenListType * childrenList = & node->GetChildren();
   typename NodeType::ChildrenListType::iterator it=childrenList->begin();
   
@@ -159,7 +157,7 @@ AttributeFilteringComponentTreeFilter<TInputImage, TCompare>
       }
     }
     
-    return nodeCanBeMerged && compare( node->GetAttribute(), m_Threshold );
+    return nodeCanBeMerged && this->Compare( node->GetAttribute(), m_Threshold );
 }
 
 
@@ -170,7 +168,6 @@ AttributeFilteringComponentTreeFilter<TInputImage, TCompare>
 {
   assert(node != NULL);
   
-  CompareType compare;
   typename NodeType::ChildrenListType * childrenList = & node->GetChildren();
   typename NodeType::ChildrenListType::iterator it=childrenList->begin();
   
@@ -178,7 +175,7 @@ AttributeFilteringComponentTreeFilter<TInputImage, TCompare>
   
   while( it!=childrenList->end() )
     {
-    if( compare( (*it)->GetAttribute(), m_Threshold ) )
+    if( this->Compare( (*it)->GetAttribute(), m_Threshold ) )
       {
       this->SubtractFiltering( *it, sub + (*it)->GetPixel() - node->GetPixel() );
       

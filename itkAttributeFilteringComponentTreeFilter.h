@@ -81,6 +81,11 @@ public:
   static const int SUBTRACT=3;
   
 
+  itkSetMacro(ReverseOrdering, bool);
+  itkGetConstReferenceMacro(ReverseOrdering, bool);
+  itkBooleanMacro(ReverseOrdering);
+
+
 protected:
   AttributeFilteringComponentTreeFilter();
   ~AttributeFilteringComponentTreeFilter() {};
@@ -97,6 +102,19 @@ protected:
   void DirectFiltering( NodeType* );
   
   void SubtractFiltering( NodeType*, const PixelType & );
+  
+  inline bool Compare( const AttributeType & a1, const AttributeType & a2 )
+  	{
+  	CompareType compare;
+	if( m_ReverseOrdering )
+	  {
+	  return compare( a2, a1 );
+	  }
+	else
+	  {
+	  return compare( a1, a2 );
+	  }
+  	}
 
 private:
   AttributeFilteringComponentTreeFilter(const Self&); //purposely not implemented
@@ -105,6 +123,8 @@ private:
   AttributeType m_Threshold;
   
   int m_FilteringType;
+  
+  bool m_ReverseOrdering;
 
 } ; // end of class
 
