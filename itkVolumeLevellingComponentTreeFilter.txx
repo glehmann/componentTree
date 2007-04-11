@@ -38,6 +38,12 @@ VolumeLevellingComponentTreeFilter<TInputImage>
   this->AllocateOutputs();
 
   m_Progress = new ProgressReporter(this, 0, this->GetOutput()->GetRequestedRegion().GetNumberOfPixels());
+  m_PhysicalPixelSize = 1;
+  for( int i=0; i<ImageDimension; i++ )
+    {
+    m_PhysicalPixelSize *= this->GetInput()->GetSpacing()[i];
+    }
+
   this->SetVolumeLevelling( this->GetOutput()->GetRoot() );
   delete m_Progress;
   m_Progress = NULL;
@@ -71,7 +77,7 @@ VolumeLevellingComponentTreeFilter<TInputImage>
     size += ret.size;
     }
 
-  node->SetAttribute( static_cast< AttributeType >( sum - size * node->GetPixel() ) );
+  node->SetAttribute( static_cast< AttributeType >( sum - size * m_PhysicalPixelSize * node->GetPixel() ) );
 
   return SumSize( sum, size );
 

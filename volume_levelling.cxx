@@ -40,7 +40,7 @@ int main(int argc, char * argv[])
   typedef itk::VolumeLevellingComponentTreeFilter< TreeType > FilterType;
   FilterType::Pointer filter = FilterType::New();
   filter->SetInput( maxtree->GetOutput() );
-//   itk::SimpleFilterWatcher watcher(filter, "filter");
+  itk::SimpleFilterWatcher watcher(filter, "filter");
 
   typedef itk::ComponentTreeAttributeToImageFilter< TreeType, IType2 > T2IType;
   T2IType::Pointer filter2 = T2IType::New();
