@@ -100,7 +100,7 @@ protected:
    * to GrayscaleGeodesicErodeImageFilter. */
   void GenerateData();
   
-  void PutLeavesInQueue( NodeType* node );
+  void PutLeavesInQueue( PriorityQueueType & queue, NodeType* node );
 
 
 private:

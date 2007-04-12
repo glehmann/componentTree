@@ -42,16 +42,16 @@ KeepNLobesComponentTreeFilter<TImage>
   ProgressReporter progress(this, 0, this->GetOutput()->GetRequestedRegion().GetNumberOfPixels()*2);
 
   // setup the priority queue
-  m_Queue = new PriorityQueueType();
+  PriorityQueueType queue;
 
   // put all the leaves in the queue
-  this->PutLeavesInQueue( this->GetOutput()->GetRoot() );
+  this->PutLeavesInQueue( queue, this->GetOutput()->GetRoot() );
 
   // now drop the smallest leaves untill the number of leaves is the desired number
-  while( m_Queue->Size() > m_NumberOfLobes && !m_Queue->Empty() )
+  while( queue.Size() > m_NumberOfLobes && !queue.Empty() )
     {
-    NodeType * node = m_Queue->FrontValue();
-    m_Queue->Pop();
+    NodeType * node = queue.FrontValue();
+    queue.Pop();
     NodeType * parent = node->GetParent();
     
     // merge the node in its parent
@@ -63,35 +63,31 @@ KeepNLobesComponentTreeFilter<TImage>
     // also, take care to never push the root to the queue !
     if( parent->IsLeaf() && !parent->IsRoot() )
       {
-      m_Queue->Push( parent->GetAttribute(), parent );
+      queue.Push( parent->GetAttribute(), parent );
       }
     }
 
   // TODO: how to generate progress ??
-  delete m_Queue;
-  m_Queue = NULL;
-
 }
 
 
 template<class TImage>
 void
 KeepNLobesComponentTreeFilter<TImage>
-::PutLeavesInQueue( NodeType* node )
+::PutLeavesInQueue( PriorityQueueType & queue, NodeType* node )
 {
   assert(node != NULL);
-  assert(m_Queue != NULL);
 
   if( node->IsLeaf() )
     {
-    m_Queue->Push( node->GetAttribute(), node );
+    queue.Push( node->GetAttribute(), node );
     }
   else
     {
     const typename NodeType::ChildrenListType & childrenList = node->GetChildren();
     for( typename NodeType::ChildrenListType::const_iterator it=childrenList.begin(); it!=childrenList.end(); it++ )
       {
-      this->PutLeavesInQueue( *it );
+      this->PutLeavesInQueue( queue, *it );
       }
     }
 }
