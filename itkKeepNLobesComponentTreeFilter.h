@@ -65,6 +65,7 @@ public:
   typedef typename ImageType::AttributeType   AttributeType;
   
   typedef PriorityQueue< AttributeType, NodeType*, typename std::less< AttributeType > > PriorityQueueType;
+  typedef PriorityQueue< AttributeType, NodeType*, typename std::greater< AttributeType > > ReversePriorityQueueType;
 
   /** ImageDimension constants */
   itkStaticConstMacro(ImageDimension, unsigned int,
@@ -91,6 +92,11 @@ public:
   itkSetMacro(NumberOfLobes, unsigned long);
   itkGetConstReferenceMacro(NumberOfLobes, unsigned long);
 
+  itkSetMacro(ReverseOrdering, bool);
+  itkGetConstReferenceMacro(ReverseOrdering, bool);
+  itkBooleanMacro(ReverseOrdering);
+
+
 protected:
   KeepNLobesComponentTreeFilter();
   ~KeepNLobesComponentTreeFilter() {};
@@ -101,6 +107,7 @@ protected:
   void GenerateData();
   
   void PutLeavesInQueue( PriorityQueueType & queue, NodeType* node );
+  void PutLeavesInQueue( ReversePriorityQueueType & queue, NodeType* node );
 
 
 private:
@@ -108,8 +115,8 @@ private:
   void operator=(const Self&); //purposely not implemented
 
   unsigned long m_NumberOfLobes;
-
-  PriorityQueueType * m_Queue;
+  
+  bool m_ReverseOrdering;
 
 } ; // end of class
 
