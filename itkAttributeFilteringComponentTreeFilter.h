@@ -72,9 +72,6 @@ public:
   itkGetMacro(Lambda, AttributeType);
   
 
-  itkSetMacro(FilteringType, int);
-  itkGetMacro(FilteringType, int);
-  
   static const int MAXIMUM=0;
   static const int MINIMUM=1;
   static const int DIRECT=2;
@@ -84,6 +81,67 @@ public:
   itkSetMacro(ReverseOrdering, bool);
   itkGetConstReferenceMacro(ReverseOrdering, bool);
   itkBooleanMacro(ReverseOrdering);
+
+  static int GetFilteringTypeFromName( const std::string & s )
+    {
+    if( s == "Maximum" )
+      {
+      return MAXIMUM;
+      }
+    else if( s == "Minimum" )
+      {
+      return MINIMUM;
+      }
+    else if( s == "Direct" )
+      {
+      return DIRECT;
+      }
+    else if( s == "Subtract" )
+      {
+      return SUBTRACT;
+      }
+    // can't recognize the namespace
+    itkGenericExceptionMacro( << "Unknown filtering type." );
+    }
+
+  static std::string GetNameFromFilteringType( const int & a )
+    {
+    switch( a )
+      {
+      case MAXIMUM:
+        return "Maximum";
+        break;
+      case MINIMUM:
+        return "Minimum";
+        break;
+      case DIRECT:
+        return "Direct";
+        break;
+      case SUBTRACT:
+        return "Subtract";
+        break;
+      }
+    // can't recognize the namespace
+    itkGenericExceptionMacro( << "Unknown filtering type." );
+    }
+
+//   itkSetMacro(FilteringType, int);
+  itkGetMacro(FilteringType, int);
+  
+  void SetFilteringType( std::string type )
+    {
+    this->SetFilteringType( GetFilteringTypeFromName( type ) );
+    }
+
+  void SetFilteringType( const int & type )
+    {
+    if( m_FilteringType != type )
+      {
+      GetNameFromFilteringType( type ); // to validate the filtering type
+      m_FilteringType = type;
+      this->Modified();
+      }
+    }
 
 
 protected:

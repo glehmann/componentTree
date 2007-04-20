@@ -216,8 +216,7 @@ AttributeFilteringComponentTreeFilter<TInputImage, TCompare>
   Superclass::PrintSelf(os, indent);
   os << indent << "Lambda: " 
      << static_cast<typename NumericTraits< AttributeType >::PrintType>( m_Lambda ) << std::endl;
-  os << indent << "FilteringType: " 
-     << static_cast<typename NumericTraits< int >::PrintType>( m_FilteringType ) << std::endl;
+  os << indent << "FilteringType: "  << GetNameFromFilteringType(m_FilteringType) << " (" << m_FilteringType << ")" << std::endl;
   os << indent << "ReverseOrdering: " 
      << static_cast<typename NumericTraits< bool >::PrintType>( m_ReverseOrdering ) << std::endl;
 }
