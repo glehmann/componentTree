@@ -75,8 +75,8 @@ public:
   /** End concept checking */
 #endif
 
-  itkSetMacro(Threshold, AttributeType);
-  itkGetMacro(Threshold, AttributeType);
+  itkSetMacro(Lambda, AttributeType);
+  itkGetMacro(Lambda, AttributeType);
 
 protected:
   AttributeFilteringComponentTreeToImageFilter();
@@ -87,7 +87,7 @@ protected:
    * to GrayscaleGeodesicErodeImageFilter. */
   void GenerateData();
   
-  void ThresholdComponents( NodeType* );
+  void LambdaComponents( NodeType* );
 
   void WriteNodes( const NodeType*, OutputImagePixelType & p );
 
@@ -95,7 +95,7 @@ private:
   AttributeFilteringComponentTreeToImageFilter(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
 
-  AttributeType m_Threshold;
+  AttributeType m_Lambda;
 
   ProgressReporter * m_Progress;
 

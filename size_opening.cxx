@@ -43,7 +43,7 @@ int main(int argc, char * argv[])
   typedef itk::AttributeFilteringComponentTreeToImageFilter< TreeType, IType > T2IType;
   T2IType::Pointer filter2 = T2IType::New();
   filter2->SetInput( filter->GetOutput() );
-  filter2->SetThreshold( atoi( argv[4] ) );
+  filter2->SetLambda( atoi( argv[4] ) );
 
   typedef itk::ImageFileWriter< IType > WriterType;
   WriterType::Pointer writer = WriterType::New();

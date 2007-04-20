@@ -26,7 +26,7 @@ template <class TInputImage, class TOutputImage, class TCompare>
 AttributeFilteringComponentTreeToImageFilter<TInputImage, TOutputImage, TCompare>
 ::AttributeFilteringComponentTreeToImageFilter()
 {
-  m_Threshold = itk::NumericTraits< AttributeType >::Zero;
+  m_Lambda = itk::NumericTraits< AttributeType >::Zero;
 }
 
 
@@ -39,7 +39,7 @@ AttributeFilteringComponentTreeToImageFilter<TInputImage, TOutputImage, TCompare
   this->AllocateOutputs();
 
   m_Progress = new ProgressReporter(this, 0, this->GetOutput()->GetRequestedRegion().GetNumberOfPixels());
-  this->ThresholdComponents( this->GetInput()->GetRoot() );
+  this->LambdaComponents( this->GetInput()->GetRoot() );
   delete m_Progress;
   m_Progress = NULL;
 }
@@ -48,7 +48,7 @@ AttributeFilteringComponentTreeToImageFilter<TInputImage, TOutputImage, TCompare
 template<class TInputImage, class TOutputImage, class TCompare>
 void
 AttributeFilteringComponentTreeToImageFilter<TInputImage, TOutputImage, TCompare>
-::ThresholdComponents( NodeType* node )
+::LambdaComponents( NodeType* node )
 {
   assert(node != NULL);
   OutputImagePixelType v = static_cast<OutputImagePixelType>( node->GetPixel() );
@@ -69,14 +69,14 @@ AttributeFilteringComponentTreeToImageFilter<TInputImage, TOutputImage, TCompare
   const typename NodeType::ChildrenListType * childrenList = & node->GetChildren();
   for( typename NodeType::ChildrenListType::const_iterator it=childrenList->begin(); it!=childrenList->end(); it++ )
     {
-    if( compare( (*it)->GetAttribute(), m_Threshold ) )
+    if( compare( (*it)->GetAttribute(), m_Lambda ) )
       {
       // write this subtree to the output image with the pixel value of the current node
       this->WriteNodes( *it, v );
       }
     else
       {
-      this->ThresholdComponents( *it );
+      this->LambdaComponents( *it );
       }
     }
 }
@@ -114,8 +114,8 @@ AttributeFilteringComponentTreeToImageFilter<TInputImage, TOutputImage, TCompare
 ::PrintSelf(std::ostream &os, Indent indent) const
 {
   Superclass::PrintSelf(os, indent);
-  os << indent << "Threshold: " 
-     << static_cast<typename NumericTraits< AttributeType >::PrintType>( m_Threshold ) << std::endl;
+  os << indent << "Lambda: " 
+     << static_cast<typename NumericTraits< AttributeType >::PrintType>( m_Lambda ) << std::endl;
 }
   
 }// end namespace itk

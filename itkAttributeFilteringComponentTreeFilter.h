@@ -68,8 +68,8 @@ public:
   /** End concept checking */
 #endif
 
-  itkSetMacro(Threshold, AttributeType);
-  itkGetMacro(Threshold, AttributeType);
+  itkSetMacro(Lambda, AttributeType);
+  itkGetMacro(Lambda, AttributeType);
   
 
   itkSetMacro(FilteringType, int);
@@ -120,7 +120,7 @@ private:
   AttributeFilteringComponentTreeFilter(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
 
-  AttributeType m_Threshold;
+  AttributeType m_Lambda;
   
   int m_FilteringType;
   

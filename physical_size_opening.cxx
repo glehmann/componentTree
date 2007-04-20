@@ -44,7 +44,7 @@ int main(int argc, char * argv[])
   typedef itk::AttributeFilteringComponentTreeFilter< TreeType > FilteringType;
   FilteringType::Pointer filter2 = FilteringType::New();
   filter2->SetInput( filter->GetOutput() );
-  filter2->SetThreshold( atof( argv[4] ) );
+  filter2->SetLambda( atof( argv[4] ) );
 
   typedef itk::ComponentTreeToImageFilter< TreeType, IType > T2IType;
   T2IType::Pointer filter3 = T2IType::New();

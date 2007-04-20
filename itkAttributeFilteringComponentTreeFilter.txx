@@ -27,7 +27,7 @@ template <class TInputImage, class TCompare>
 AttributeFilteringComponentTreeFilter<TInputImage, TCompare>
 ::AttributeFilteringComponentTreeFilter()
 {
-  m_Threshold = itk::NumericTraits< AttributeType >::Zero;
+  m_Lambda = itk::NumericTraits< AttributeType >::Zero;
   m_FilteringType = MAXIMUM;
   m_ReverseOrdering = false;
 }
@@ -78,7 +78,7 @@ AttributeFilteringComponentTreeFilter<TInputImage, TCompare>
   typename NodeType::ChildrenListType::iterator it=childrenList->begin();
   while( it!=childrenList->end() )
     {
-    if( this->Compare( (*it)->GetAttribute(), m_Threshold ) )
+    if( this->Compare( (*it)->GetAttribute(), m_Lambda ) )
       {
       this->GetOutput()->NodeFlatten( *it );
       this->GetOutput()->NodeMerge( node, *it );
@@ -108,7 +108,7 @@ AttributeFilteringComponentTreeFilter<TInputImage, TCompare>
   typename NodeType::ChildrenListType::iterator it=childrenList->begin();
   while( it!=childrenList->end() )
     {
-    if( this->Compare( (*it)->GetAttribute(), m_Threshold ) )
+    if( this->Compare( (*it)->GetAttribute(), m_Lambda ) )
       {
       this->GetOutput()->NodeMerge( node, *it );
       // must store the iterator, because once the element
@@ -157,7 +157,7 @@ AttributeFilteringComponentTreeFilter<TInputImage, TCompare>
       }
     }
     
-    return nodeCanBeMerged && this->Compare( node->GetAttribute(), m_Threshold );
+    return nodeCanBeMerged && this->Compare( node->GetAttribute(), m_Lambda );
 }
 
 
@@ -175,7 +175,7 @@ AttributeFilteringComponentTreeFilter<TInputImage, TCompare>
   
   while( it!=childrenList->end() )
     {
-    if( this->Compare( (*it)->GetAttribute(), m_Threshold ) )
+    if( this->Compare( (*it)->GetAttribute(), m_Lambda ) )
       {
       this->SubtractFiltering( *it, sub + (*it)->GetPixel() - node->GetPixel() );
       
@@ -214,8 +214,8 @@ AttributeFilteringComponentTreeFilter<TInputImage, TCompare>
 ::PrintSelf(std::ostream &os, Indent indent) const
 {
   Superclass::PrintSelf(os, indent);
-  os << indent << "Threshold: " 
-     << static_cast<typename NumericTraits< AttributeType >::PrintType>( m_Threshold ) << std::endl;
+  os << indent << "Lambda: " 
+     << static_cast<typename NumericTraits< AttributeType >::PrintType>( m_Lambda ) << std::endl;
   os << indent << "FilteringType: " 
      << static_cast<typename NumericTraits< int >::PrintType>( m_FilteringType ) << std::endl;
   os << indent << "ReverseOrdering: " 
