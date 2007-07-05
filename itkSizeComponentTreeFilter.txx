@@ -22,16 +22,16 @@
 
 namespace itk {
 
-template <class TImage>
-SizeComponentTreeFilter<TImage>
+template<class TInputImage, class TAttributeAccessor>
+SizeComponentTreeFilter<TInputImage, TAttributeAccessor>
 ::SizeComponentTreeFilter()
 {
 }
 
 
-template<class TImage>
+template<class TInputImage, class TAttributeAccessor>
 void
-SizeComponentTreeFilter<TImage>
+SizeComponentTreeFilter<TInputImage, TAttributeAccessor>
 ::GenerateData()
 {
   // Allocate the output
@@ -46,20 +46,22 @@ SizeComponentTreeFilter<TImage>
 }
 
 
-template<class TImage>
+template<class TInputImage, class TAttributeAccessor>
 void
-SizeComponentTreeFilter<TImage>
+SizeComponentTreeFilter<TInputImage, TAttributeAccessor>
 ::SetComponentSize( NodeType* node )
 {
   assert(node != NULL);
   
+  AttributeAccessorType accessor;
+
   AttributeType size = 0;
   
   const typename NodeType::ChildrenListType * childrenList = & node->GetChildren();
   for( typename NodeType::ChildrenListType::const_iterator it=childrenList->begin(); it!=childrenList->end(); it++ )
     {
     this->SetComponentSize( *it );
-    size += (*it)->GetAttribute();
+    size += accessor(*it);
     }
     
   // compute the number of indexes of this node
@@ -71,7 +73,7 @@ SizeComponentTreeFilter<TImage>
     m_Progress->CompletedPixel();
     }
 
-  node->SetAttribute( size );
+  accessor( node, size );
   // GetAttribute() is broken, but why ??
 
   assert( size > 0 );
@@ -79,9 +81,9 @@ SizeComponentTreeFilter<TImage>
 }
 
 
-template<class TImage>
+template<class TInputImage, class TAttributeAccessor>
 void
-SizeComponentTreeFilter<TImage>
+SizeComponentTreeFilter<TInputImage, TAttributeAccessor>
 ::PrintSelf(std::ostream &os, Indent indent) const
 {
   Superclass::PrintSelf(os, indent);

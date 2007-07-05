@@ -22,16 +22,16 @@
 
 namespace itk {
 
-template <class TImage>
-LeafComponentTreeFilter<TImage>
+template<class TInputImage, class TAttributeAccessor>
+LeafComponentTreeFilter<TInputImage, TAttributeAccessor>
 ::LeafComponentTreeFilter()
 {
 }
 
 
-template<class TImage>
+template<class TInputImage, class TAttributeAccessor>
 void
-LeafComponentTreeFilter<TImage>
+LeafComponentTreeFilter<TInputImage, TAttributeAccessor>
 ::GenerateData()
 {
   // Allocate the output
@@ -46,26 +46,28 @@ LeafComponentTreeFilter<TImage>
 }
 
 
-template<class TImage>
+template<class TInputImage, class TAttributeAccessor>
 void
-LeafComponentTreeFilter<TImage>
+LeafComponentTreeFilter<TInputImage, TAttributeAccessor>
 ::SetComponentLeaf( NodeType* node )
 {
   assert(node != NULL);
   
+  AttributeAccessorType accessor;
+
   const typename NodeType::ChildrenListType * childrenList = & node->GetChildren();
   for( typename NodeType::ChildrenListType::const_iterator it=childrenList->begin(); it!=childrenList->end(); it++ )
     {
     this->SetComponentLeaf( *it );
     }
     
-  node->SetAttribute( node->IsLeaf() );
+  accessor( node, node->IsLeaf() );
 }
 
 
-template<class TImage>
+template<class TInputImage, class TAttributeAccessor>
 void
-LeafComponentTreeFilter<TImage>
+LeafComponentTreeFilter<TInputImage, TAttributeAccessor>
 ::PrintSelf(std::ostream &os, Indent indent) const
 {
   Superclass::PrintSelf(os, indent);

@@ -25,6 +25,38 @@
 
 namespace itk
 {
+
+namespace Functor {
+
+/**
+ * The default functor used to access a single attribute
+ */
+template< class TComponentTreeNode >
+class ITK_EXPORT AttributeComponentTreeNodeAccessor
+{
+public:
+  typedef TComponentTreeNode ComponentTreeNodeType;
+  typedef typename ComponentTreeNodeType::AttributeType AttributeType;
+
+  inline const AttributeType operator()( const ComponentTreeNodeType * node )
+    {
+    return node->GetAttribute();
+    }
+
+  inline AttributeType operator()( ComponentTreeNodeType * node )
+    {
+    return node->GetAttribute();
+    }
+
+  inline void operator()( ComponentTreeNodeType * node, const AttributeType & attribute )
+    {
+    node->SetAttribute( attribute );
+    }
+};
+
+}
+
+
 /** \class ComponentTreeNode
  *  \brief ComponentTreeNode class
  * 

@@ -23,16 +23,16 @@
 
 namespace itk {
 
-template <class TInputImage>
-LocalIntensityComponentTreeFilter<TInputImage>
+template<class TInputImage, class TAttributeAccessor>
+LocalIntensityComponentTreeFilter<TInputImage, TAttributeAccessor>
 ::LocalIntensityComponentTreeFilter()
 {
 }
 
 
-template<class TInputImage>
+template<class TInputImage, class TAttributeAccessor>
 void
-LocalIntensityComponentTreeFilter<TInputImage>
+LocalIntensityComponentTreeFilter<TInputImage, TAttributeAccessor>
 ::GenerateData()
 {
   // Allocate the output
@@ -46,33 +46,35 @@ LocalIntensityComponentTreeFilter<TInputImage>
 }
 
 
-template<class TInputImage>
+template<class TInputImage, class TAttributeAccessor>
 void
-LocalIntensityComponentTreeFilter<TInputImage>
+LocalIntensityComponentTreeFilter<TInputImage, TAttributeAccessor>
 ::SetComponentIntensity( NodeType* node )
 {
   assert(node != NULL);
+  AttributeAccessorType accessor;
+
   AttributeType intensity = NumericTraits<AttributeType>::Zero;
   const typename NodeType::ChildrenListType * childrenList = & node->GetChildren();
   for( typename NodeType::ChildrenListType::const_iterator it=childrenList->begin(); it!=childrenList->end(); it++ )
     {
     this->SetComponentIntensity( *it );
-    intensity = std::max( intensity, (*it)->GetAttribute() );
+    intensity = std::max( intensity, accessor(*it) );
     }
   if( node->IsRoot() )
     {
-    node->SetAttribute( NumericTraits<AttributeType>::max() );
+    accessor( node, NumericTraits<AttributeType>::max() );
     }
   else
     {
-    node->SetAttribute( static_cast< AttributeType >( intensity + ( node->GetPixel() - node->GetParent()->GetPixel() ) ) );
+    accessor( node, static_cast< AttributeType >( intensity + ( node->GetPixel() - node->GetParent()->GetPixel() ) ) );
     }
 }
 
 
-template<class TInputImage>
+template<class TInputImage, class TAttributeAccessor>
 void
-LocalIntensityComponentTreeFilter<TInputImage>
+LocalIntensityComponentTreeFilter<TInputImage, TAttributeAccessor>
 ::PrintSelf(std::ostream &os, Indent indent) const
 {
   Superclass::PrintSelf(os, indent);

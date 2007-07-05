@@ -22,16 +22,16 @@
 
 namespace itk {
 
-template <class TInputImage>
-IntegratedIntensityComponentTreeFilter<TInputImage>
+template<class TInputImage, class TAttributeAccessor>
+IntegratedIntensityComponentTreeFilter<TInputImage, TAttributeAccessor>
 ::IntegratedIntensityComponentTreeFilter()
 {
 }
 
 
-template<class TInputImage>
+template<class TInputImage, class TAttributeAccessor>
 void
-IntegratedIntensityComponentTreeFilter<TInputImage>
+IntegratedIntensityComponentTreeFilter<TInputImage, TAttributeAccessor>
 ::GenerateData()
 {
   // Allocate the output
@@ -46,12 +46,14 @@ IntegratedIntensityComponentTreeFilter<TInputImage>
 }
 
 
-template<class TInputImage>
+template<class TInputImage, class TAttributeAccessor>
 void
-IntegratedIntensityComponentTreeFilter<TInputImage>
+IntegratedIntensityComponentTreeFilter<TInputImage, TAttributeAccessor>
 ::SetComponentIntensitySize( NodeType* node )
 {
   assert(node != NULL);
+
+  AttributeAccessorType accessor;
 
   unsigned long size = 0;
   for( typename NodeType::IndexType current=node->GetFirstIndex();
@@ -68,16 +70,16 @@ IntegratedIntensityComponentTreeFilter<TInputImage>
   for( typename NodeType::ChildrenListType::const_iterator it=childrenList->begin(); it!=childrenList->end(); it++ )
     {
     this->SetComponentIntensitySize( *it );
-    intensity += (*it)->GetAttribute();
+    intensity += accessor( *it );
     }
 
-  node->SetAttribute( intensity );
+  accessor( node, intensity );
 }
 
 
-template<class TInputImage>
+template<class TInputImage, class TAttributeAccessor>
 void
-IntegratedIntensityComponentTreeFilter<TInputImage>
+IntegratedIntensityComponentTreeFilter<TInputImage, TAttributeAccessor>
 ::PrintSelf(std::ostream &os, Indent indent) const
 {
   Superclass::PrintSelf(os, indent);

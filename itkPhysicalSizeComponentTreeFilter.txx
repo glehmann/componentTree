@@ -22,16 +22,16 @@
 
 namespace itk {
 
-template <class TImage>
-PhysicalSizeComponentTreeFilter<TImage>
+template<class TImage, class TAttributeAccessor>
+PhysicalSizeComponentTreeFilter<TImage, TAttributeAccessor>
 ::PhysicalSizeComponentTreeFilter()
 {
 }
 
 
-template<class TImage>
+template<class TImage, class TAttributeAccessor>
 void
-PhysicalSizeComponentTreeFilter<TImage>
+PhysicalSizeComponentTreeFilter<TImage, TAttributeAccessor>
 ::GenerateData()
 {
   // Allocate the output
@@ -52,18 +52,21 @@ PhysicalSizeComponentTreeFilter<TImage>
 }
 
 
-template<class TImage>
+template<class TImage, class TAttributeAccessor>
 void
-PhysicalSizeComponentTreeFilter<TImage>
+PhysicalSizeComponentTreeFilter<TImage, TAttributeAccessor>
 ::SetComponentSize( NodeType* node )
 {
   assert(node != NULL);
+
+  AttributeAccessorType accessor;
+
   AttributeType size = 0;
   const typename NodeType::ChildrenListType * childrenList = & node->GetChildren();
   for( typename NodeType::ChildrenListType::const_iterator it=childrenList->begin(); it!=childrenList->end(); it++ )
     {
     this->SetComponentSize( *it );
-    size += (*it)->GetAttribute();
+    size += accessor( *it );
     }
 
   unsigned long nb = 0;
@@ -76,17 +79,16 @@ PhysicalSizeComponentTreeFilter<TImage>
     }
 
   size += nb * this->m_AttributeValuePerPixel;
-  node->SetAttribute( size );
-  // GetAttribute() is broken, but why ??
+  accessor( node, size );
 
   assert( size > 0 );
   // assert( node->GetAttribute() == size );
 }
 
 
-template<class TImage>
+template<class TImage, class TAttributeAccessor>
 void
-PhysicalSizeComponentTreeFilter<TImage>
+PhysicalSizeComponentTreeFilter<TImage, TAttributeAccessor>
 ::PrintSelf(std::ostream &os, Indent indent) const
 {
   Superclass::PrintSelf(os, indent);

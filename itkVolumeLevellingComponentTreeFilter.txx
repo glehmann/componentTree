@@ -22,16 +22,16 @@
 
 namespace itk {
 
-template <class TInputImage>
-VolumeLevellingComponentTreeFilter<TInputImage>
+template<class TInputImage, class TAttributeAccessor>
+VolumeLevellingComponentTreeFilter<TInputImage, TAttributeAccessor>
 ::VolumeLevellingComponentTreeFilter()
 {
 }
 
 
-template<class TInputImage>
+template<class TInputImage, class TAttributeAccessor>
 void
-VolumeLevellingComponentTreeFilter<TInputImage>
+VolumeLevellingComponentTreeFilter<TInputImage, TAttributeAccessor>
 ::GenerateData()
 {
   // Allocate the output
@@ -52,12 +52,14 @@ VolumeLevellingComponentTreeFilter<TInputImage>
 }
 
 
-template<class TInputImage>
-typename VolumeLevellingComponentTreeFilter<TInputImage>::SumSize
-VolumeLevellingComponentTreeFilter<TInputImage>
+template<class TInputImage, class TAttributeAccessor>
+typename VolumeLevellingComponentTreeFilter<TInputImage, TAttributeAccessor>::SumSize
+VolumeLevellingComponentTreeFilter<TInputImage, TAttributeAccessor>
 ::SetVolumeLevelling( NodeType* node )
 {
   assert(node != NULL);
+
+  AttributeAccessorType accessor;
 
   unsigned long size = 0;
   for( typename NodeType::IndexType current=node->GetFirstIndex();
@@ -77,16 +79,16 @@ VolumeLevellingComponentTreeFilter<TInputImage>
     size += ret.size;
     }
 
-  node->SetAttribute( static_cast< AttributeType >( sum - size * m_PhysicalPixelSize * node->GetPixel() ) );
+  accessor( node, static_cast< AttributeType >( sum - size * m_PhysicalPixelSize * node->GetPixel() ) );
 
   return SumSize( sum, size );
 
 }
 
 
-template<class TInputImage>
+template<class TInputImage, class TAttributeAccessor>
 void
-VolumeLevellingComponentTreeFilter<TInputImage>
+VolumeLevellingComponentTreeFilter<TInputImage, TAttributeAccessor>
 ::PrintSelf(std::ostream &os, Indent indent) const
 {
   Superclass::PrintSelf(os, indent);

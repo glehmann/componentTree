@@ -26,7 +26,7 @@ namespace itk {
  *
  * \ingroup ImageEnhancement  MathematicalMorphologyImageFilters
  */
-template< class TImage >
+template< class TImage, class TAttibuteAccessor=typename Functor::AttributeComponentTreeNodeAccessor< typename TImage::NodeType > >
 class ITK_EXPORT IntegratedIntensityComponentTreeFilter : 
     public InPlaceComponentTreeFilter<TImage>
 {
@@ -45,7 +45,9 @@ public:
   typedef typename ImageType::PixelType       PixelType;
   typedef typename ImageType::NodeType        NodeType;
   typedef typename ImageType::IndexType       IndexType;
-  typedef typename ImageType::AttributeType   AttributeType;
+
+  typedef TAttibuteAccessor AttributeAccessorType;
+  typedef typename AttributeAccessorType::AttributeType   AttributeType;
   
   /** ImageDimension constants */
   itkStaticConstMacro(ImageDimension, unsigned int,
