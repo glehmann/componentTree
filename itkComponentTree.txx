@@ -145,7 +145,8 @@ ComponentTree<TPixel, VImageDimension, TValue>
 
   return size;
 }
- 
+
+
 /** Remove an index */
 template<class TPixel, unsigned int VImageDimension, class TValue>
 bool 
@@ -179,6 +180,7 @@ ComponentTree<TPixel, VImageDimension, TValue>
     }
   return false;
 }
+
 
 template<class TPixel, unsigned int VImageDimension, class TValue>
 bool 
@@ -216,6 +218,7 @@ ComponentTree<TPixel, VImageDimension, TValue>
   assert( this->NodeHasIndex( node, idx ) );
 }
 
+
 template<class TPixel, unsigned int VImageDimension, class TValue>
 void 
 ComponentTree<TPixel, VImageDimension, TValue>
@@ -247,6 +250,7 @@ ComponentTree<TPixel, VImageDimension, TValue>
     }
   return false;
 }
+
 
 template<class TPixel, unsigned int VImageDimension, class TValue>
 bool 
@@ -305,6 +309,7 @@ ComponentTree<TPixel, VImageDimension, TValue>
   obsolatedNode->GetChildren().clear();
 }
 
+
 template<class TPixel, unsigned int VImageDimension, class TValue>
 void 
 ComponentTree<TPixel, VImageDimension, TValue>
@@ -327,6 +332,166 @@ ComponentTree<TPixel, VImageDimension, TValue>
   // clear the child list 
   node->GetChildren().clear();
 }
+
+
+template<class TPixel, unsigned int VImageDimension, class TValue>
+const typename ComponentTree<TPixel, VImageDimension, TValue>::PixelType &
+ComponentTree<TPixel, VImageDimension, TValue>
+::GetPixel( const IndexType & idx ) const
+{
+  return this->GetNode( idx )->GetPixel();
+}
+
+
+template<class TPixel, unsigned int VImageDimension, class TValue>
+const typename ComponentTree<TPixel, VImageDimension, TValue>::PixelType &
+ComponentTree<TPixel, VImageDimension, TValue>
+::GetPixel( const OffsetValueType & idx ) const
+{
+  return this->GetNode( idx )->GetPixel();
+}
+
+
+template<class TPixel, unsigned int VImageDimension, class TValue>
+const typename ComponentTree<TPixel, VImageDimension, TValue>::NodeType *
+ComponentTree<TPixel, VImageDimension, TValue>
+::GetNode( const IndexType & idx ) const
+{
+  const NodeType * retNode = this->GetNode( this->GetRoot(), idx );
+  if( retNode == NULL )
+    {
+    itkExceptionMacro( << "No node found at index " << idx );
+    }
+  return retNode;
+}
+
+
+template<class TPixel, unsigned int VImageDimension, class TValue>
+const typename ComponentTree<TPixel, VImageDimension, TValue>::NodeType *
+ComponentTree<TPixel, VImageDimension, TValue>
+::GetNode( const OffsetValueType & idx ) const
+{
+  const NodeType * retNode = this->GetNode( this->GetRoot(), idx );
+  if( retNode == NULL )
+    {
+    itkExceptionMacro( << "No node found at offset " << idx );
+    }
+  return retNode;
+}
+
+
+template<class TPixel, unsigned int VImageDimension, class TValue>
+typename ComponentTree<TPixel, VImageDimension, TValue>::NodeType *
+ComponentTree<TPixel, VImageDimension, TValue>
+::GetNode( const IndexType & idx )
+{
+  NodeType * retNode = this->GetNode( this->GetRoot(), idx );
+  if( retNode == NULL )
+    {
+    itkExceptionMacro( << "No node found at index " << idx );
+    }
+  return retNode;
+}
+
+
+template<class TPixel, unsigned int VImageDimension, class TValue>
+typename ComponentTree<TPixel, VImageDimension, TValue>::NodeType *
+ComponentTree<TPixel, VImageDimension, TValue>
+::GetNode( const OffsetValueType & idx )
+{
+  NodeType * retNode = this->GetNode( this->GetRoot(), idx );
+  if( retNode == NULL )
+    {
+    itkExceptionMacro( << "No node found at offset " << idx );
+    }
+  return retNode;
+}
+
+
+template<class TPixel, unsigned int VImageDimension, class TValue>
+const typename ComponentTree<TPixel, VImageDimension, TValue>::NodeType *
+ComponentTree<TPixel, VImageDimension, TValue>
+::GetNode( const NodeType *node, const IndexType & idx ) const
+{
+  return this->GetNode( node, this->ComputeOffset( idx ) );
+}
+
+
+template<class TPixel, unsigned int VImageDimension, class TValue>
+const typename ComponentTree<TPixel, VImageDimension, TValue>::NodeType *
+ComponentTree<TPixel, VImageDimension, TValue>
+::GetNode( const NodeType *node, const OffsetValueType & idx ) const
+{
+  assert( node != NULL );
+
+  OffsetValueType current = node->GetFirstIndex();
+  while( current != NodeType::EndIndex )
+    {
+    if( current == idx )
+      {
+      return node;
+      }
+    current = m_LinkedListArray[ current ];
+    }
+
+  for( typename NodeType::ChildrenListType::const_iterator it=node->GetChildren().begin();
+       it!=node->GetChildren().end();
+       it++ )
+    {
+    const NodeType * retNode = this->GetNode( *it, idx );
+    if( retNode != NULL )
+      {
+      return retNode;
+      }
+    }
+
+  return NULL;
+}
+
+
+template<class TPixel, unsigned int VImageDimension, class TValue>
+typename ComponentTree<TPixel, VImageDimension, TValue>::NodeType *
+ComponentTree<TPixel, VImageDimension, TValue>
+::GetNode( NodeType *node, const IndexType & idx )
+{
+  return this->GetNode( node, this->ComputeOffset( idx ) );
+}
+
+
+template<class TPixel, unsigned int VImageDimension, class TValue>
+typename ComponentTree<TPixel, VImageDimension, TValue>::NodeType *
+ComponentTree<TPixel, VImageDimension, TValue>
+::GetNode( NodeType *node, const OffsetValueType & idx )
+{
+  assert( node != NULL );
+
+  OffsetValueType current = node->GetFirstIndex();
+  while( current != NodeType::EndIndex )
+    {
+    if( current == idx )
+      {
+      return node;
+      }
+    current = m_LinkedListArray[ current ];
+    }
+
+  for( typename NodeType::ChildrenListType::const_iterator it=node->GetChildren().begin();
+       it!=node->GetChildren().end();
+       it++ )
+    {
+    NodeType * retNode = this->GetNode( *it, idx );
+    if( retNode != NULL )
+      {
+      return retNode;
+      }
+    }
+
+  return NULL;
+}
+
+
+
+
 } // end namespace itk
 
 #endif

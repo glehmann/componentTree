@@ -164,11 +164,28 @@ public:
 
   void NodeTakeIndexesFrom( NodeType * node, NodeType *obsoletedNode );
 
-  /** Return the number of children */
+  /** Return the number of index  in the node and its children */
   int NodeCountIndexes( const NodeType *node ) const;
 
+  const PixelType & GetPixel( const IndexType & idx ) const;
 
+  const PixelType & GetPixel( const OffsetValueType & idx ) const;
 
+  const NodeType * GetNode( const IndexType & idx ) const;
+
+  const NodeType * GetNode( const OffsetValueType & idx ) const;
+
+  NodeType * GetNode( const IndexType & idx );
+
+  NodeType * GetNode( const OffsetValueType & idx );
+
+  const NodeType * GetNode( const NodeType *node, const IndexType & idx ) const;
+
+  const NodeType * GetNode( const NodeType *node, const OffsetValueType & idx ) const;
+
+  NodeType * GetNode( NodeType *node, const IndexType & idx );
+
+  NodeType * GetNode( NodeType *node, const OffsetValueType & idx );
 
 protected:
   ComponentTree();
