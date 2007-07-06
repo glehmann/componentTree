@@ -64,11 +64,25 @@ template< class NodeType > void printAttributes( const NodeType * node )
 }
 
 
+template< class NodeType > void printBranchAttributes( const NodeType * node )
+{
+  for( int i=0; i<NodeType::AttributeType::Dimension; i++ )
+    {
+    std::cout << node->GetAttribute()[i] << "\t";
+    }
+  std::cout << std::endl;
+  if( !node->IsRoot() )
+    {
+    printBranchAttributes( node->GetParent() );
+    }
+}
+
+
 int main(int argc, char * argv[])
 {
-  if( argc != 4 )
+  if( argc < 4 )
     {
-    std::cerr << "usage: " << argv[0] << " inputImage outputImage connectivity" << std::endl;
+    std::cerr << "usage: " << argv[0] << " inputImage outputImage connectivity [x y z]" << std::endl;
     std::cerr << "  inputImage: an input image (up to dim=3)." << std::endl;
     std::cerr << "  outputImage: the value of the attribute for all the pixels, with unsigned long type." << std::endl;
     std::cerr << "  connectivity: 1 for fully connected, or 0" << std::endl;
@@ -156,7 +170,19 @@ int main(int argc, char * argv[])
     << "leaf" << "\t"
     << "intensity" << "\t"
     << std::endl;
-  printAttributes( intensity->GetOutput()->GetRoot() );
+  if( argc == 4 )
+    {
+    printAttributes( intensity->GetOutput()->GetRoot() );
+    }
+  else
+    {
+    itk::Index< dim > idx;
+    for( int i=0; i<dim; i++ )
+      {
+      idx[i] = atoi( argv[ i+4 ] );
+      }
+    printBranchAttributes( intensity->GetOutput()->GetNode( idx ) );
+    }
 
 //   itk::Index<3> idx;
 //   idx[0] = 340;
