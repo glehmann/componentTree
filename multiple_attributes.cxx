@@ -93,7 +93,7 @@ int main(int argc, char * argv[])
   MaxTreeType::Pointer maxtree = MaxTreeType::New();
   maxtree->SetInput( reader->GetOutput() );
   maxtree->SetFullyConnected( atoi( argv[3] ) );
-  itk::SimpleFilterWatcher watcher(maxtree, "max tree");
+//   itk::SimpleFilterWatcher watcher(maxtree, "max tree");
 
   typedef itk::Functor::ArrayAttributeComponentTreeNodeAccessor< TreeType::NodeType, double, 0 > IntegratedIntensityAccessor;
   typedef itk::Functor::ArrayAttributeComponentTreeNodeAccessor< TreeType::NodeType, double, 1 > PhysicalSizeAccessor;
@@ -106,37 +106,37 @@ int main(int argc, char * argv[])
   typedef itk::IntegratedIntensityComponentTreeFilter< TreeType, IntegratedIntensityAccessor > IntegratedIntensityType;
   IntegratedIntensityType::Pointer integrated_intensity = IntegratedIntensityType::New();
   integrated_intensity->SetInput( maxtree->GetOutput() );
-  itk::SimpleFilterWatcher watcher0(integrated_intensity, "integrated_intensity");
+//   itk::SimpleFilterWatcher watcher0(integrated_intensity, "integrated_intensity");
 
   typedef itk::PhysicalSizeComponentTreeFilter< TreeType, PhysicalSizeAccessor > PhysicalSizeType;
   PhysicalSizeType::Pointer physical_size = PhysicalSizeType::New();
   physical_size->SetInput( integrated_intensity->GetOutput() );
-  itk::SimpleFilterWatcher watcher1(physical_size, "physical_size");
+//   itk::SimpleFilterWatcher watcher1(physical_size, "physical_size");
 
   typedef itk::LocalIntensityComponentTreeFilter< TreeType, LocalIntensityAccessor > LocalIntensityType;
   LocalIntensityType::Pointer local_intensity = LocalIntensityType::New();
   local_intensity->SetInput( physical_size->GetOutput() );
-  itk::SimpleFilterWatcher watcher2(local_intensity, "local_intensity");
+//   itk::SimpleFilterWatcher watcher2(local_intensity, "local_intensity");
 
   typedef itk::VolumeLevellingComponentTreeFilter< TreeType, VolumeLevellingAccessor > VolumeLevellingType;
   VolumeLevellingType::Pointer volume_levelling = VolumeLevellingType::New();
   volume_levelling->SetInput( local_intensity->GetOutput() );
-  itk::SimpleFilterWatcher watcher3(volume_levelling, "volume_levelling");
+//   itk::SimpleFilterWatcher watcher3(volume_levelling, "volume_levelling");
 
   typedef itk::SizeComponentTreeFilter< TreeType, SizeAccessor > SizeType;
   SizeType::Pointer size = SizeType::New();
   size->SetInput( local_intensity->GetOutput() );
-  itk::SimpleFilterWatcher watcher4(size, "size");
+//   itk::SimpleFilterWatcher watcher4(size, "size");
 
   typedef itk::LeafComponentTreeFilter< TreeType, LeafAccessor > LeafType;
   LeafType::Pointer leaf = LeafType::New();
   leaf->SetInput( size->GetOutput() );
-  itk::SimpleFilterWatcher watcher5(leaf, "size");
+//   itk::SimpleFilterWatcher watcher5(leaf, "size");
 
   typedef itk::IntensityComponentTreeFilter< TreeType, IntensityAccessor > IntensityType;
   IntensityType::Pointer intensity = IntensityType::New();
   intensity->SetInput( leaf->GetOutput() );
-  itk::SimpleFilterWatcher watcher6(intensity, "intensity");
+//   itk::SimpleFilterWatcher watcher6(intensity, "intensity");
 
   typedef itk::ComponentTreeToImageFilter< TreeType, IType > T2IType;
   T2IType::Pointer filter2 = T2IType::New();
@@ -148,8 +148,25 @@ int main(int argc, char * argv[])
   writer->SetFileName( argv[2] );
   writer->Update();
 
-  std::cout << "integrated_intensity physical_size local_intensity volume_levelling size leaf intensity" << std::endl;
+  std::cout << "#integrated_intensity" << "\t"
+    << "physical_size" << "\t"
+    << "local_intensity" << "\t"
+    << "volume_levelling" << "\t"
+    << "size" << "\t"
+    << "leaf" << "\t"
+    << "intensity" << "\t"
+    << std::endl;
   printAttributes( intensity->GetOutput()->GetRoot() );
+
+//   itk::Index<3> idx;
+//   idx[0] = 340;
+//   idx[1] = 350;
+//   idx[2] = 19;
+//   std::cout << "region: " << intensity->GetOutput()->GetRequestedRegion() << std::endl;
+//   std::cout << "idx: " << idx << "  node: " << intensity->GetOutput()->GetNode( idx ) << std::endl;
+//   idx.Fill(-30);
+//   std::cout << "idx: " << idx << "  node: " << intensity->GetOutput()->GetNode( intensity->GetOutput()->GetRoot(), idx ) << std::endl;
+//   std::cout << "idx: " << idx << "  pixel: " << (double) intensity->GetOutput()->GetPixel( idx ) << std::endl;
 
   return 0;
 }
