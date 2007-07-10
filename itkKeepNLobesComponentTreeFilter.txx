@@ -23,8 +23,8 @@
 
 namespace itk {
 
-template <class TImage>
-KeepNLobesComponentTreeFilter<TImage>
+template <class TImage, class TAttributeAccessor>
+KeepNLobesComponentTreeFilter<TImage, TAttributeAccessor>
 ::KeepNLobesComponentTreeFilter()
 {
   m_NumberOfLobes = 1;
@@ -32,15 +32,17 @@ KeepNLobesComponentTreeFilter<TImage>
 }
 
 
-template<class TImage>
+template<class TImage, class TAttributeAccessor>
 void
-KeepNLobesComponentTreeFilter<TImage>
+KeepNLobesComponentTreeFilter<TImage, TAttributeAccessor>
 ::GenerateData()
 {
   // Allocate the output
   this->AllocateOutputs();
 
   ProgressReporter progress(this, 0, this->GetOutput()->GetRequestedRegion().GetNumberOfPixels()*2);
+
+  AttributeAccessorType accessor;
 
   if( !m_ReverseOrdering )
     {
@@ -66,7 +68,7 @@ KeepNLobesComponentTreeFilter<TImage>
       // also, take care to never push the root to the queue !
       if( parent->IsLeaf() && !parent->IsRoot() )
         {
-        queue.Push( parent->GetAttribute(), parent );
+        queue.Push( accessor( parent ), parent );
         }
       }
     }
@@ -94,7 +96,7 @@ KeepNLobesComponentTreeFilter<TImage>
       // also, take care to never push the root to the queue !
       if( parent->IsLeaf() && !parent->IsRoot() )
         {
-        queue.Push( parent->GetAttribute(), parent );
+        queue.Push( accessor( parent ), parent );
         }
       }
     }
@@ -103,16 +105,18 @@ KeepNLobesComponentTreeFilter<TImage>
 }
 
 
-template<class TImage>
+template<class TImage, class TAttributeAccessor>
 void
-KeepNLobesComponentTreeFilter<TImage>
+KeepNLobesComponentTreeFilter<TImage, TAttributeAccessor>
 ::PutLeavesInQueue( PriorityQueueType & queue, NodeType* node )
 {
   assert(node != NULL);
 
+  AttributeAccessorType accessor;
+
   if( node->IsLeaf() )
     {
-    queue.Push( node->GetAttribute(), node );
+    queue.Push( accessor( node ), node );
     }
   else
     {
@@ -125,16 +129,18 @@ KeepNLobesComponentTreeFilter<TImage>
 }
 
 
-template<class TImage>
+template<class TImage, class TAttributeAccessor>
 void
-KeepNLobesComponentTreeFilter<TImage>
+KeepNLobesComponentTreeFilter<TImage, TAttributeAccessor>
 ::PutLeavesInQueue( ReversePriorityQueueType & queue, NodeType* node )
 {
   assert(node != NULL);
 
+  AttributeAccessorType accessor;
+
   if( node->IsLeaf() )
     {
-    queue.Push( node->GetAttribute(), node );
+    queue.Push( accessor( node ), node );
     }
   else
     {
@@ -149,9 +155,9 @@ KeepNLobesComponentTreeFilter<TImage>
 
 
 
-template<class TImage>
+template<class TImage, class TAttributeAccessor>
 void
-KeepNLobesComponentTreeFilter<TImage>
+KeepNLobesComponentTreeFilter<TImage, TAttributeAccessor>
 ::PrintSelf(std::ostream &os, Indent indent) const
 {
   Superclass::PrintSelf(os, indent);

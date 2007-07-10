@@ -42,7 +42,7 @@ IntegratedIntensityComponentTreeFilter<TInputImage, TAttributeAccessor>
   delete m_Progress;
   m_Progress = NULL;
   
-  assert( this->IsMonotone( false, false ) );
+//   assert( this->IsMonotone( false, false ) );
 }
 
 

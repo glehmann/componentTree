@@ -42,7 +42,7 @@ LeafComponentTreeFilter<TInputImage, TAttributeAccessor>
   delete m_Progress;
   m_Progress = NULL;
 
-  assert( this->IsMonotone() );
+//   assert( this->IsMonotone() );
 }
 
 

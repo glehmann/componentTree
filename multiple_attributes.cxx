@@ -8,10 +8,11 @@
 #include "itkPhysicalSizeComponentTreeFilter.h"
 #include "itkLocalIntensityComponentTreeFilter.h"
 #include "itkVolumeLevellingComponentTreeFilter.h"
-#include "itkComponentTreeToImageFilter.h"
+#include "itkComponentTreeLeavesToLabelImageFilter.h"
 #include "itkSizeComponentTreeFilter.h"
 #include "itkLeafComponentTreeFilter.h"
 #include "itkIntensityComponentTreeFilter.h"
+#include "itkKeepNLobesComponentTreeFilter.h"
 
 namespace itk
 {
@@ -34,10 +35,10 @@ public:
     return node->GetAttribute()[ Index ];
     }
 
-  inline AttributeType operator()( ComponentTreeNodeType * node )
-    {
-    return node->GetAttribute()[ Index ];
-    }
+//   inline AttributeType operator()( ComponentTreeNodeType * node )
+//     {
+//     return node->GetAttribute()[ Index ];
+//     }
 
   inline void operator()( ComponentTreeNodeType * node, const AttributeType & value )
     {
@@ -49,40 +50,87 @@ public:
 
 }
 
-template< class NodeType > void printAttributes( const NodeType * node )
+template< class NodeType, class ImageType > void printAttributes( const NodeType * node, const ImageType * img )
 {
   const typename NodeType::ChildrenListType * childrenList = & node->GetChildren();
   for( typename NodeType::ChildrenListType::const_iterator it=childrenList->begin(); it!=childrenList->end(); it++ )
     {
-    printAttributes( *it );
+    printAttributes( *it, img );
     }
   for( int i=0; i<NodeType::AttributeType::Dimension; i++ )
     {
     std::cout << node->GetAttribute()[i] << "\t";
+    }
+  for( int i=0; i<ImageType::ImageDimension; i++ )
+    {
+    std::cout << img->ComputeIndex( node->GetFirstIndex() )[i] << "\t";
     }
   std::cout << std::endl;
 }
 
 
-template< class NodeType > void printBranchAttributes( const NodeType * node )
+template< class NodeType, class ImageType > void printBranchAttributes( const NodeType * node, const ImageType * img )
 {
   for( int i=0; i<NodeType::AttributeType::Dimension; i++ )
     {
     std::cout << node->GetAttribute()[i] << "\t";
     }
+  for( int i=0; i<ImageType::ImageDimension; i++ )
+    {
+    std::cout << img->ComputeIndex( node->GetFirstIndex() )[i] << "\t";
+    }
   std::cout << std::endl;
   if( !node->IsRoot() )
     {
-    printBranchAttributes( node->GetParent() );
+    printBranchAttributes< NodeType, ImageType >( node->GetParent(), img );
+    }
+}
+
+
+template< class NodeType, class AccessorType > void setBranchAttribute( NodeType * node )
+{
+  AccessorType accessor;
+  accessor( node, 1 );
+  if( !node->IsRoot() )
+    {
+    setBranchAttribute< NodeType, AccessorType >( node->GetParent() );
+    }
+}
+
+
+template< class NodeType, class AccessorType > void initAttribute( NodeType * node )
+{
+  AccessorType accessor;
+  accessor( node, 0 );
+  typename NodeType::ChildrenListType * childrenList = & node->GetChildren();
+  for( typename NodeType::ChildrenListType::iterator it=childrenList->begin(); it!=childrenList->end(); it++ )
+    {
+    initAttribute< NodeType, AccessorType >( *it );
+    }
+}
+
+
+template< class NodeType, class SpotAccessorType, class BranchAccessorType, class ImageType > void setSpotAttribute( NodeType * node, const ImageType * img )
+{
+  SpotAccessorType spotAccessor;
+  spotAccessor( node, img->GetPixel( img->ComputeIndex( node->GetFirstIndex() ) ) );
+  if( spotAccessor( node ) != 0 && node->IsLeaf() )
+    {
+    setBranchAttribute< NodeType, BranchAccessorType >( node );
+    }
+  const typename NodeType::ChildrenListType * childrenList = & node->GetChildren();
+  for( typename NodeType::ChildrenListType::const_iterator it=childrenList->begin(); it!=childrenList->end(); it++ )
+    {
+    setSpotAttribute< NodeType, SpotAccessorType, BranchAccessorType, ImageType >( *it, img );
     }
 }
 
 
 int main(int argc, char * argv[])
 {
-  if( argc < 4 )
+  if( argc < 5 )
     {
-    std::cerr << "usage: " << argv[0] << " inputImage outputImage connectivity [x y z]" << std::endl;
+    std::cerr << "usage: " << argv[0] << " inputImage outputImage connectivity lobes" << std::endl;
     std::cerr << "  inputImage: an input image (up to dim=3)." << std::endl;
     std::cerr << "  outputImage: the value of the attribute for all the pixels, with unsigned long type." << std::endl;
     std::cerr << "  connectivity: 1 for fully connected, or 0" << std::endl;
@@ -97,7 +145,7 @@ int main(int argc, char * argv[])
   typedef unsigned long PType2;
   typedef itk::Image< PType2, dim > IType2;
 
-  typedef itk::ComponentTree< PType, dim, itk::FixedArray< double, 7 > > TreeType;
+  typedef itk::ComponentTree< PType, dim, itk::FixedArray< double, 9 > > TreeType;
 
   typedef itk::ImageFileReader< IType > ReaderType;
   ReaderType::Pointer reader = ReaderType::New();
@@ -109,13 +157,17 @@ int main(int argc, char * argv[])
   maxtree->SetFullyConnected( atoi( argv[3] ) );
 //   itk::SimpleFilterWatcher watcher(maxtree, "max tree");
 
-  typedef itk::Functor::ArrayAttributeComponentTreeNodeAccessor< TreeType::NodeType, double, 0 > IntegratedIntensityAccessor;
-  typedef itk::Functor::ArrayAttributeComponentTreeNodeAccessor< TreeType::NodeType, double, 1 > PhysicalSizeAccessor;
-  typedef itk::Functor::ArrayAttributeComponentTreeNodeAccessor< TreeType::NodeType, double, 2 > LocalIntensityAccessor;
-  typedef itk::Functor::ArrayAttributeComponentTreeNodeAccessor< TreeType::NodeType, double, 3 > VolumeLevellingAccessor;
-  typedef itk::Functor::ArrayAttributeComponentTreeNodeAccessor< TreeType::NodeType, double, 4 > SizeAccessor;
-  typedef itk::Functor::ArrayAttributeComponentTreeNodeAccessor< TreeType::NodeType, double, 5 > LeafAccessor;
-  typedef itk::Functor::ArrayAttributeComponentTreeNodeAccessor< TreeType::NodeType, double, 6 > IntensityAccessor;
+  typedef TreeType::NodeType NodeType;
+
+  typedef itk::Functor::ArrayAttributeComponentTreeNodeAccessor< NodeType, double, 0 > IntegratedIntensityAccessor;
+  typedef itk::Functor::ArrayAttributeComponentTreeNodeAccessor< NodeType, double, 1 > PhysicalSizeAccessor;
+  typedef itk::Functor::ArrayAttributeComponentTreeNodeAccessor< NodeType, double, 2 > LocalIntensityAccessor;
+  typedef itk::Functor::ArrayAttributeComponentTreeNodeAccessor< NodeType, double, 3 > VolumeLevellingAccessor;
+  typedef itk::Functor::ArrayAttributeComponentTreeNodeAccessor< NodeType, double, 4 > SizeAccessor;
+  typedef itk::Functor::ArrayAttributeComponentTreeNodeAccessor< NodeType, double, 5 > LeafAccessor;
+  typedef itk::Functor::ArrayAttributeComponentTreeNodeAccessor< NodeType, double, 6 > IntensityAccessor;
+  typedef itk::Functor::ArrayAttributeComponentTreeNodeAccessor< NodeType, double, 7 > SpotAccessor;
+  typedef itk::Functor::ArrayAttributeComponentTreeNodeAccessor< NodeType, double, 8 > BranchAccessor;
 
   typedef itk::IntegratedIntensityComponentTreeFilter< TreeType, IntegratedIntensityAccessor > IntegratedIntensityType;
   IntegratedIntensityType::Pointer integrated_intensity = IntegratedIntensityType::New();
@@ -139,7 +191,7 @@ int main(int argc, char * argv[])
 
   typedef itk::SizeComponentTreeFilter< TreeType, SizeAccessor > SizeType;
   SizeType::Pointer size = SizeType::New();
-  size->SetInput( local_intensity->GetOutput() );
+  size->SetInput( volume_levelling->GetOutput() );
 //   itk::SimpleFilterWatcher watcher4(size, "size");
 
   typedef itk::LeafComponentTreeFilter< TreeType, LeafAccessor > LeafType;
@@ -152,9 +204,15 @@ int main(int argc, char * argv[])
   intensity->SetInput( leaf->GetOutput() );
 //   itk::SimpleFilterWatcher watcher6(intensity, "intensity");
 
-  typedef itk::ComponentTreeToImageFilter< TreeType, IType > T2IType;
+  typedef itk::KeepNLobesComponentTreeFilter< TreeType, VolumeLevellingAccessor > KeepType;
+  KeepType::Pointer keep = KeepType::New();
+  keep->SetInput( intensity->GetOutput() );
+  keep->SetNumberOfLobes( atoi( argv[4] ) );
+  keep->SetInPlace( false );
+
+  typedef itk::ComponentTreeLeavesToLabelImageFilter< TreeType, IType > T2IType;
   T2IType::Pointer filter2 = T2IType::New();
-  filter2->SetInput( intensity->GetOutput() );
+  filter2->SetInput( keep->GetOutput() );
 
   typedef itk::ImageFileWriter< IType > WriterType;
   WriterType::Pointer writer = WriterType::New();
@@ -169,19 +227,27 @@ int main(int argc, char * argv[])
     << "size" << "\t"
     << "leaf" << "\t"
     << "intensity" << "\t"
+    << "spot" << "\t"
+    << "branch" << "\t"
+    << "x" << "\t"
+    << "y" << "\t"
+    << "z" << "\t"
     << std::endl;
-  if( argc == 4 )
+  initAttribute< NodeType, SpotAccessor >( intensity->GetOutput()->GetRoot() );
+  initAttribute< NodeType, BranchAccessor >( intensity->GetOutput()->GetRoot() );
+  setSpotAttribute< NodeType, SpotAccessor, BranchAccessor, IType >( intensity->GetOutput()->GetRoot(), filter2->GetOutput() );
+  if( argc == 5 )
     {
-    printAttributes( intensity->GetOutput()->GetRoot() );
+  printAttributes( intensity->GetOutput()->GetRoot(), intensity->GetOutput() );
     }
   else
     {
     itk::Index< dim > idx;
     for( int i=0; i<dim; i++ )
       {
-      idx[i] = atoi( argv[ i+4 ] );
+      idx[i] = atoi( argv[ i+5 ] );
       }
-    printBranchAttributes( intensity->GetOutput()->GetNode( idx ) );
+    printBranchAttributes( intensity->GetOutput()->GetNode( idx ), intensity->GetOutput() );
     }
 
 //   itk::Index<3> idx;
