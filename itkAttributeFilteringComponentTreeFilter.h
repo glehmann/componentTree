@@ -25,7 +25,7 @@ namespace itk {
  *
  * \ingroup ImageEnhancement  MathematicalMorphologyImageFilters
  */
-template<class TImage, class TCompare=std::less< typename TImage::AttributeType > >
+template<class TImage, class TAttibuteAccessor=typename Functor::AttributeComponentTreeNodeAccessor< typename TImage::NodeType > >
 class ITK_EXPORT AttributeFilteringComponentTreeFilter : 
     public InPlaceComponentTreeFilter<TImage>
 {
@@ -38,13 +38,14 @@ public:
 
   /** Some convenient typedefs. */
   typedef TImage ImageType;
-  typedef TCompare CompareType;
   typedef typename ImageType::Pointer         ImagePointer;
   typedef typename ImageType::ConstPointer    ImageConstPointer;
   typedef typename ImageType::PixelType       PixelType;
   typedef typename ImageType::NodeType        NodeType;
   typedef typename ImageType::IndexType       IndexType;
-  typedef typename ImageType::AttributeType   AttributeType;
+
+  typedef TAttibuteAccessor AttributeAccessorType;
+  typedef typename AttributeAccessorType::AttributeType   AttributeType;
   
   /** ImageDimension constants */
   itkStaticConstMacro(ImageDimension, unsigned int,
@@ -162,17 +163,16 @@ protected:
   void SubtractFiltering( NodeType*, const PixelType & );
   
   inline bool Compare( const AttributeType & a1, const AttributeType & a2 )
-  	{
-  	CompareType compare;
-	if( m_ReverseOrdering )
-	  {
-	  return compare( a2, a1 );
-	  }
-	else
-	  {
-	  return compare( a1, a2 );
-	  }
-  	}
+    {
+    if( m_ReverseOrdering )
+      {
+      return a2 < a1;
+      }
+    else
+      {
+      return a1 > a2;
+      }
+    }
 
 private:
   AttributeFilteringComponentTreeFilter(const Self&); //purposely not implemented

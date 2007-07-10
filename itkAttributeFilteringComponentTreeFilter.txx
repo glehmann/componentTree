@@ -23,8 +23,8 @@
 
 namespace itk {
 
-template <class TInputImage, class TCompare>
-AttributeFilteringComponentTreeFilter<TInputImage, TCompare>
+template <class TInputImage, class TAccessor>
+AttributeFilteringComponentTreeFilter<TInputImage, TAccessor>
 ::AttributeFilteringComponentTreeFilter()
 {
   m_Lambda = itk::NumericTraits< AttributeType >::Zero;
@@ -33,9 +33,9 @@ AttributeFilteringComponentTreeFilter<TInputImage, TCompare>
 }
 
 
-template<class TInputImage, class TCompare>
+template<class TInputImage, class TAccessor>
 void
-AttributeFilteringComponentTreeFilter<TInputImage, TCompare>
+AttributeFilteringComponentTreeFilter<TInputImage, TAccessor>
 ::GenerateData()
 {
   // Allocate the output
@@ -45,40 +45,43 @@ AttributeFilteringComponentTreeFilter<TInputImage, TCompare>
   // TODO: how to generate progress ??
   
   if( m_FilteringType == MAXIMUM )
-  	{
+    {
     this->MaximumFiltering( this->GetOutput()->GetRoot() );
     }
   else if( m_FilteringType == MINIMUM )
-  	{
+    {
     this->MinimumFiltering( this->GetOutput()->GetRoot() );
     }
   else if( m_FilteringType == DIRECT )
-  	{
+    {
     this->DirectFiltering( this->GetOutput()->GetRoot() );
     }
   else if( m_FilteringType == SUBTRACT )
-  	{
+    {
     this->SubtractFiltering( this->GetOutput()->GetRoot(), 0 );
     }
   else
-  	{
-  	itkExceptionMacro( << "Unknown filtering type" );
-  	}
+    {
+    itkExceptionMacro( << "Unknown filtering type" );
+    }
 
 }
 
 
-template<class TInputImage, class TCompare>
+template<class TInputImage, class TAccessor>
 void
-AttributeFilteringComponentTreeFilter<TInputImage, TCompare>
+AttributeFilteringComponentTreeFilter<TInputImage, TAccessor>
 ::MaximumFiltering( NodeType* node )
 {
   assert(node != NULL);
+
+  AttributeAccessorType accessor;
+
   typename NodeType::ChildrenListType * childrenList = & node->GetChildren();
   typename NodeType::ChildrenListType::iterator it=childrenList->begin();
   while( it!=childrenList->end() )
     {
-    if( this->Compare( (*it)->GetAttribute(), m_Lambda ) )
+    if( this->Compare( accessor(*it), m_Lambda ) )
       {
       this->GetOutput()->NodeFlatten( *it );
       this->GetOutput()->NodeMerge( node, *it );
@@ -98,17 +101,20 @@ AttributeFilteringComponentTreeFilter<TInputImage, TCompare>
 }
 
 
-template<class TInputImage, class TCompare>
+template<class TInputImage, class TAccessor>
 void
-AttributeFilteringComponentTreeFilter<TInputImage, TCompare>
+AttributeFilteringComponentTreeFilter<TInputImage, TAccessor>
 ::DirectFiltering( NodeType* node )
 {
   assert(node != NULL);
+
+  AttributeAccessorType accessor;
+
   typename NodeType::ChildrenListType * childrenList = & node->GetChildren();
   typename NodeType::ChildrenListType::iterator it=childrenList->begin();
   while( it!=childrenList->end() )
     {
-    if( this->Compare( (*it)->GetAttribute(), m_Lambda ) )
+    if( this->Compare( accessor(*it), m_Lambda ) )
       {
       this->GetOutput()->NodeMerge( node, *it );
       // must store the iterator, because once the element
@@ -127,12 +133,15 @@ AttributeFilteringComponentTreeFilter<TInputImage, TCompare>
 }
 
 
-template<class TInputImage, class TCompare>
+template<class TInputImage, class TAccessor>
 bool
-AttributeFilteringComponentTreeFilter<TInputImage, TCompare>
+AttributeFilteringComponentTreeFilter<TInputImage, TAccessor>
 ::MinimumFiltering( NodeType* node )
 {
   assert(node != NULL);
+
+  AttributeAccessorType accessor;
+
   typename NodeType::ChildrenListType * childrenList = & node->GetChildren();
   typename NodeType::ChildrenListType::iterator it=childrenList->begin();
   
@@ -157,17 +166,19 @@ AttributeFilteringComponentTreeFilter<TInputImage, TCompare>
       }
     }
     
-    return nodeCanBeMerged && this->Compare( node->GetAttribute(), m_Lambda );
+    return nodeCanBeMerged && this->Compare( accessor(node), m_Lambda );
 }
 
 
-template<class TInputImage, class TCompare>
+template<class TInputImage, class TAccessor>
 void
-AttributeFilteringComponentTreeFilter<TInputImage, TCompare>
+AttributeFilteringComponentTreeFilter<TInputImage, TAccessor>
 ::SubtractFiltering( NodeType* node, const PixelType & sub )
 {
   assert(node != NULL);
-  
+
+  AttributeAccessorType accessor;
+
   typename NodeType::ChildrenListType * childrenList = & node->GetChildren();
   typename NodeType::ChildrenListType::iterator it=childrenList->begin();
   
@@ -175,7 +186,7 @@ AttributeFilteringComponentTreeFilter<TInputImage, TCompare>
   
   while( it!=childrenList->end() )
     {
-    if( this->Compare( (*it)->GetAttribute(), m_Lambda ) )
+    if( this->Compare( accessor(*it), m_Lambda ) )
       {
       this->SubtractFiltering( *it, sub + (*it)->GetPixel() - node->GetPixel() );
       
@@ -208,9 +219,9 @@ AttributeFilteringComponentTreeFilter<TInputImage, TCompare>
 }
 
 
-template<class TInputImage, class TCompare>
+template<class TInputImage, class TAccessor>
 void
-AttributeFilteringComponentTreeFilter<TInputImage, TCompare>
+AttributeFilteringComponentTreeFilter<TInputImage, TAccessor>
 ::PrintSelf(std::ostream &os, Indent indent) const
 {
   Superclass::PrintSelf(os, indent);
