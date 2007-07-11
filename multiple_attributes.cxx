@@ -61,8 +61,8 @@ template< class NodeType, class ImageType > void printNodeAttributes( const Node
     {
     std::cout << img->ComputeIndex( node->GetFirstIndex() )[i] << "\t";
     }
-  std::cout << node << "\t";
-  std::cout << node->GetParent() << "\t";
+  std::cout << reinterpret_cast<long>(node) << "\t";
+  std::cout << reinterpret_cast<long>(node->GetParent()) << "\t";
   std::cout << node->GetChildren().size() << "\t";
   if( node->GetParent() )
     {
