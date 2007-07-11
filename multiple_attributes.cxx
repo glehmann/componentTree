@@ -14,6 +14,7 @@
 #include "itkIntensityComponentTreeFilter.h"
 #include "itkKeepNLobesComponentTreeFilter.h"
 #include "itkAttributeFilteringComponentTreeFilter.h"
+#include <iomanip>
 
 namespace itk
 {
@@ -264,23 +265,24 @@ int main(int argc, char * argv[])
   writer->SetFileName( argv[2] );
   writer->Update();
 
-  std::cout << "#integrated_intensity" << "\t"
-    << "physical_size" << "\t"
-    << "local_intensity" << "\t"
-    << "volume_levelling" << "\t"
-    << "size" << "\t"
-    << "leaf" << "\t"
-    << "intensity" << "\t"
-    << "spot" << "\t"
-    << "branch" << "\t"
-    << "spot_base" << "\t"
-    << "x" << "\t"
-    << "y" << "\t"
-    << "z" << "\t"
-    << "node" << "\t"
-    << "parent" << "\t"
-    << "node_children" << "\t"
-    << "parent_children" << "\t"
+  std::cout // << std::fixed
+    << "\"integrated_intensity\"" << "\t"
+    << "\"physical_size\"" << "\t"
+    << "\"local_intensity\"" << "\t"
+    << "\"volume_levelling\"" << "\t"
+    << "\"size\"" << "\t"
+    << "\"leaf\"" << "\t"
+    << "\"intensity\"" << "\t"
+    << "\"spot\"" << "\t"
+    << "\"branch\"" << "\t"
+    << "\"spot_base\"" << "\t"
+    << "\"x\"" << "\t"
+    << "\"y\"" << "\t"
+    << "\"z\"" << "\t"
+    << "\"node\"" << "\t"
+    << "\"parent\"" << "\t"
+    << "\"node_children\"" << "\t"
+    << "\"parent_children\"" << "\t"
     << std::endl;
 
   initAttribute< NodeType, SpotAccessor >( intensity->GetOutput()->GetRoot() );
