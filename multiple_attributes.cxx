@@ -247,6 +247,7 @@ int main(int argc, char * argv[])
   filtering->SetInput( intensity->GetOutput() );
   filtering->SetLambda( 0.7 );
   filtering->SetFilteringType( "Direct" );
+  filtering->SetReverseOrdering( true );
   filtering->SetInPlace( false );
 
   typedef itk::KeepNLobesComponentTreeFilter< TreeType, VolumeLevellingAccessor > KeepType;
