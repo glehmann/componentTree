@@ -490,6 +490,30 @@ ComponentTree<TPixel, VImageDimension, TValue>
 }
 
 
+template<class TPixel, unsigned int VImageDimension, class TValue>
+typename ComponentTree<TPixel, VImageDimension, TValue>::NodeType *
+ComponentTree<TPixel, VImageDimension, TValue>
+::GetRoot()
+{
+  if( m_Root == NULL )
+    {
+    itkExceptionMacro(<< "No root Node.");
+    }
+  return m_Root;
+}
+
+
+template<class TPixel, unsigned int VImageDimension, class TValue>
+const typename ComponentTree<TPixel, VImageDimension, TValue>::NodeType *
+ComponentTree<TPixel, VImageDimension, TValue>
+::GetRoot() const
+{
+  if( m_Root == NULL )
+    {
+    itkExceptionMacro(<< "No root Node.");
+    }
+  return m_Root;
+}
 
 
 } // end namespace itk

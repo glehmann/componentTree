@@ -110,10 +110,12 @@ public:
     this->SetRequestedRegion(region);
     };
 
-  /** Set/Get the root node */
-  itkGetMacro(Root, NodeType *);
-  itkGetConstMacro(Root, NodeType *);
+  /** Get the root node. Throw an exception is no root is set. */
+  NodeType * GetRoot();
+  const NodeType * GetRoot() const;
 //   itkSetMacro(Root, NodeType *);
+
+  /** Set the root node */
   void SetRoot( NodeType * node )
     {
     m_Root = node;
