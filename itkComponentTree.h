@@ -113,13 +113,9 @@ public:
   /** Get the root node. Throw an exception is no root is set. */
   NodeType * GetRoot();
   const NodeType * GetRoot() const;
-//   itkSetMacro(Root, NodeType *);
 
   /** Set the root node */
-  void SetRoot( NodeType * node )
-    {
-    m_Root = node;
-    }
+  itkSetObjectMacro(Root, NodeType);
 
   /** Restore the data object to its initial state. This means releasing
    * memory. */
