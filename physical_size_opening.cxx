@@ -10,13 +10,15 @@
 
 int main(int argc, char * argv[])
 {
-  if( argc != 5 )
+  if( argc != 7 )
     {
-    std::cerr << "usage: " << argv[0] << " inputImage outputImage connectivity size" << std::endl;
+    std::cerr << "usage: " << argv[0] << " inputImage outputImage connectivity size type order" << std::endl;
     std::cerr << "  inputImage: an input image (up to dim=3)." << std::endl;
     std::cerr << "  outputImage: the value of the attribute for all the pixels, with float type." << std::endl;
     std::cerr << "  connectivity: 1 for fully connected, or 0" << std::endl;
     std::cerr << "  size: the size of the components to remove" << std::endl;
+    std::cerr << "  type: the filtering type (can be Direct, Minimum, Maximum or Subtract)" << std::endl;
+    std::cerr << "  order: use reverse order (1) or usual order (0)" << std::endl;
     exit(1);
     }
     
@@ -45,6 +47,9 @@ int main(int argc, char * argv[])
   FilteringType::Pointer filter2 = FilteringType::New();
   filter2->SetInput( filter->GetOutput() );
   filter2->SetLambda( atof( argv[4] ) );
+  filter2->SetFilteringType( argv[5] );
+  filter2->SetReverseOrdering( atoi( argv[6] ) );
+  itk::SimpleFilterWatcher watcher2(filter2, "filter2");
 
   typedef itk::ComponentTreeToImageFilter< TreeType, IType > T2IType;
   T2IType::Pointer filter3 = T2IType::New();
