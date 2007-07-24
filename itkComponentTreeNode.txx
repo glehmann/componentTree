@@ -132,7 +132,7 @@ void ComponentTreeNode<TPixel, TIndex, TValue>
 template <typename TPixel, typename TIndex, typename TValue>
 typename ComponentTreeNode<TPixel, TIndex, TValue>::Self *
 ComponentTreeNode<TPixel, TIndex, TValue>
-::Clone() 
+::Clone() const
 {
   // create a new node to clone this one
   Self * node = new Self();
@@ -143,7 +143,7 @@ ComponentTreeNode<TPixel, TIndex, TValue>
   node->SetFirstIndex( m_FirstIndex );
   node->SetLastIndex( m_LastIndex );
   // and copy clone the childs
-  for( ChildrenListIteratorType it=this->GetChildren().begin(); it!=this->GetChildren().end(); it++ )
+  for( ChildrenListConstIteratorType it=this->GetChildren().begin(); it!=this->GetChildren().end(); it++ )
     {
     assert( (*it)->GetParent() == this );
 

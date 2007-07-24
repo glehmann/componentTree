@@ -48,7 +48,7 @@ AttributeFilteringComponentTreeToImageFilter<TInputImage, TOutputImage, TCompare
 template<class TInputImage, class TOutputImage, class TCompare>
 void
 AttributeFilteringComponentTreeToImageFilter<TInputImage, TOutputImage, TCompare>
-::LambdaComponents( NodeType* node )
+::LambdaComponents( const NodeType* node )
 {
   assert(node != NULL);
   OutputImagePixelType v = static_cast<OutputImagePixelType>( node->GetPixel() );

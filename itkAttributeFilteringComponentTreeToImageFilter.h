@@ -87,7 +87,7 @@ protected:
    * to GrayscaleGeodesicErodeImageFilter. */
   void GenerateData();
   
-  void LambdaComponents( NodeType* );
+  void LambdaComponents( const NodeType* );
 
   void WriteNodes( const NodeType*, OutputImagePixelType & p );
 

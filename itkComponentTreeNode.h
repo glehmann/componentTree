@@ -80,6 +80,7 @@ public:
   typedef ComponentTreeNode      Self;
   typedef std::list<Self *>      ChildrenListType;
   typedef typename ChildrenListType::iterator ChildrenListIteratorType;
+  typedef typename ChildrenListType::const_iterator ChildrenListConstIteratorType;
 
   typedef TIndex                     IndexType;
   typedef TPixel                     PixelType;
@@ -183,7 +184,7 @@ public:
     }
 
   /** return a clone of the current tree */
-  Self * Clone();
+  Self * Clone() const;
 
   inline ComponentTreeNode();
 
