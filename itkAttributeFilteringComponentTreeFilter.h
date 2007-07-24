@@ -166,11 +166,11 @@ protected:
     {
     if( m_ReverseOrdering )
       {
-      return a2 < a1;
+      return a1 > a2;
       }
     else
       {
-      return a1 > a2;
+      return a1 < a2;
       }
     }
 
