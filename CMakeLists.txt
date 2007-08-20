@@ -200,11 +200,16 @@ FOREACH(s 10 100 1000 10000 100000)
 #  )
 ENDFOREACH(s)
 
-FOREACH(s 10 100 1000 10000 100000)
-  ADD_TEST(PhysicalSizeOpeningF=0Size=${s} ${TEST_COMMAND}
-     physical_size_opening ${CMAKE_SOURCE_DIR}/images/cthead1_small.nrrd physical_size_openingF=0Size=${s}.png 0 ${s}
-     --compare physical_size_openingF=0Size=${s}.png ${CMAKE_SOURCE_DIR}/images/physical_size_openingF=0Size=${s}.png
-  )
+FOREACH(s 100 1000 10000)
+  FOREACH(t Maximum Minimum Direct Subtract)
+    FOREACH(o 0 1)
+      ADD_TEST(PhysicalSizeOpeningF=0Size=${s}Type=${t}Order=${o} ${TEST_COMMAND}
+        physical_size_opening ${CMAKE_SOURCE_DIR}/images/cthead1_small.nrrd physical_size_openingF=0Size=${s}Type=${t}Order=${o}.png 0 ${s} ${t} ${o}
+        --compare physical_size_openingF=0Size=${s}Type=${t}Order=${o}.png ${CMAKE_SOURCE_DIR}/images/physical_size_openingF=0Size=${s}Type=${t}Order=${o}.png
+      )
+    ENDFOREACH(o)
+  ENDFOREACH(t)
+
 #  ADD_TEST(PhysicalSizeOpeningF=1Size=${s} ${TEST_COMMAND}
 #     physical_size_opening ${CMAKE_SOURCE_DIR}/images/cthead1_small.nrrd physical_size_openingF=1Size=${s}.png 1 ${s}
 #     --compare physical_size_openingF=1Size=${s}.png ${CMAKE_SOURCE_DIR}/images/physical_size_openingF=1Size=${s}.png
