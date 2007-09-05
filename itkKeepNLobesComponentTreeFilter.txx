@@ -47,7 +47,7 @@ KeepNLobesComponentTreeFilter<TImage, TAttributeAccessor>
   if( !m_ReverseOrdering )
     {
     // setup the priority queue
-    PriorityQueueType queue;
+    HierarchicalQueueType queue;
 
     // put all the leaves in the queue
     this->PutLeavesInQueue( queue, this->GetOutput()->GetRoot() );
@@ -75,7 +75,7 @@ KeepNLobesComponentTreeFilter<TImage, TAttributeAccessor>
   else
     {
     // setup the priority queue
-    ReversePriorityQueueType queue;
+    ReverseHierarchicalQueueType queue;
 
     // put all the leaves in the queue
     this->PutLeavesInQueue( queue, this->GetOutput()->GetRoot() );
@@ -108,7 +108,7 @@ KeepNLobesComponentTreeFilter<TImage, TAttributeAccessor>
 template<class TImage, class TAttributeAccessor>
 void
 KeepNLobesComponentTreeFilter<TImage, TAttributeAccessor>
-::PutLeavesInQueue( PriorityQueueType & queue, NodeType* node )
+::PutLeavesInQueue( HierarchicalQueueType & queue, NodeType* node )
 {
   assert(node != NULL);
 
@@ -132,7 +132,7 @@ KeepNLobesComponentTreeFilter<TImage, TAttributeAccessor>
 template<class TImage, class TAttributeAccessor>
 void
 KeepNLobesComponentTreeFilter<TImage, TAttributeAccessor>
-::PutLeavesInQueue( ReversePriorityQueueType & queue, NodeType* node )
+::PutLeavesInQueue( ReverseHierarchicalQueueType & queue, NodeType* node )
 {
   assert(node != NULL);
 

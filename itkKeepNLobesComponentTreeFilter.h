@@ -18,7 +18,7 @@
 #define __itkKeepNLobesComponentTreeFilter_h
 
 #include "itkInPlaceComponentTreeFilter.h"
-#include "itkPriorityQueue.h"
+#include "itkHierarchicalQueue.h"
 
 namespace itk {
 
@@ -66,8 +66,8 @@ public:
   typedef TAttibuteAccessor AttributeAccessorType;
   typedef typename AttributeAccessorType::AttributeType   AttributeType;
   
-  typedef PriorityQueue< AttributeType, NodeType*, typename std::less< AttributeType > > PriorityQueueType;
-  typedef PriorityQueue< AttributeType, NodeType*, typename std::greater< AttributeType > > ReversePriorityQueueType;
+  typedef HierarchicalQueue< AttributeType, NodeType*, typename std::less< AttributeType > > HierarchicalQueueType;
+  typedef HierarchicalQueue< AttributeType, NodeType*, typename std::greater< AttributeType > > ReverseHierarchicalQueueType;
 
   /** ImageDimension constants */
   itkStaticConstMacro(ImageDimension, unsigned int,
@@ -108,8 +108,8 @@ protected:
    * to GrayscaleGeodesicErodeImageFilter. */
   void GenerateData();
   
-  void PutLeavesInQueue( PriorityQueueType & queue, NodeType* node );
-  void PutLeavesInQueue( ReversePriorityQueueType & queue, NodeType* node );
+  void PutLeavesInQueue( HierarchicalQueueType & queue, NodeType* node );
+  void PutLeavesInQueue( ReverseHierarchicalQueueType & queue, NodeType* node );
 
 
 private:
