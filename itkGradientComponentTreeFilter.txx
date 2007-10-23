@@ -97,11 +97,6 @@ GradientComponentTreeFilter<TInputImage, TAttributeAccessor>
     double sDiff = vcl_pow( static_cast< double >( size ), 1.0/ImageDimension) - vcl_pow( s, 1.0/ImageDimension);
     
     double res = vcl_abs( v - localValue ) / sDiff;
-    if( res < 0 || res > 10 )
-      {
-    std::cout << res << "   " <<  sDiff << std::endl;
-      
-      }
 
     accessor( node, res );
     }
