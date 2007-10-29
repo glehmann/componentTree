@@ -76,11 +76,9 @@ protected:
   ~IntegratedIntensityComponentTreeFilter() {};
   void PrintSelf(std::ostream& os, Indent indent) const;
 
-  /** Single-threaded version of GenerateData.  This filter delegates
-   * to GrayscaleGeodesicErodeImageFilter. */
   void GenerateData();
   
-  void SetComponentIntensitySize( NodeType* );
+  void SetComponentIntegratedIntensity( NodeType* );
 
 private:
   IntegratedIntensityComponentTreeFilter(const Self&); //purposely not implemented

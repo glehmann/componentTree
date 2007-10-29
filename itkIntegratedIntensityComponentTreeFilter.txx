@@ -38,7 +38,7 @@ IntegratedIntensityComponentTreeFilter<TInputImage, TAttributeAccessor>
   this->AllocateOutputs();
 
   m_Progress = new ProgressReporter(this, 0, this->GetOutput()->GetRequestedRegion().GetNumberOfPixels());
-  this->SetComponentIntensitySize( this->GetOutput()->GetRoot() );
+  this->SetComponentIntegratedIntensity( this->GetOutput()->GetRoot() );
   delete m_Progress;
   m_Progress = NULL;
   
@@ -49,7 +49,7 @@ IntegratedIntensityComponentTreeFilter<TInputImage, TAttributeAccessor>
 template<class TInputImage, class TAttributeAccessor>
 void
 IntegratedIntensityComponentTreeFilter<TInputImage, TAttributeAccessor>
-::SetComponentIntensitySize( NodeType* node )
+::SetComponentIntegratedIntensity( NodeType* node )
 {
   assert(node != NULL);
 
@@ -69,7 +69,7 @@ IntegratedIntensityComponentTreeFilter<TInputImage, TAttributeAccessor>
   const typename NodeType::ChildrenListType * childrenList = & node->GetChildren();
   for( typename NodeType::ChildrenListType::const_iterator it=childrenList->begin(); it!=childrenList->end(); it++ )
     {
-    this->SetComponentIntensitySize( *it );
+    this->SetComponentIntegratedIntensity( *it );
     intensity += accessor( *it );
     }
 
