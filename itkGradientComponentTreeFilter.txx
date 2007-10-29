@@ -83,6 +83,7 @@ GradientComponentTreeFilter<TInputImage, TAttributeAccessor>
     }
 
   double localValue = static_cast< double >( node->GetPixel() );
+  double rootSize = vcl_pow( static_cast< double >( size ), 1.0/ImageDimension );
 
   // set the gradient for all the children
   typename NodeType::ChildrenListType::const_iterator it;
@@ -94,8 +95,7 @@ GradientComponentTreeFilter<TInputImage, TAttributeAccessor>
     double v = static_cast< double >( (*it)->GetPixel() );
     double s = *sIt;
 
-    double sDiff = vcl_pow( static_cast< double >( size ), 1.0/ImageDimension) - vcl_pow( s, 1.0/ImageDimension);
-    
+    double sDiff = rootSize - vcl_pow( s, 1.0/ImageDimension );
     double res = vcl_abs( v - localValue ) / sDiff;
 
     accessor( *it, static_cast< AttributeType >( res ) );
