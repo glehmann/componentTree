@@ -98,7 +98,7 @@ GradientComponentTreeFilter<TInputImage, TAttributeAccessor>
     
     double res = vcl_abs( v - localValue ) / sDiff;
 
-    accessor( node, res );
+    accessor( *it, static_cast< AttributeType >( res ) );
     }
 
   assert( size > 0 );
