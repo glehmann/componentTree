@@ -38,6 +38,11 @@ VolumeLevellingComponentTreeFilter<TInputImage, TAttributeAccessor>
   this->AllocateOutputs();
 
   m_Progress = new ProgressReporter(this, 0, this->GetOutput()->GetRequestedRegion().GetNumberOfPixels());
+  m_PhysicalPixelSize = 1;
+  for( int i=0; i<ImageDimension; i++ )
+    {
+    m_PhysicalPixelSize *= this->GetInput()->GetSpacing()[i];
+    }
   this->SetVolumeLevelling( this->GetOutput()->GetRoot() );
   delete m_Progress;
   m_Progress = NULL;
@@ -65,7 +70,7 @@ VolumeLevellingComponentTreeFilter<TInputImage, TAttributeAccessor>
     childrenSize += ret.size;
     }
 
-  accessor( node, static_cast< AttributeType >( childrenSum - childrenSize * node->GetPixel() ) );
+  accessor( node, static_cast< AttributeType >( ( childrenSum - childrenSize * node->GetPixel() ) * m_PhysicalPixelSize ) );
 //   std::cout << accessor( node ) << std::endl;
 
   unsigned long size = 0;
