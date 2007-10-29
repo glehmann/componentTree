@@ -38,12 +38,6 @@ VolumeLevellingComponentTreeFilter<TInputImage, TAttributeAccessor>
   this->AllocateOutputs();
 
   m_Progress = new ProgressReporter(this, 0, this->GetOutput()->GetRequestedRegion().GetNumberOfPixels());
-  m_PhysicalPixelSize = 1;
-  for( int i=0; i<ImageDimension; i++ )
-    {
-    m_PhysicalPixelSize *= this->GetInput()->GetSpacing()[i];
-    }
-
   this->SetVolumeLevelling( this->GetOutput()->GetRoot() );
   delete m_Progress;
   m_Progress = NULL;
@@ -61,6 +55,19 @@ VolumeLevellingComponentTreeFilter<TInputImage, TAttributeAccessor>
 
   AttributeAccessorType accessor;
 
+  double childrenSum = 0;
+  unsigned long childrenSize = 0;
+  const typename NodeType::ChildrenListType * childrenList = & node->GetChildren();
+  for( typename NodeType::ChildrenListType::const_iterator it=childrenList->begin(); it!=childrenList->end(); it++ )
+    {
+    SumSize ret = this->SetVolumeLevelling( *it );
+    childrenSum += ret.sum;
+    childrenSize += ret.size;
+    }
+
+  accessor( node, static_cast< AttributeType >( childrenSum - childrenSize * node->GetPixel() ) );
+//   std::cout << accessor( node ) << std::endl;
+
   unsigned long size = 0;
   for( typename NodeType::IndexType current=node->GetFirstIndex();
      current != NodeType::EndIndex;
@@ -69,19 +76,9 @@ VolumeLevellingComponentTreeFilter<TInputImage, TAttributeAccessor>
     size++;
     m_Progress->CompletedPixel();
     }
-
   double sum = size * node->GetPixel();
-  const typename NodeType::ChildrenListType * childrenList = & node->GetChildren();
-  for( typename NodeType::ChildrenListType::const_iterator it=childrenList->begin(); it!=childrenList->end(); it++ )
-    {
-    SumSize ret = this->SetVolumeLevelling( *it );
-    sum += ret.sum;
-    size += ret.size;
-    }
 
-  accessor( node, static_cast< AttributeType >( sum - size * m_PhysicalPixelSize * node->GetPixel() ) );
-
-  return SumSize( sum, size );
+  return SumSize( childrenSum + sum, childrenSize + size );
 
 }
 

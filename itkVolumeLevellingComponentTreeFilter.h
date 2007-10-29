@@ -99,7 +99,6 @@ private:
   void operator=(const Self&); //purposely not implemented
 
   ProgressReporter * m_Progress;
-  double m_PhysicalPixelSize;
 
 } ; // end of class
 

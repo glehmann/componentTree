@@ -6,6 +6,7 @@
 #include "itkImageToMaximumTreeFilter.h"
 #include "itkVolumeLevellingComponentTreeFilter.h"
 #include "itkComponentTreeAttributeToImageFilter.h"
+#include "itkRescaleIntensityImageFilter.h"
 
 int main(int argc, char * argv[])
 {
@@ -18,12 +19,12 @@ int main(int argc, char * argv[])
     exit(1);
     }
     
-  const int dim = 3;
+  const int dim = 2;
   
-  typedef unsigned short PType;
+  typedef unsigned char PType;
   typedef itk::Image< PType, dim > IType;
 
-  typedef unsigned short PType2;
+  typedef unsigned long PType2;
   typedef itk::Image< PType2, dim > IType2;
 
   typedef itk::ComponentTree< PType, dim, PType2 > TreeType;
@@ -40,15 +41,19 @@ int main(int argc, char * argv[])
   typedef itk::VolumeLevellingComponentTreeFilter< TreeType > FilterType;
   FilterType::Pointer filter = FilterType::New();
   filter->SetInput( maxtree->GetOutput() );
-  itk::SimpleFilterWatcher watcher(filter, "filter");
+//   itk::SimpleFilterWatcher watcher(filter, "filter");
 
   typedef itk::ComponentTreeAttributeToImageFilter< TreeType, IType2 > T2IType;
   T2IType::Pointer filter2 = T2IType::New();
   filter2->SetInput( filter->GetOutput() );
 
-  typedef itk::ImageFileWriter< IType2 > WriterType;
+  typedef itk::RescaleIntensityImageFilter< IType2, IType > RI2IType;
+  RI2IType::Pointer rescale = RI2IType::New();
+  rescale->SetInput( filter2->GetOutput() );
+
+  typedef itk::ImageFileWriter< IType > WriterType;
   WriterType::Pointer writer = WriterType::New();
-  writer->SetInput( filter2->GetOutput() );
+  writer->SetInput( rescale->GetOutput() );
   writer->SetFileName( argv[2] );
   writer->Update();
 
