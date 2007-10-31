@@ -33,16 +33,18 @@ colorlinks,linkcolor={blue},citecolor={blue},urlcolor={blue},
 
 % The title should be descriptive enough for people to be able to find
 % the relevant document. 
-\title{}
+\title{Component tree: an efficient representation of grayscale connected components}
 
 % Increment the release number whenever significant changes are made.
 % The author and/or editor can define 'significant' however they like.
-\release{0.00}
+% \release{0.00}
 
 % At minimum, give your name and an email address.  You can include a
 % snail-mail address if you like.
-\author{}
-\authoraddress{}
+\author{Ga\"etan Lehmann{$^1$}}
+\authoraddress{{$^1$}INRA, UMR 1198; ENVA; CNRS, FRE 2857, Biologie du
+D\'eveloppement et 
+Reproduction, Jouy en Josas, F-78350, France.}
 
 \begin{document}
 \maketitle
@@ -59,6 +61,185 @@ colorlinks,linkcolor={blue},citecolor={blue},urlcolor={blue},
 \end{abstract}
 
 \tableofcontents
+
+\section{Introduction}
+
+{\em Connected component} is a well known and very useful notion in binary case.
+% ITK contains many implementations of algorithms based on that notion (connected component
+% labellisation, growing region, watershed, all the set of transforms based on geodesic
+% dilation/erosion)
+As often in mathematical morphology, this notion can be extended to the grayscale case,
+and allow to perform lot of the useful transforms based on binary connected components
+in the grayscale images.
+This article describe the {\em component tree}, a data structure able to efficiently represent
+the grayscale connected components in an grayscale image, as well as the algorithm
+used to build the component tree.
+The choices made for the implementation are discussed, and the performances are studied.
+
+All the source codes are provided, as well as a full set of tests and several
+usage examples of the new classes.
+
+\section{A few definitions and properties}
+
+The connectivity define which pixels are in the neighborhood of a pixel. The same connectivity is usually defined for all the pixels in an image.
+
+A binary connected component is defined as a set of foreground pixels for which at least one path
+exists bitween all the pairs of pixels of the connected component, in the graph formed by
+the pixels of the image and the connectivity used for that image.
+
+The connected component notion can be extended to grayscale images with the notion of threshold set.
+A threshold set is the set of foreground pixels formed by selecting all the pixels greater or equal to a threshold value. The connected components can be found at a defined threshold: that's the (binary) connected components in the threshold set. As a consequence, there are as much connected components sets as pixel values in a grayscale image.
+Also, it can be noticed that a connected component at a given threshold can't partially contain a connected component at a higher threshold -- the connected component is fully included or is not included. This is a very interesting property of grayscale connected components, because it make the transforms based on that notion never add or move the frontiers in the image -- they can only be removed. That's also the property used in the component tree.
+
+The above definition of the threshold set is valid for the images where the objects are bright and the background is dark. If the image contain dark objects, the pixels must be selected if they have a value lower or equal to the threshold value.
+
+In the various articles about connected component, the term {\em max-tree} is often used in place of {component tree}. In that article, the term {\em max-tree} is used for the component trees which are representing brigh objects, and {\em min-tree} for the component trees which are representing dark objects. The term {\em component tree} is used when the notion of brigh or dark object is not important.
+
+In some articles, {\em max-tree} and {\em component tree} are used to define two variants of the same data structure -- it's not the case in that article.
+
+\section{Component tree}
+
+The component tree is an efficient representation of all the connected component sets in a grayscale image.
+
+  \subsection{Data structure}
+
+The component tree is a tree, and thus contains nodes which have:
+\begin{itemize}
+ \item a parent node,
+ \item some child nodes.
+\end{itemize}
+
+The {\em root} node is the only node with no parent. A node with node child is called a {\em leaf}.
+Each node represent a connected component at a given threshold, and is thus associated with:
+\begin{itemize}
+  \item the pixel value used as threshold,
+  \item the list of pixels in that connected component.
+\end{itemize}
+
+However, each node does not list all the pixels in the connectected component, but only the ones with the pixel value associated with that node. Thanks to the inclusion relation with the connected components at higher threshold values, all the pixels of the connected component can be computed as the union of the pixels in the node, and the pixels of all its children.
+
+Finally, a node is often associated to an {\em attribute}, often a value of a specific property of the connected component (like its size, its shape, its intensity, ...), or the the relation with the other connected components of the tree (like the intensity variation with the parent node, the number of children, ...). In practice, many kind of attributes can be associated to a node.
+
+  \subsection{Implementation}
+
+A particular attention has been ported both on usability and on performance of the code.
+For usability, and following the approach used in ITK, the code has been implemented using the object paradigm style. However, a much rough approach has also been used in some case, because it gives significant performance improvements.
+
+There are two critical points for usability, and for performances:
+\begin{itemize}
+  \item the nodes,
+  \item the indexes.
+\end{itemize}
+Both of them may be present in important number in the component tree. However, it must be noticed that:
+\begin{itemize}
+  \item there are less nodes than indexes,
+  \item the nodes are much often manipulated by the developpers than the indexes,
+  \item the number of indexes is known, and always the same in an image, while the number of nodes is unknown before building the tree, and can change with the transforms,
+  \item for both indexes and nodes, the order in the children and in the indexes containers is not relevant,
+  \item while merging nodes, both indexes and nodes (children) containers must be merged as well, and so the merging must be efficiently implemented (if possible, in constant time) in the indexes and nodes containers,
+  \item the nodes is a set of different kind of data, while the indexes are simply a position in an image.
+\end{itemize}
+
+Given the usability and performances considerations given above, it has been cosen to implement:
+\begin{itemize}
+  \item the indexes as a simple offset in the image, of type $long$. It can be easily converted to a full {\em itk::Index} with the method provided in the {\em itk::ImageBase} class, and is much efficent both in memory and in compuation time than the {\em itk::Index}. The memory usage for example is $D$ times much efficient, where $D$ is the image dimension.
+  \item the index list as a custom list, which takes advantage of some particularities cited above (see below for much details).
+  \item the nodes as a new class, {\em itk::ComponentTreeNode} (see below for much details).
+  \item the children list as a {\em std::list}. This data structure can be efficently merged (in constant time).
+\end{itemize}
+
+
+The proposed implementation is based on two main classes: {\em itk::ComponentTree} and {\em itk::ComponentTreeNode}.
+
+{\em itk::ComponentTreeNode} is the class for all the node of a component tree. It contains several variables dedicated to that task:
+\begin{itemize}
+  \item {\em Pixel} is the pixel value,
+  \item {\em Parent} is a pointer to the parent node,
+  \item {\em Children} is a list of the children nodes,
+  \item {\em FirstIndex} and {\em LastIndex} are the first and last indexes of the index list (see below),
+  \item {\em Attribute} is the attribute associated with the node.
+\end{itemize}
+
+The list of indexes is implemented in a compact way. It is stored in two places:
+\begin{itemize}
+  \item An array of type {\em std::vector<long>} of the same size than the image is stored in the {\em itk::ComponentTree} class. The indices of the array correspond to the indexes in the image. Each content of that array is a reference to the next element in a list of indexes, or $-1$ if that the last element.
+  \item The first index of the indexes list is stored in {\em itk::ComponentTreeNode}, as well as the last index, to allow a constant time merge.
+\end{itemize}
+This way of storing the indexes lists requires far less memory than with a {\em std::list}:
+\begin{itemize}
+  \item $(N+2)L$ for the implemented way,
+  \item $(3N+2)L$ with the {\em std::list}, because of the link to the previous and the next node,
+\end{itemize}
+where $L$ is the size of the $long$ type on the system, and $N$ the size of the list.
+
+There can be a quite important number of nodes in a tree, so {\em itk::ComponentTreeNode} is a critical class for the performances of the transforms which are using the component trees, and thus has not been implemented as a subclass of {\em itk::LightObject}, to avoid the cost of the smart pointers managment, and the cost of the object factories.
+
+  \subsection{Comparison with implementations described in references}
+
+The component tree implementation is described in several articles, sometimes in details, sometimes very roughly.
+In general, the tree is implemented as a {\em rooted tree}, where each element contains a pointer to its parent, or to the canonical element of its node. The rooted tree is an array of the same size than the image, where all the elements are a index to a another element in the same array. The attributes are stored in another structure outside, and the pixel value associated with the nodes can be retrieved from the original image.
+
+This way of storing the component tree has some advantages compared to the proposed implementation:
+\begin{itemize}
+  \item the memory usage is the smallest known one.
+  \item attribute computation may be much efficient, by scanning the rooted tree in raster order.
+  \item it allow direct access to the node from the pixel position.
+\end{itemize}
+but it also has some problems:
+\begin{itemize}
+  \item the structure may not be canonical (all the element in the rooted tree points to the parent node, or to the canonical node)
+  \item there is no direct link bitween the attribute and the node. It implies some extra work to keep the data structure used to store the tree and the data structure used to store the attribute values synchronized.
+  \item if each element of the rooted tree is associated with an attribute value, storing those values is highly less memory efficient than storing an attribute value for each node.
+  \item removing a node, by merging it in its parent, has a $O(n)$ complexity, where $n$ is the number of pixels in the removed node, if the elements of the nodes are known, and $O(N)$, where $N$ is the size of the image, if the elements are not known, which is the much common situation. The complexity is $O(C)$ with the proposed structure, where $C$ is the number of children. Also, the rooted tree requires to modify the input image, or to recreate a new image similar to the input one when the tree is manipulated. With that last case, and depending on the pixel type, it can highly decrease the memory performance of the rooted tree implementation.
+\end{itemize}
+
+Note that some of the problems above are irrevelant with floating point pixel type, because, most of the time with floating point pixels, a node contains a single pixel.
+
+  \subsection{Comparison with the binary implementation}
+
+    \subsubsection{Line representation vs linked list}
+    \subsubsection{Index vs offset}
+    \subsubsection{Direct access to label vs nested tree}
+    \subsubsection{Support for large number of attributes vs single templated attribute}
+    \subsubsection{Parallel vs recursive attribute computation}
+
+  \subsection{Computation of the component tree}
+
+  \subsection{Component tree manipulation}
+
+  \subsection{Conversion to a standard image}
+
+  \subsection{Performances}
+
+\section{Attributes}
+
+  \subsection{Size and physical size}
+
+  \subsection{Compactness}
+
+  \subsection{Gradient}
+
+  \subsection{Integrated intensity}
+
+  \subsection{Intensity}
+
+  \subsection{Intensity variation}
+
+  \subsection{Local intensity}
+
+  \subsection{Volume levelling}
+
+\section{Useful examples}
+
+  \subsection{Attribute opening}
+
+  \subsection{Tophat by attributes}
+
+  \subsection{Keep N lobes}
+
+  \subsection{Granulometry}
+
+  \subsection{Gradient based segmentation}
 
 
 % \url{http://www.itk.org}
