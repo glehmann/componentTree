@@ -26,6 +26,7 @@ colorlinks,linkcolor={blue},citecolor={blue},urlcolor={blue},
 \usepackage{listings}
 % subfigures
 \usepackage{subfigure}
+\usepackage{pseudocode}
 
 
 %  This is a template for Papers to the Insight Journal. 
@@ -81,15 +82,15 @@ usage examples of the new classes.
 
 \section{A few definitions and properties}
 
-The connectivity define which pixels are in the neighborhood of a pixel. The same connectivity is usually defined for all the pixels in an image.
+The connectivity defines which pixels are in the neighborhood of a pixel. The same connectivity is usually defined for all the pixels in an image.
 
 A binary connected component is defined as a set of foreground pixels for which at least one path
 exists bitween all the pairs of pixels of the connected component, in the graph formed by
 the pixels of the image and the connectivity used for that image.
 
-The connected component notion can be extended to grayscale images with the notion of threshold set.
+The connected component notion can be extended to grayscale images with the notion of {\em threshold set}.
 A threshold set is the set of foreground pixels formed by selecting all the pixels greater or equal to a threshold value. The connected components can be found at a defined threshold: that's the (binary) connected components in the threshold set. As a consequence, there are as much connected components sets as pixel values in a grayscale image.
-Also, it can be noticed that a connected component at a given threshold can't partially contain a connected component at a higher threshold -- the connected component is fully included or is not included. This is a very interesting property of grayscale connected components, because it make the transforms based on that notion never add or move the frontiers in the image -- they can only be removed. That's also the property used in the component tree.
+Also, it can be noticed that a connected component at a given threshold can't partially contain a connected component at a higher threshold -- the connected component is fully included or is not included. This is a very interesting property of grayscale connected components, because it make the transforms based on that notion never add or move any frontier in the image -- they can only be removed. That property makes possible to represent the grayscale connected components as a tree: the component tree.
 
 The above definition of the threshold set is valid for the images where the objects are bright and the background is dark. If the image contain dark objects, the pixels must be selected if they have a value lower or equal to the threshold value.
 
@@ -109,28 +110,28 @@ The component tree is a tree, and thus contains nodes which have:
  \item some child nodes.
 \end{itemize}
 
-The {\em root} node is the only node with no parent. A node with node child is called a {\em leaf}.
+The {\em root} node is the only node with no parent. A node without any child is called a {\em leaf}.
 Each node represent a connected component at a given threshold, and is thus associated with:
 \begin{itemize}
   \item the pixel value used as threshold,
   \item the list of pixels in that connected component.
 \end{itemize}
 
-However, each node does not list all the pixels in the connectected component, but only the ones with the pixel value associated with that node. Thanks to the inclusion relation with the connected components at higher threshold values, all the pixels of the connected component can be computed as the union of the pixels in the node, and the pixels of all its children.
+However, each node does not list all the pixels in the connectected component, but only the ones with the exact pixel value associated with that node. Thanks to the inclusion relation with the connected components at higher threshold values, all the pixels of the connected component can be computed as the union of the pixels in the node, and the pixels of all its children.
 
 Finally, a node is often associated to an {\em attribute}, often a value of a specific property of the connected component (like its size, its shape, its intensity, ...), or the the relation with the other connected components of the tree (like the intensity variation with the parent node, the number of children, ...). In practice, many kind of attributes can be associated to a node.
 
   \subsection{Implementation}
 
 A particular attention has been ported both on usability and on performance of the code.
-For usability, and following the approach used in ITK, the code has been implemented using the object paradigm style. However, a much rough approach has also been used in some case, because it gives significant performance improvements.
+For usability, and following the approach used in ITK, the code has been implemented using the object paradigm style. However, a much rough approach has also been used in some case, because of the significant performance improvements.
 
 There are two critical points for usability, and for performances:
 \begin{itemize}
   \item the nodes,
   \item the indexes.
 \end{itemize}
-Both of them may be present in important number in the component tree. However, it must be noticed that:
+Both of them may be found in important number in the component tree. However, it must be noticed that:
 \begin{itemize}
   \item there are less nodes than indexes,
   \item the nodes are much often manipulated by the developpers than the indexes,
@@ -140,7 +141,7 @@ Both of them may be present in important number in the component tree. However, 
   \item the nodes is a set of different kind of data, while the indexes are simply a position in an image.
 \end{itemize}
 
-Given the usability and performances considerations given above, it has been cosen to implement:
+Given the usability and performances considerations given above, it has been chosen to implement:
 \begin{itemize}
   \item the indexes as a simple offset in the image, of type $long$. It can be easily converted to a full {\em itk::Index} with the method provided in the {\em itk::ImageBase} class, and is much efficent both in memory and in compuation time than the {\em itk::Index}. The memory usage for example is $D$ times much efficient, where $D$ is the image dimension.
   \item the index list as a custom list, which takes advantage of some particularities cited above (see below for much details).
@@ -172,7 +173,7 @@ This way of storing the indexes lists requires far less memory than with a {\em 
 \end{itemize}
 where $L$ is the size of the $long$ type on the system, and $N$ the size of the list.
 
-There can be a quite important number of nodes in a tree, so {\em itk::ComponentTreeNode} is a critical class for the performances of the transforms which are using the component trees, and thus has not been implemented as a subclass of {\em itk::LightObject}, to avoid the cost of the smart pointers managment, and the cost of the object factories.
+There can be a quite important number of nodes in a tree, so {\em itk::ComponentTreeNode} is a critical class for the performances of the transforms based on the component trees, and thus has not been implemented as a subclass of {\em itk::LightObject}, to avoid the cost of the smart pointers managment, and the cost of the object factories.
 
   \subsection{Comparison with implementations described in references}
 
@@ -191,19 +192,133 @@ but it also has some problems:
   \item there is no direct link bitween the attribute and the node. It implies some extra work to keep the data structure used to store the tree and the data structure used to store the attribute values synchronized.
   \item if each element of the rooted tree is associated with an attribute value, storing those values is highly less memory efficient than storing an attribute value for each node.
   \item removing a node, by merging it in its parent, has a $O(n)$ complexity, where $n$ is the number of pixels in the removed node, if the elements of the nodes are known, and $O(N)$, where $N$ is the size of the image, if the elements are not known, which is the much common situation. The complexity is $O(C)$ with the proposed structure, where $C$ is the number of children. Also, the rooted tree requires to modify the input image, or to recreate a new image similar to the input one when the tree is manipulated. With that last case, and depending on the pixel type, it can highly decrease the memory performance of the rooted tree implementation.
+  \item determine if a node is a leaf or not is quite difficult (TODO: complexity ?). It can be done in constant time with the proposed implementation.
+  \item finding the children? the elements of a node? complexity? link with problems above?
 \end{itemize}
 
-Note that some of the problems above are irrevelant with floating point pixel type, because, most of the time with floating point pixels, a node contains a single pixel.
+Note that some of the problems above are irrevelant with floating point pixel type, because, most of the time in that case, a node contains a single pixel.
 
   \subsection{Comparison with the binary implementation}
 
+The binary case has been implemented in another contribution to ITK. The differences are studied in that section.
+
     \subsubsection{Line representation vs linked list}
+
+The indexes contained in an object are implemented with the {\em run-length encoding} in the binary case. With that implementation, it is possible to store a high number of indexes in only two values:
+\begin{itemize}
+  \item an index,
+  \item a line length.
+\end{itemize}
+It is particulary efficient for the connected components, where lots of pixels are likely to be neighbors on a line. It also makes possible to optimize the computation of some attributes by avoiding the iteration over all the pixels contained in a line coded that way.
+
+It would have be perfectly possible to use that encoding in the componennt trees. However, the component tree only store the indexes at a single pixel value -- all the connected component is not store in each node. This data structure make less likely to have to code a line of at least two pixels. Also, the lists of indexes shown above would have more difficult to create with that encoding.
+
     \subsubsection{Index vs offset}
-    \subsubsection{Direct access to label vs nested tree}
+
+In the binary case, the indexes used in the run-length encoding are stored as {\em itk::Index}. It is the more standard way to code an index in ITK. However, it requires N fold more memory than a simple offset in an image, where N is the dimension of the image. Because the component tree code doesn't use the run-length en coding, it uses a lot more indexes that in the binary case, so it has been chosen to use the offsets rather than the {\em itk::Index} to reduce the memory usage.
+
     \subsubsection{Support for large number of attributes vs single templated attribute}
+
+The binary object representation has been made to support several attributes at a time. The component tree node is made to support only a single templated attribute. There are two main reason for that difference:
+\begin{itemize}
+  \item the binary object are often used to read the attribute values of an object, to describe the object for example. It is often interesting in that case to be able to access several attributes at a time. Reading the attribute values on a component tree node seem to be a very rare use case.
+  \item the number of objects in the binary case is likely to be a lot smaller than the number of nodes in the component trees. Given the high number of nodes, it is safer to store a single (templated) value per node, and compute the value of another attribute if needed, rather than storing several attribute in a node. It is possible however to store several attributes, by using a {\em structure} as attribute type.
+\end{itemize}
+
     \subsubsection{Parallel vs recursive attribute computation}
 
+In the binary case, all the objects are distinct. It is easy to compute the attribute values of several objects in parallel. In the component trees, the objects are not as well separated: a connected component is made of the pixels associated to a node, and of the pixels of all its children. Also, computing the attribute value of a node is often made from the values of its children. The attribute computation is naturally implemented recursively, and thus is much difficult to implement in parallel.
+
   \subsection{Computation of the component tree}
+
+An usual {\em itk::Image} can be converted to an {\em itk::ComponentTree} with the specializations of {\em itk::ImageToComponentTreeFilter}: {\em itk::ImageToMaximumTreeFilter} for the bright objects and {\em itk::ImageToMinimumTreeFilter} for the dark objects.
+
+The algorithm implemented is a slight modification of the algorithm in TODO. It use the data structure described above to reduce the memory usage required by the algorithm: during the build of the component tree, the {\em Parent} is the last node known to be the current root of the tree.
+
+\begin{figure}[htbp]
+\centering
+\small
+\begin{pseudocode}[framebox]{BeucherWatershed}{I,N}
+\COMMENT{Store the indexes of the pixels for all the pixel values}\\
+pixelMap \GETS \emptyset \\
+\FOREACH idx \in I \DO
+% \BEGIN
+  pixelMap[I[idx]] \GETS pixelMap[I[idx]] + [idx] \\
+% \END \\
+\COMMENT{Create an image to associate a pixel to a node}\\
+nodeImage \GETS \emptyset \\
+\COMMENT{Create a list of node to delete}\\
+tempNodeList \GETS \emptyset \\
+\COMMENT{Iterate over the pixel values, from the highest to the lowest}\\
+\FOREACH v \in keys(pixelMap) \DO
+\BEGIN
+  \COMMENT{Iterate over the indexes where the image has the value v}\\
+  \FOREACH idx \in pixelMap[v] \DO
+  \BEGIN
+    node \GETS \emptyset \\
+    \COMMENT{Iterate over the neighbors of idx}\\
+    \FOREACH nIdx \in N(p) \DO
+    \BEGIN
+      nRefNode \GETS refNode( nodeImage[nIdx] ) \\
+      nv \GETS I[nIdx] \\
+      \IF nRefNode \neq \emptyset \AND node \neq nRefNode \AND nv = v
+        \THEN
+          \BEGIN
+            \IF node = \emptyset
+              \THEN
+                \BEGIN
+                  addIndex( nRefNode, idx ) \\
+                  node \GETS nRefNode \\
+                \END
+              \ELSE
+                \BEGIN
+                  lightMerge( node, nRefNode ) \\
+                  tempNodeList \GETS tempNodeList + [nRefNode] \\
+                \END
+          \END
+    \END \\
+    
+  \END \\
+\END \\
+
+%   \COMMENT{put the edges of the marker in the queue}\\
+%   \IF M[p] \neq WSLABEL
+%   \THEN
+%   \BEGIN
+%     bgNeighbor \GETS \FALSE \\
+%     \FOREACH q \in \CALL{N}{p} \DO 
+%     \BEGIN
+%       \IF M[q] = WSLABEL
+%         \THEN bgNeighbor \GETS \TRUE \\
+%     \END\\
+%     \IF bgNeighbor \STMTNUM{5em}{algo:Beucher:bgNeighbor}
+%       \THEN
+%       queue[I[p]] \GETS queue[I[p]] \cup \{p\} \\
+%   \END
+% \END
+% \\
+% \\
+% \COMMENT{flooding stage} \\
+% \WHILE queue \neq \emptyset \DO
+% \BEGIN
+%   v \GETS \CALL{first}{queue}\\
+%   \WHILE queue[v] \neq \emptyset \DO
+%   \BEGIN
+%     p \GETS \CALL{first}{queue[v]} \\
+%     \FOREACH q \in \CALL{N}{p} \DO
+%     \BEGIN
+%     \IF O[q] = WSLABEL
+%     \THEN
+%     \BEGIN
+%       O[q] \GETS O[p] \\
+%       v \GETS \CALL{MAX}{I[q], v} \STMTNUM{5em}{algo:Beucher:max} \\
+%       queue[v] \GETS queue[v] \cup \{q\} \\
+%     \END
+%     \END
+%   \END
+\end{pseudocode}
+\caption{Simple watershed algorithm.\label{BeucherAlgorithm} $FIRST(queue)$ extract the highest priority element from the queue. $N(p)$ return the list of p's neighbors. $MAX(a,b)$ returns the maximum of $a$, and $b$. $WSLABEL$ is the label used to define background and watershed pixels (usually $0$). The lower completion is done by the statement (\ref{algo:Beucher:max}). Determine if a marker pixel before adding it in the queue (\ref{algo:Beucher:bgNeighbor}) is not required, but helps to decrease memory usage in case of large markers.}
+\end{figure}
 
   \subsection{Component tree manipulation}
 
