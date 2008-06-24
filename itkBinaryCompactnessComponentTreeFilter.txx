@@ -1,7 +1,7 @@
 /*=========================================================================
 
   Program:   Insight Segmentation & Registration Toolkit
-  Module:    $RCSfile: itkCompactnessComponentTreeFilter.txx,v $
+  Module:    $RCSfile: itkBinaryCompactnessComponentTreeFilter.txx,v $
   Language:  C++
   Date:      $Date: 2005/08/23 15:09:03 $
   Version:   $Revision: 1.6 $
@@ -14,24 +14,24 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef __itkCompactnessComponentTreeFilter_txx
-#define __itkCompactnessComponentTreeFilter_txx
+#ifndef __itkBinaryCompactnessComponentTreeFilter_txx
+#define __itkBinaryCompactnessComponentTreeFilter_txx
 
-#include "itkCompactnessComponentTreeFilter.h"
+#include "itkBinaryCompactnessComponentTreeFilter.h"
 
 
 namespace itk {
 
 template<class TInputImage, class TAttributeAccessor>
-CompactnessComponentTreeFilter<TInputImage, TAttributeAccessor>
-::CompactnessComponentTreeFilter()
+BinaryCompactnessComponentTreeFilter<TInputImage, TAttributeAccessor>
+::BinaryCompactnessComponentTreeFilter()
 {
 }
 
 
 template<class TInputImage, class TAttributeAccessor>
 void
-CompactnessComponentTreeFilter<TInputImage, TAttributeAccessor>
+BinaryCompactnessComponentTreeFilter<TInputImage, TAttributeAccessor>
 ::GenerateData()
 {
   // Allocate the output
@@ -53,8 +53,8 @@ CompactnessComponentTreeFilter<TInputImage, TAttributeAccessor>
 
 
 template<class TInputImage, class TAttributeAccessor>
-typename CompactnessComponentTreeFilter<TInputImage, TAttributeAccessor>::ChildData
-CompactnessComponentTreeFilter<TInputImage, TAttributeAccessor>
+typename BinaryCompactnessComponentTreeFilter<TInputImage, TAttributeAccessor>::ChildData
+BinaryCompactnessComponentTreeFilter<TInputImage, TAttributeAccessor>
 ::SetCompactness( NodeType* node )
 {
   assert(node != NULL);
@@ -77,22 +77,21 @@ CompactnessComponentTreeFilter<TInputImage, TAttributeAccessor>
     }
 
   unsigned long size = 0;
-  const PixelType & p = node->GetPixel();
   for( typename NodeType::IndexType current=node->GetFirstIndex();
      current != NodeType::EndIndex;
      current = this->GetInput()->GetLinkedListArray()[ current ] )
     {
     IndexType idx = this->GetOutput()->ComputeIndex( current );
-    sum += p;
+    sum += 1;
     PointType physicalPosition;
     this->GetOutput()->TransformIndexToPhysicalPoint(idx, physicalPosition);
     for(unsigned int i=0; i<ImageDimension; i++)
       {
-      cog[i] += physicalPosition[i] * p; 
-      cm[i][i] += p * physicalPosition[i] * physicalPosition[i];
+      cog[i] += physicalPosition[i]; 
+      cm[i][i] += physicalPosition[i] * physicalPosition[i];
       for(unsigned int j=i+1; j<ImageDimension; j++)
         {
-        double weight = p * physicalPosition[i] * physicalPosition[j];
+        double weight = physicalPosition[i] * physicalPosition[j];
         cm[i][j] += weight;
         cm[j][i] += weight;
         }
@@ -158,7 +157,7 @@ CompactnessComponentTreeFilter<TInputImage, TAttributeAccessor>
 
 template<class TInputImage, class TAttributeAccessor>
 void
-CompactnessComponentTreeFilter<TInputImage, TAttributeAccessor>
+BinaryCompactnessComponentTreeFilter<TInputImage, TAttributeAccessor>
 ::PrintSelf(std::ostream &os, Indent indent) const
 {
   Superclass::PrintSelf(os, indent);
