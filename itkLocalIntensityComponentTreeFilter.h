@@ -70,6 +70,11 @@ public:
   /** End concept checking */
 #endif
 
+  /** Set/Get whether the leaves should have a local intensity of 0 */
+  itkSetMacro(UseZeroLeaves, bool);
+  itkGetConstReferenceMacro(UseZeroLeaves, bool);
+  itkBooleanMacro(UseZeroLeaves);
+
 protected:
   LocalIntensityComponentTreeFilter();
   ~LocalIntensityComponentTreeFilter() {};
@@ -80,10 +85,13 @@ protected:
   void GenerateData();
   
   void SetComponentIntensity( NodeType* );
+  void SetComponentIntensity2( NodeType* );
 
 private:
   LocalIntensityComponentTreeFilter(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
+
+  bool m_UseZeroLeaves;
 
 } ; // end of class
 

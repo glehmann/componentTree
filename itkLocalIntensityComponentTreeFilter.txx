@@ -27,6 +27,7 @@ template<class TInputImage, class TAttributeAccessor>
 LocalIntensityComponentTreeFilter<TInputImage, TAttributeAccessor>
 ::LocalIntensityComponentTreeFilter()
 {
+  m_UseZeroLeaves = false;
 }
 
 
@@ -39,8 +40,14 @@ LocalIntensityComponentTreeFilter<TInputImage, TAttributeAccessor>
   this->AllocateOutputs();
 
   ProgressReporter progress(this, 0, this->GetOutput()->GetRequestedRegion().GetNumberOfPixels()*2);
-  this->SetComponentIntensity( this->GetOutput()->GetRoot() );
-
+  if( m_UseZeroLeaves )
+    {
+    this->SetComponentIntensity2( this->GetOutput()->GetRoot() );
+    }
+  else
+    {
+    this->SetComponentIntensity( this->GetOutput()->GetRoot() );
+    }
   // TODO: how to generate progress ??
 
 }
@@ -54,12 +61,12 @@ LocalIntensityComponentTreeFilter<TInputImage, TAttributeAccessor>
   assert(node != NULL);
   AttributeAccessorType accessor;
 
-  AttributeType intensity = NumericTraits<AttributeType>::Zero;
+  AttributeType li = NumericTraits<AttributeType>::Zero;
   const typename NodeType::ChildrenListType * childrenList = & node->GetChildren();
   for( typename NodeType::ChildrenListType::const_iterator it=childrenList->begin(); it!=childrenList->end(); it++ )
     {
     this->SetComponentIntensity( *it );
-    intensity = std::max( intensity, accessor(*it) );
+    li = std::max( li, accessor(*it) );
     }
   if( node->IsRoot() )
     {
@@ -67,8 +74,27 @@ LocalIntensityComponentTreeFilter<TInputImage, TAttributeAccessor>
     }
   else
     {
-    accessor( node, static_cast< AttributeType >( intensity + ( node->GetPixel() - node->GetParent()->GetPixel() ) ) );
+    accessor( node, static_cast< AttributeType >( li + ( node->GetPixel() - node->GetParent()->GetPixel() ) ) );
     }
+}
+
+
+template<class TInputImage, class TAttributeAccessor>
+void
+LocalIntensityComponentTreeFilter<TInputImage, TAttributeAccessor>
+::SetComponentIntensity2( NodeType* node )
+{
+  assert(node != NULL);
+  AttributeAccessorType accessor;
+
+  AttributeType li = NumericTraits<AttributeType>::Zero;
+  const typename NodeType::ChildrenListType * childrenList = & node->GetChildren();
+  for( typename NodeType::ChildrenListType::const_iterator it=childrenList->begin(); it!=childrenList->end(); it++ )
+    {
+    this->SetComponentIntensity( *it );
+    li = std::max( li, static_cast< AttributeType >( accessor(*it) + std::abs( (*it)->GetPixel() - node->GetPixel() ) ) );
+    }
+  accessor( node, li );
 }
 
 
