@@ -29,6 +29,7 @@ KeepNLobesComponentTreeFilter<TImage, TAttributeAccessor>
 {
   m_NumberOfLobes = 1;
   m_ReverseOrdering = false;
+  m_RemoveByGroup = false;
 }
 
 
@@ -51,11 +52,13 @@ KeepNLobesComponentTreeFilter<TImage, TAttributeAccessor>
 
     // put all the leaves in the queue
     this->PutLeavesInQueue( queue, this->GetOutput()->GetRoot() );
+    AttributeType lastAttribute = accessor( this->GetOutput()->GetRoot() );
 
-    // now drop the smallest leaves untill the number of leaves is the desired number
-    while( queue.Size() > m_NumberOfLobes && !queue.Empty() )
+    // now drop the smallest leaves until the number of leaves is the desired number
+    while( !queue.Empty() && ( queue.Size() > m_NumberOfLobes || ( m_RemoveByGroup && lastAttribute == queue.FrontKey() ) ) )
       {
       NodeType * node = queue.FrontValue();
+      lastAttribute = queue.FrontKey();
       queue.Pop();
       NodeType * parent = node->GetParent();
     
@@ -79,11 +82,13 @@ KeepNLobesComponentTreeFilter<TImage, TAttributeAccessor>
 
     // put all the leaves in the queue
     this->PutLeavesInQueue( queue, this->GetOutput()->GetRoot() );
+    AttributeType lastAttribute = accessor( this->GetOutput()->GetRoot() );
 
     // now drop the smallest leaves untill the number of leaves is the desired number
-    while( queue.Size() > m_NumberOfLobes && !queue.Empty() )
+    while( !queue.Empty() && ( queue.Size() > m_NumberOfLobes || ( m_RemoveByGroup && lastAttribute == queue.FrontKey() ) ) )
       {
       NodeType * node = queue.FrontValue();
+      lastAttribute = queue.FrontKey();
       queue.Pop();
       NodeType * parent = node->GetParent();
     
@@ -162,6 +167,8 @@ KeepNLobesComponentTreeFilter<TImage, TAttributeAccessor>
 {
   Superclass::PrintSelf(os, indent);
   os << indent << "NumberOfLobes: " << m_NumberOfLobes << std::endl;
+  os << indent << "ReverseOrdering: " << m_ReverseOrdering << std::endl;
+  os << indent << "RemoveByGroup: " << m_RemoveByGroup << std::endl;
 }
   
 }// end namespace itk

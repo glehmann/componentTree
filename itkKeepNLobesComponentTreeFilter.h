@@ -98,6 +98,10 @@ public:
   itkGetConstReferenceMacro(ReverseOrdering, bool);
   itkBooleanMacro(ReverseOrdering);
 
+  itkSetMacro(RemoveByGroup, bool);
+  itkGetConstReferenceMacro(RemoveByGroup, bool);
+  itkBooleanMacro(RemoveByGroup);
+
 
 protected:
   KeepNLobesComponentTreeFilter();
@@ -119,6 +123,8 @@ private:
   unsigned long m_NumberOfLobes;
   
   bool m_ReverseOrdering;
+
+  bool m_RemoveByGroup;
 
 } ; // end of class
 
