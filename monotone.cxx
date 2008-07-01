@@ -7,6 +7,7 @@
 #include "itkSizeComponentTreeFilter.h"
 #include "itkAttributeFilteringComponentTreeFilter.h"
 #include "itkGradientComponentTreeFilter.h"
+#include "itkLocalGradientComponentTreeFilter.h"
 #include "itkMonotoneComponentTreeFilter.h"
 #include "itkComponentTreeAttributeToImageFilter.h"
 #include "itkComponentTreeToImageFilter.h"
@@ -14,21 +15,19 @@
 
 int main(int argc, char * argv[])
 {
-  if( argc != 9 )
+  if( argc != 7 )
     {
-    std::cerr << "usage: " << argv[0] << " inputImage outputImage attributeImage connectivity minSize maxSize removeNodes strictlyMonotone" << std::endl;
+    std::cerr << "usage: " << argv[0] << " inputImage outputImage attributeImage connectivity removeNodes strictlyMonotone" << std::endl;
     std::cerr << "  inputImage: an input image." << std::endl;
     std::cerr << "  outputImage: the output image." << std::endl;
     std::cerr << "  attributeImage: the value of the attribute for all the pixels, rescaled to unsigned char type." << std::endl;
     std::cerr << "  connectivity: 1 for fully connected, or 0" << std::endl;
-    std::cerr << "  minSize: the minimum size of an object in pixels" << std::endl;
-    std::cerr << "  maxSize: the maximum size of an object in pixels" << std::endl;
     std::cerr << "  removeNodes: remove the nodes while making the attribute monotones" << std::endl;
     std::cerr << "  strictlyMonotone: make the attribute strictly monotone" << std::endl;
     exit(1);
     }
     
-  const int dim = 2;
+  const int dim = 3;
   
   typedef unsigned char PType;
   typedef itk::Image< PType, dim > IType;
@@ -41,38 +40,26 @@ int main(int argc, char * argv[])
   typedef itk::ImageFileReader< IType > ReaderType;
   ReaderType::Pointer reader = ReaderType::New();
   reader->SetFileName( argv[1] );
+  reader->Update();
 
   typedef itk::ImageToMaximumTreeFilter< IType, TreeType > MaxTreeType;
   MaxTreeType::Pointer maxtree = MaxTreeType::New();
   maxtree->SetInput( reader->GetOutput() );
   maxtree->SetFullyConnected( atoi( argv[4] ) );
-  itk::SimpleFilterWatcher watcher2(maxtree, "filter");
-
-  typedef itk::SizeComponentTreeFilter< TreeType > SizeType;
-  SizeType::Pointer size = SizeType::New();
-  size->SetInput( maxtree->GetOutput() );
-
-  typedef itk::AttributeFilteringComponentTreeFilter< TreeType > FilteringType;
-  FilteringType::Pointer minFiltering = FilteringType::New();
-  minFiltering->SetInput( size->GetOutput() );
-  minFiltering->SetLambda( atoi( argv[5] ) );
-
-  FilteringType::Pointer maxFiltering = FilteringType::New();
-  maxFiltering->SetInput( minFiltering->GetOutput() );
-  maxFiltering->SetFilteringType( "Subtract" );
-  maxFiltering->SetReverseOrdering( true );
-  maxFiltering->SetLambda( atoi( argv[6] ) );
+//   itk::SimpleFilterWatcher watcher2(maxtree, "filter");
 
   typedef itk::GradientComponentTreeFilter< TreeType > GradientType;
+//  typedef itk::LocalGradientComponentTreeFilter< TreeType > GradientType;
   GradientType::Pointer gradient = GradientType::New();
-  gradient->SetInput( maxFiltering->GetOutput() );
+  gradient->SetInput( maxtree->GetOutput() );
+//  gradient->SetUseZeroLeaves( true );
 
   typedef itk::MonotoneComponentTreeFilter< TreeType > MonotoneType;
   MonotoneType::Pointer monotone = MonotoneType::New();
   monotone->SetInput( gradient->GetOutput() );
   monotone->SetReverseOrdering( true );
-  monotone->SetRemoveNodes( atoi( argv[7] ) );
-  monotone->SetStrictlyMonotone( atoi( argv[8] ) );
+  monotone->SetRemoveNodes( atoi( argv[5] ) );
+  monotone->SetStrictlyMonotone( atoi( argv[6] ) );
   itk::SimpleFilterWatcher watcher(monotone, "monotone");
 
   typedef itk::ComponentTreeToImageFilter< TreeType, IType > T2IType;

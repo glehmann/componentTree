@@ -68,13 +68,24 @@ LocalIntensityComponentTreeFilter<TInputImage, TAttributeAccessor>
     this->SetComponentIntensity( *it );
     li = std::max( li, accessor(*it) );
     }
+
   if( node->IsRoot() )
     {
     accessor( node, NumericTraits<AttributeType>::max() );
     }
   else
     {
-    accessor( node, static_cast< AttributeType >( li + ( node->GetPixel() - node->GetParent()->GetPixel() ) ) );
+    PixelType & pixelNode = node->GetPixel();
+    PixelType & pixelParent = node->GetParent()->GetPixel();
+    if( pixelNode > pixelParent )
+      {
+      li += node->GetPixel() - node->GetParent()->GetPixel();
+      }
+    else
+      {
+      li += node->GetParent()->GetPixel() - node->GetPixel();
+      }
+    accessor( node, static_cast< AttributeType >( li ) );
     }
 }
 
@@ -86,13 +97,23 @@ LocalIntensityComponentTreeFilter<TInputImage, TAttributeAccessor>
 {
   assert(node != NULL);
   AttributeAccessorType accessor;
+  PixelType & pixelNode = node->GetPixel();
 
   AttributeType li = NumericTraits<AttributeType>::Zero;
   const typename NodeType::ChildrenListType * childrenList = & node->GetChildren();
   for( typename NodeType::ChildrenListType::const_iterator it=childrenList->begin(); it!=childrenList->end(); it++ )
     {
-    this->SetComponentIntensity( *it );
-    li = std::max( li, static_cast< AttributeType >( accessor(*it) + std::abs( (*it)->GetPixel() - node->GetPixel() ) ) );
+    this->SetComponentIntensity2( *it );
+    PixelType & pixelChild = (*it)->GetPixel();
+    AttributeType & liChild = accessor(*it);
+    if( pixelChild > pixelNode )
+      {
+      li = std::max( li, static_cast< AttributeType >( liChild + ( pixelChild - pixelNode ) ) );
+      }
+    else
+      {
+      li = std::max( li, static_cast< AttributeType >( liChild + ( pixelNode - pixelChild ) ) );
+      }
     }
   accessor( node, li );
 }
@@ -104,6 +125,7 @@ LocalIntensityComponentTreeFilter<TInputImage, TAttributeAccessor>
 ::PrintSelf(std::ostream &os, Indent indent) const
 {
   Superclass::PrintSelf(os, indent);
+  os << indent << "UseZeroLeaves: " << m_UseZeroLeaves << std::endl;
 }
   
 }// end namespace itk
