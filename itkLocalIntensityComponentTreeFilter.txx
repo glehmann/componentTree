@@ -104,8 +104,8 @@ LocalIntensityComponentTreeFilter<TInputImage, TAttributeAccessor>
   for( typename NodeType::ChildrenListType::const_iterator it=childrenList->begin(); it!=childrenList->end(); it++ )
     {
     this->SetComponentIntensity2( *it );
-    PixelType & pixelChild = (*it)->GetPixel();
-    AttributeType & liChild = accessor(*it);
+    const PixelType & pixelChild = (*it)->GetPixel();
+    const AttributeType & liChild = accessor(*it);
     if( pixelChild > pixelNode )
       {
       li = std::max( li, static_cast< AttributeType >( liChild + ( pixelChild - pixelNode ) ) );
