@@ -12,7 +12,12 @@
 #include "itkComponentTreeAttributeToImageFilter.h"
 #include "itkComponentTreeToImageFilter.h"
 #include "itkRescaleIntensityImageFilter.h"
-
+#include "itkKeepNLobesComponentTreeFilter.h"
+#include "itkComponentTreeLeavesToLabelImageFilter.h"
+#include "itkVolumeLevellingComponentTreeFilter.h"
+#include "itkLocalIntensityComponentTreeFilter.h"
+#include "itkSizeComponentTreeFilter.h"
+#include "itkMaximumIntensityComponentTreeFilter.h"
 
 namespace itk
 {
@@ -75,7 +80,7 @@ int main(int argc, char * argv[])
 {
   if( argc != 5 )
     {
-    std::cerr << "usage: " << argv[0] << " inputImage outputImage attributeImage connectivity" << std::endl;
+    std::cerr << "usage: " << argv[0] << " inputImage outputImage connectivity nb" << std::endl;
     std::cerr << "  inputImage: an input image." << std::endl;
     std::cerr << "  outputImage: the output image." << std::endl;
     std::cerr << "  attributeImage: the value of the attribute for all the pixels, rescaled to unsigned char type." << std::endl;
@@ -102,7 +107,7 @@ int main(int argc, char * argv[])
   typedef itk::ImageToMaximumTreeFilter< IType, TreeType > MaxTreeType;
   MaxTreeType::Pointer maxtree = MaxTreeType::New();
   maxtree->SetInput( reader->GetOutput() );
-  maxtree->SetFullyConnected( atoi( argv[4] ) );
+  maxtree->SetFullyConnected( atoi( argv[3] ) );
 //   itk::SimpleFilterWatcher watcher2(maxtree, "filter");
 
   typedef itk::Functor::ArrayAttributeComponentTreeNodeAccessor< NodeType, double, 0 > GradientAccessor;
@@ -114,30 +119,35 @@ int main(int argc, char * argv[])
   gradient->SetInput( maxtree->GetOutput() );
 //  gradient->SetUseZeroLeaves( true );
 
-  typedef itk::LocalGradientComponentTreeFilter< TreeType, LocalGradientAccessor > LocalGradientType;
+//  typedef itk::LocalGradientComponentTreeFilter< TreeType, LocalGradientAccessor > LocalGradientType;
+//  typedef itk::VolumeLevellingComponentTreeFilter< TreeType, LocalGradientAccessor > LocalGradientType;
+//  typedef itk::LocalIntensityComponentTreeFilter< TreeType, LocalGradientAccessor > LocalGradientType;
+//  typedef itk::SizeComponentTreeFilter< TreeType, LocalGradientAccessor > LocalGradientType;
+  typedef itk::MaximumIntensityComponentTreeFilter< TreeType, LocalGradientAccessor > LocalGradientType;
   LocalGradientType::Pointer lgradient = LocalGradientType::New();
   lgradient->SetInput( gradient->GetOutput() );
-  lgradient->SetUseZeroLeaves( true );
-
-  typedef itk::MonotoneComponentTreeFilter< TreeType, LocalGradientAccessor > LocalMonotoneType;
-  LocalMonotoneType::Pointer lmonotone = LocalMonotoneType::New();
-  lmonotone->SetInput( lgradient->GetOutput() );
-  lmonotone->SetReverseOrdering( true );
-  lmonotone->SetRemoveNodes( false );
-  lmonotone->SetStrictlyMonotone( false );
+//  lgradient->SetUseZeroLeaves( true );
 
   typedef itk::MonotoneComponentTreeFilter< TreeType, GradientAccessor > MonotoneType;
   MonotoneType::Pointer monotone = MonotoneType::New();
-  monotone->SetInput( lmonotone->GetOutput() );
+//  monotone->SetInput( lmonotone->GetOutput() );
+  monotone->SetInput( lgradient->GetOutput() );
   monotone->SetReverseOrdering( true );
   monotone->SetRemoveNodes( true );
-  monotone->SetStrictlyMonotone( false );
+  monotone->SetStrictlyMonotone( true );
 //   itk::SimpleFilterWatcher watcher(monotone, "monotone");
-  monotone->Update();
 
+  typedef itk::KeepNLobesComponentTreeFilter< TreeType, LocalGradientAccessor > KeepType;
+  KeepType::Pointer keep = KeepType::New();
+  keep->SetInput( monotone->GetOutput() );
+  keep->SetNumberOfLobes( atoi( argv[4] ) );
+  keep->SetAddNewLeavesToQueue( false );
+//  itk::SimpleFilterWatcher watcher(keep, "keep");
+  
+  keep->Update();
   typedef std::deque< NodeType * > LeavesContainerType;
   LeavesContainerType leaves;
-  findLeaves< LeavesContainerType, NodeType >( leaves, monotone->GetOutput()->GetRoot() );
+  findLeaves< LeavesContainerType, NodeType >( leaves, keep->GetOutput()->GetRoot() );
   GradientAccessor gradientAccessor;
   LocalGradientAccessor lgradientAccessor;
 
@@ -146,31 +156,16 @@ int main(int argc, char * argv[])
     std::cout << (*it)->GetPixel()+0.0 << " " << gradientAccessor(*it) << " " << lgradientAccessor(*it) << std::endl;
     }
 
-//   typedef itk::ComponentTreeToImageFilter< TreeType, IType > T2IType;
-//   T2IType::Pointer t2i = T2IType::New();
-// //   t2i->SetInput( filtering->GetOutput() );
-//   t2i->SetInput( monotone->GetOutput() );
-// 
-//   typedef itk::ImageFileWriter< IType > WriterType;
-//   WriterType::Pointer writer = WriterType::New();
-//   writer->SetInput( t2i->GetOutput() );
-//   writer->SetFileName( argv[2] );
-//   writer->Update();
-// 
-// 
-//   typedef itk::ComponentTreeAttributeToImageFilter< TreeType, RIType > T2AType;
-//   T2AType::Pointer t2a = T2AType::New();
-// //   t2a->SetInput( filtering->GetOutput() );
-// //   t2a->SetInput( gradient->GetOutput() );
-//   t2a->SetInput( monotone->GetOutput() );
-// 
-//   typedef itk::RescaleIntensityImageFilter< RIType, IType > RI2IType;
-//   RI2IType::Pointer rescale = RI2IType::New();
-//   rescale->SetInput( t2a->GetOutput() );
-// 
-//   writer->SetInput( rescale->GetOutput() );
-//   writer->SetFileName( argv[3] );
-//   writer->Update();
+  typedef itk::ComponentTreeLeavesToLabelImageFilter< TreeType, IType > T2IType;
+  T2IType::Pointer l2i = T2IType::New();
+  l2i->SetInput( keep->GetOutput() );
+
+  typedef itk::ImageFileWriter< IType > WriterType;
+  WriterType::Pointer writer = WriterType::New();
+  writer->SetInput( l2i->GetOutput() );
+  writer->SetFileName( argv[2] );
+  writer->Update();
+
 
   return 0;
 }
