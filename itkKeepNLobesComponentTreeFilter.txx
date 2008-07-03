@@ -30,6 +30,7 @@ KeepNLobesComponentTreeFilter<TImage, TAttributeAccessor>
   m_NumberOfLobes = 1;
   m_ReverseOrdering = false;
   m_RemoveByGroup = false;
+  m_AddNewLeavesToQueue = true;
 }
 
 
@@ -67,12 +68,29 @@ KeepNLobesComponentTreeFilter<TImage, TAttributeAccessor>
       parent->RemoveChild( node );
       delete node;
 
-      // and add the parent to the queue if it is now a leaf
-      // also, take care to never push the root to the queue !
-      if( parent->IsLeaf() && !parent->IsRoot() )
+      if( m_AddNewLeavesToQueue )
         {
-        queue.Push( accessor( parent ), parent );
+        // and add the parent to the queue if it is now a leaf
+        // also, take care to never push the root to the queue !
+        if( parent->IsLeaf() && !parent->IsRoot() )
+          {
+            queue.Push( accessor( parent ), parent );
+          }
         }
+      else
+        {
+        // merge the parents if they are leaves
+        NodeType * n = parent;
+        while( n->IsLeaf() && !n->IsRoot() )
+          {
+          NodeType * p = n->GetParent();
+          this->GetOutput()->NodeMerge( p, n );
+          p->RemoveChild( n );
+          delete n;
+          n = p;
+          }
+        }
+
       }
     }
   else
@@ -97,12 +115,29 @@ KeepNLobesComponentTreeFilter<TImage, TAttributeAccessor>
       parent->RemoveChild( node );
       delete node;
 
-      // and add the parent to the queue if it is now a leaf
-      // also, take care to never push the root to the queue !
-      if( parent->IsLeaf() && !parent->IsRoot() )
+      if( m_AddNewLeavesToQueue )
         {
-        queue.Push( accessor( parent ), parent );
+        // and add the parent to the queue if it is now a leaf
+        // also, take care to never push the root to the queue !
+        if( parent->IsLeaf() && !parent->IsRoot() )
+          {
+            queue.Push( accessor( parent ), parent );
+          }
         }
+      else
+        {
+        // merge the parents if they are leaves
+        NodeType * n = parent;
+        while( n->IsLeaf() && !n->IsRoot() )
+          {
+          NodeType * p = n->GetParent();
+          this->GetOutput()->NodeMerge( p, n );
+          p->RemoveChild( n );
+          delete n;
+          n = p;
+          }
+        }
+
       }
     }
     
@@ -169,6 +204,7 @@ KeepNLobesComponentTreeFilter<TImage, TAttributeAccessor>
   os << indent << "NumberOfLobes: " << m_NumberOfLobes << std::endl;
   os << indent << "ReverseOrdering: " << m_ReverseOrdering << std::endl;
   os << indent << "RemoveByGroup: " << m_RemoveByGroup << std::endl;
+  os << indent << "AddNewLeavesToQueue: " << m_AddNewLeavesToQueue << std::endl;
 }
   
 }// end namespace itk

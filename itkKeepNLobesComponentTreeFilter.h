@@ -102,6 +102,10 @@ public:
   itkGetConstReferenceMacro(RemoveByGroup, bool);
   itkBooleanMacro(RemoveByGroup);
 
+  itkSetMacro(AddNewLeavesToQueue, bool);
+  itkGetConstReferenceMacro(AddNewLeavesToQueue, bool);
+  itkBooleanMacro(AddNewLeavesToQueue);
+
 
 protected:
   KeepNLobesComponentTreeFilter();
@@ -125,6 +129,8 @@ private:
   bool m_ReverseOrdering;
 
   bool m_RemoveByGroup;
+
+  bool m_AddNewLeavesToQueue;
 
 } ; // end of class
 
