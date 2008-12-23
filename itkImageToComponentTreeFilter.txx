@@ -28,7 +28,7 @@
 #include "itkConnectedComponentAlgorithm.h"
 #include "itkConstShapedNeighborhoodIterator.h"
 #include "itkShapedNeighborhoodIterator.h"
-#include "itkConstantBoundaryCondition.h"
+#include "itkConstantBoundaryConditionWithoutDefault.h"
 #include "itkProgressReporter.h"
 
 namespace itk {
@@ -116,7 +116,7 @@ ImageToComponentTreeFilter<TInputImage, TOutputImage, TCompare>
   radius.Fill( 1 );
   NodeImageIteratorType nIt(radius, nodeImage, nodeImage->GetRequestedRegion());
   setConnectivity( &nIt, m_FullyConnected );
-  ConstantBoundaryCondition< NodeImageType > cbc;
+  ConstantBoundaryConditionWithoutDefault< NodeImageType > cbc;
 /*  typename NodeType::Pointer outNode = NodeType::New();
   NodeType* outside = outNode.GetPointer();
   cbc.SetConstant( outside );*/

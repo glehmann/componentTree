@@ -1,7 +1,7 @@
 /*=========================================================================
 
   Program:   Insight Segmentation & Registration Toolkit
-  Module:    $RCSfile: itkConstantBoundaryCondition.h,v $
+  Module:    $RCSfile: itkConstantBoundaryConditionWithoutDefault.h,v $
   Language:  C++
   Date:      $Date: 2006/04/20 16:59:33 $
   Version:   $Revision: 1.19 $
@@ -14,8 +14,8 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef __itkConstantBoundaryCondition_h
-#define __itkConstantBoundaryCondition_h
+#ifndef __itkConstantBoundaryConditionWithoutDefault_h
+#define __itkConstantBoundaryConditionWithoutDefault_h
 #include "itkNeighborhood.h"
 #include "itkNumericTraits.h"
 #include "itkImageBoundaryCondition.h"
@@ -23,7 +23,7 @@
 namespace itk
 {
 
-/** \class ConstantBoundaryCondition
+/** \class ConstantBoundaryConditionWithoutDefault
  * \brief This boundary condition returns a constant value for out-of-bounds
  * image pixels.
  * 
@@ -57,12 +57,12 @@ namespace itk
  * \ingroup ImageObjects
  */
 template<class TImage>
-class ITK_EXPORT ConstantBoundaryCondition
+class ITK_EXPORT ConstantBoundaryConditionWithoutDefault
   : public ImageBoundaryCondition<TImage>
 {
 public:
   /** Self & superclass typedefs */ 
-  typedef ConstantBoundaryCondition      Self;
+  typedef ConstantBoundaryConditionWithoutDefault      Self;
   typedef ImageBoundaryCondition<TImage> Superclass;
   
   /** Extract information from the image type */
@@ -79,7 +79,7 @@ public:
   itkStaticConstMacro(ImageDimension, unsigned int,Superclass::ImageDimension);
 
   /** Default constructor. */
-  ConstantBoundaryCondition()
+  ConstantBoundaryConditionWithoutDefault()
     { /* m_Constant = NumericTraits<PixelType>::Zero; */ }
 
   /** Computes and returns appropriate out-of-bounds values from
