@@ -1,6 +1,9 @@
 #Change PROJECT_NAME to the name of your project
 PROJECT(componentTree)
 
+# required to avoid warnings while running cmake
+CMAKE_MINIMUM_REQUIRED(VERSION 2.4.2)
+
 # cpack stuff
 INCLUDE(CPack)
 
