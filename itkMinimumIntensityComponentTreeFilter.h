@@ -21,7 +21,7 @@
 
 namespace itk {
 /** \class MinimumIntensityComponentTreeFilter
- * \brief 
+ * \brief TODO
  *
  * \ingroup ImageEnhancement  MathematicalMorphologyImageFilters
  */

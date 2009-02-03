@@ -26,7 +26,7 @@
 
 namespace itk {
 /** \class CompactnessComponentTreeFilter
- * \brief 
+ * \brief TODO
  *
  * \ingroup ImageEnhancement  MathematicalMorphologyImageFilters
  */

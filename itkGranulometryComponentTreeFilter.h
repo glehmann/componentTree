@@ -39,7 +39,7 @@ namespace Function {
 
 
 /** \class GranulometryComponentTreeFilter
- * \brief 
+ * \brief TODO
  *
  * \ingroup ImageEnhancement  MathematicalMorphologyImageFilters
  */

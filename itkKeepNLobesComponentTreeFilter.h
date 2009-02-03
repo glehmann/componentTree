@@ -39,7 +39,7 @@ namespace Function {
 
 
 /** \class KeepNLobesComponentTreeFilter
- * \brief 
+ * \brief TODO
  *
  * \ingroup ImageEnhancement  MathematicalMorphologyImageFilters
  */

@@ -21,7 +21,7 @@
 
 namespace itk {
 /** \class AttributeFilteringComponentTreeFilter
- * \brief 
+ * \brief TODO
  *
  * \ingroup ImageEnhancement  MathematicalMorphologyImageFilters
  */

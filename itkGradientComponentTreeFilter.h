@@ -22,7 +22,7 @@
 
 namespace itk {
 /** \class GradientComponentTreeFilter
- * \brief 
+ * \brief TODO
  *
  * \ingroup ImageEnhancement  MathematicalMorphologyImageFilters
  */

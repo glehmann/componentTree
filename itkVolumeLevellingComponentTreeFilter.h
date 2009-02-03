@@ -22,7 +22,7 @@
 
 namespace itk {
 /** \class VolumeLevellingComponentTreeFilter
- * \brief 
+ * \brief TODO
  *
  * \ingroup ImageEnhancement  MathematicalMorphologyImageFilters
  */

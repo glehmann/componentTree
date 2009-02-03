@@ -21,7 +21,7 @@
 
 namespace itk {
   /** \class ImageToMinimumTreeFilter
- * \brief 
+ * \brief TODO
  *
  * \ingroup ImageEnhancement  MathematicalMorphologyImageFilters
  */

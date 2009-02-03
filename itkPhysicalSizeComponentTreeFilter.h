@@ -22,7 +22,7 @@
 
 namespace itk {
 /** \class PhysicalSizeComponentTreeFilter
- * \brief 
+ * \brief TODO
  *
  * \ingroup ImageEnhancement  MathematicalMorphologyImageFilters
  */

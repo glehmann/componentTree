@@ -23,7 +23,7 @@
 namespace itk {
 
 /** \class ComponentTreeLeavesToBinaryImageFilter
- * \brief 
+ * \brief TODO
  *
  * \ingroup ImageEnhancement  MathematicalMorphologyImageFilters
  */
