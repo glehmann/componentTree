@@ -83,10 +83,10 @@ protected:
   class SumSize
     {
     public:
-      SumSize( double sum, unsigned long size )
+      SumSize( double _sum, unsigned long _size )
         {
-        this->sum = sum;
-        this->size = size;
+        this->sum = _sum;
+        this->size = _size;
         }
       double sum;
       unsigned long size;

@@ -88,10 +88,10 @@ protected:
   class IntensitySize
     {
     public:
-      IntensitySize( PixelType intensity, unsigned long size )
+      IntensitySize( PixelType _intensity, unsigned long _size )
         {
-        this->intensity = intensity;
-        this->size = size;
+        this->intensity = _intensity;
+        this->size = _size;
         }
       PixelType intensity;
       unsigned long size;

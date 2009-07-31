@@ -91,11 +91,11 @@ protected:
   class ChildData
     {
     public:
-      ChildData( const double & sum, const VectorType cog, const MatrixType & cm )
+      ChildData( const double & _sum, const VectorType _cog, const MatrixType & _cm )
         {
-        this->sum = sum;
-        this->cog = cog;
-        this->cm = cm;
+        this->sum = _sum;
+        this->cog = _cog;
+        this->cm = _cm;
         }
       double sum;
       VectorType cog;
