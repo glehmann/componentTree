@@ -86,6 +86,8 @@ public:
   typedef TPixel                     PixelType;
   typedef TAttribute AttributeType;
 
+  enum { EndIndex = -1 };
+  
   /** get/set the attribute */
   inline const AttributeType & GetAttribute() const
     {
@@ -200,8 +202,6 @@ public:
     return m_Parent == NULL;
     }
     
-  itkStaticConstMacro( EndIndex, IndexType, -1 );
-  
 
 protected:
   /** the pixel value associated with the node */
