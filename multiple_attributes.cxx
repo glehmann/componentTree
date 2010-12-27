@@ -9,7 +9,7 @@
 #include "itkLocalIntensityComponentTreeFilter.h"
 #include "itkVolumeLevellingComponentTreeFilter.h"
 #include "itkComponentTreeLeavesToLabelImageFilter.h"
-#include "itkSizeComponentTreeFilter.h"
+#include "itkNumberOfPixelsComponentTreeFilter.h"
 #include "itkLeafComponentTreeFilter.h"
 #include "itkIntensityComponentTreeFilter.h"
 #include "itkKeepNLobesComponentTreeFilter.h"
@@ -227,7 +227,7 @@ int main(int argc, char * argv[])
   volume_levelling->SetInput( local_intensity->GetOutput() );
 //   itk::SimpleFilterWatcher watcher3(volume_levelling, "volume_levelling");
 
-  typedef itk::SizeComponentTreeFilter< TreeType, SizeAccessor > SizeType;
+  typedef itk::NumberOfPixelsComponentTreeFilter< TreeType, SizeAccessor > SizeType;
   SizeType::Pointer size = SizeType::New();
   size->SetInput( volume_levelling->GetOutput() );
 //   itk::SimpleFilterWatcher watcher4(size, "size");

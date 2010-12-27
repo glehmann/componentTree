@@ -1,7 +1,7 @@
 /*=========================================================================
 
   Program:   Insight Segmentation & Registration Toolkit
-  Module:    $RCSfile: itkSizeComponentTreeFilter.h,v $
+  Module:    $RCSfile: itkNumberOfPixelsComponentTreeFilter.h,v $
   Language:  C++
   Date:      $Date: 2006/03/28 19:59:05 $
   Version:   $Revision: 1.6 $
@@ -14,25 +14,30 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef __itkSizeComponentTreeFilter_h
-#define __itkSizeComponentTreeFilter_h
+#ifndef __itkNumberOfPixelsComponentTreeFilter_h
+#define __itkNumberOfPixelsComponentTreeFilter_h
 
 #include "itkInPlaceComponentTreeFilter.h"
 #include "itkProgressReporter.h"
 
 namespace itk {
-/** \class SizeComponentTreeFilter
- * \brief TODO
+/** \class NumberOfPixelsComponentTreeFilter
+ * \brief Compute the number of pixels in each node and store it as attribute
+ *
+ * The pixels of the children are included in the count.
+ * The root node must have the same number of pixels than the whole image.
+ *
+ * \author Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA de Jouy-en-Josas, France.
  *
  * \ingroup ImageEnhancement  MathematicalMorphologyImageFilters
  */
 template< class TImage, class TAttibuteAccessor=typename Functor::AttributeComponentTreeNodeAccessor< typename TImage::NodeType > >
-class ITK_EXPORT SizeComponentTreeFilter : 
+class ITK_EXPORT NumberOfPixelsComponentTreeFilter : 
     public InPlaceComponentTreeFilter<TImage>
 {
 public:
   /** Standard class typedefs. */
-  typedef SizeComponentTreeFilter Self;
+  typedef NumberOfPixelsComponentTreeFilter Self;
   typedef InPlaceComponentTreeFilter<TImage>
   Superclass;
   typedef SmartPointer<Self>        Pointer;
@@ -57,7 +62,7 @@ public:
   itkNewMacro(Self);  
 
   /** Runtime information support. */
-  itkTypeMacro(SizeComponentTreeFilter, 
+  itkTypeMacro(NumberOfPixelsComponentTreeFilter, 
                InPlaceComponentTreeFilter);
 
 #ifdef ITK_USE_CONCEPT_CHECKING
@@ -72,18 +77,16 @@ public:
 #endif
 
 protected:
-  SizeComponentTreeFilter();
-  ~SizeComponentTreeFilter() {};
+  NumberOfPixelsComponentTreeFilter();
+  ~NumberOfPixelsComponentTreeFilter() {};
   void PrintSelf(std::ostream& os, Indent indent) const;
 
-  /** Single-threaded version of GenerateData.  This filter delegates
-   * to GrayscaleGeodesicErodeImageFilter. */
   void GenerateData();
   
-  void SetComponentSize( NodeType* );
+  void SetComponentNumberOfPixels( NodeType* );
 
 private:
-  SizeComponentTreeFilter(const Self&); //purposely not implemented
+  NumberOfPixelsComponentTreeFilter(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
 
   ProgressReporter * m_Progress;
@@ -93,7 +96,7 @@ private:
 } // end namespace itk
   
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkSizeComponentTreeFilter.txx"
+#include "itkNumberOfPixelsComponentTreeFilter.txx"
 #endif
 
 #endif

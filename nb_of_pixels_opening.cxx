@@ -4,7 +4,7 @@
 
 #include "itkComponentTree.h"
 #include "itkImageToMaximumTreeFilter.h"
-#include "itkSizeComponentTreeFilter.h"
+#include "itkNumberOfPixelsComponentTreeFilter.h"
 #include "itkAttributeFilteringComponentTreeToImageFilter.h"
 
 int main(int argc, char * argv[])
@@ -35,7 +35,7 @@ int main(int argc, char * argv[])
   maxtree->SetInput( reader->GetOutput() );
   maxtree->SetFullyConnected( atoi( argv[3] ) );
 
-  typedef itk::SizeComponentTreeFilter< TreeType > FilterType;
+  typedef itk::NumberOfPixelsComponentTreeFilter< TreeType > FilterType;
   FilterType::Pointer filter = FilterType::New();
   filter->SetInput( maxtree->GetOutput() );
   itk::SimpleFilterWatcher watcher(filter, "filter");

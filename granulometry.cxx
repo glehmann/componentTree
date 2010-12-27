@@ -9,7 +9,7 @@
 
 #include "itkComponentTree.h"
 #include "itkImageToMaximumTreeFilter.h"
-#include "itkSizeComponentTreeFilter.h"
+#include "itkNumberOfPixelsComponentTreeFilter.h"
 #include "itkGranulometryComponentTreeFilter.h"
 #include "itkComponentTreeLeavesToBinaryImageFilter.h"
 
@@ -40,7 +40,7 @@ int main(int argc, char * argv[])
   maxtree->SetInput( reader->GetOutput() );
   maxtree->SetFullyConnected( atoi( argv[3] ) );
 
-  typedef itk::SizeComponentTreeFilter< TreeType > IIType;
+  typedef itk::NumberOfPixelsComponentTreeFilter< TreeType > IIType;
   IIType::Pointer ii = IIType::New();
   ii->SetInput( maxtree->GetOutput() );
 

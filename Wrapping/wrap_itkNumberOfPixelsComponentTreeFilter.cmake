@@ -1,4 +1,4 @@
-WRAP_CLASS("itk::SizeComponentTreeFilter" POINTER)
+WRAP_CLASS("itk::NumberOfPixelsComponentTreeFilter" POINTER)
   FOREACH(t ${WRAP_ITK_SCALAR})
     FOREACH(d ${WRAP_ITK_DIMS})
       WRAP_TEMPLATE("${ITKM_CT${t}${d}UL}" "${ITKT_CT${t}${d}UL}")

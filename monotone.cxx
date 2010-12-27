@@ -4,7 +4,7 @@
 
 #include "itkComponentTree.h"
 #include "itkImageToMaximumTreeFilter.h"
-#include "itkSizeComponentTreeFilter.h"
+#include "itkNumberOfPixelsComponentTreeFilter.h"
 #include "itkAttributeFilteringComponentTreeFilter.h"
 #include "itkGradientComponentTreeFilter.h"
 #include "itkLocalGradientComponentTreeFilter.h"

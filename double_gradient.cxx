@@ -4,7 +4,7 @@
 
 #include "itkComponentTree.h"
 #include "itkImageToMaximumTreeFilter.h"
-#include "itkSizeComponentTreeFilter.h"
+#include "itkNumberOfPixelsComponentTreeFilter.h"
 #include "itkAttributeFilteringComponentTreeFilter.h"
 #include "itkGradientComponentTreeFilter.h"
 #include "itkLocalGradientComponentTreeFilter.h"
@@ -16,7 +16,7 @@
 #include "itkComponentTreeLeavesToLabelImageFilter.h"
 #include "itkVolumeLevellingComponentTreeFilter.h"
 #include "itkLocalIntensityComponentTreeFilter.h"
-#include "itkSizeComponentTreeFilter.h"
+#include "itkNumberOfPixelsComponentTreeFilter.h"
 #include "itkMaximumIntensityComponentTreeFilter.h"
 
 namespace itk
@@ -122,7 +122,7 @@ int main(int argc, char * argv[])
 //  typedef itk::LocalGradientComponentTreeFilter< TreeType, LocalGradientAccessor > LocalGradientType;
 //  typedef itk::VolumeLevellingComponentTreeFilter< TreeType, LocalGradientAccessor > LocalGradientType;
 //  typedef itk::LocalIntensityComponentTreeFilter< TreeType, LocalGradientAccessor > LocalGradientType;
-//  typedef itk::SizeComponentTreeFilter< TreeType, LocalGradientAccessor > LocalGradientType;
+//  typedef itk::NumberOfPixelsComponentTreeFilter< TreeType, LocalGradientAccessor > LocalGradientType;
   typedef itk::MaximumIntensityComponentTreeFilter< TreeType, LocalGradientAccessor > LocalGradientType;
   LocalGradientType::Pointer lgradient = LocalGradientType::New();
   lgradient->SetInput( gradient->GetOutput() );
