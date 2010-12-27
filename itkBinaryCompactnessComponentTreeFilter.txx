@@ -76,7 +76,6 @@ BinaryCompactnessComponentTreeFilter<TInputImage, TAttributeAccessor>
     cm += ret.cm;
     }
 
-  unsigned long size = 0;
   for( typename NodeType::IndexType current=node->GetFirstIndex();
      current != NodeType::EndIndex;
      current = this->GetInput()->GetLinkedListArray()[ current ] )

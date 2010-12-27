@@ -76,7 +76,6 @@ CompactnessComponentTreeFilter<TInputImage, TAttributeAccessor>
     cm += ret.cm;
     }
 
-  unsigned long size = 0;
   const PixelType & p = node->GetPixel();
   for( typename NodeType::IndexType current=node->GetFirstIndex();
      current != NodeType::EndIndex;
