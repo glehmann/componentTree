@@ -58,16 +58,15 @@ public:
 
 
 /** \class ComponentTreeNode
- *  \brief ComponentTreeNode class
+ *  \brief The node of the component tree
  * 
- * This class derives from the Object class.
+ * This class is heavily related to itk::ComponentTree.
  *
- * The class is templated over the type of the elements.
+ * It is templated of the pixel type, the index type and the attribute type.
  *
- * Template parameters for class ComponentTreeNode:
+ * \author Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA de Jouy-en-Josas, France.
  *
- * - TAttribute = Element type stored in the node
- *
+ * \sa ComponentTree
  * \ingroup DataRepresentation 
  */
 template <typename TPixel, typename TIndex, typename TAttribute>

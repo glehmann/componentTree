@@ -23,7 +23,14 @@
 namespace itk {
 
 /** \class ComponentTreeAttributeToImageFilter
- * \brief TODO
+ * \brief Convert an itk::ComponentTree to an itk::Image with the attribute value as pixel value
+ *
+ * ComponentTreeAttributeToImageFilter convert a component tree in a regular image
+ * but does use the attribute value of the node instead of the pixel value of the node
+ * to produce the output image.
+ * This class is especially useful to visually check the value of the attributes.
+ *
+ * \author Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA de Jouy-en-Josas, France.
  *
  * \ingroup ImageEnhancement  MathematicalMorphologyImageFilters
  */

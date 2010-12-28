@@ -20,10 +20,15 @@
 #include "itkImageToComponentTreeFilter.h"
 
 namespace itk {
-  /** \class ImageToMaximumTreeFilter
- * \brief TODO
+/** \class ImageToMaximumTreeFilter
+ * \brief Convert an image to a max tree
  *
- * \ingroup ImageEnhancement  MathematicalMorphologyImageFilters
+ * A max tree is a component tree with the minimum pixel value in the root node and the maximum pixel values
+ * in the leaves.
+ *
+ * \author Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA de Jouy-en-Josas, France.
+ *
+ * \ingroup ImageEnhancement  MathematicalMorphologyImageFilters ImageToMinimumTreeFilter
  */
 template<class TInputImage, class TOutputImage>
 class ITK_EXPORT ImageToMaximumTreeFilter : 

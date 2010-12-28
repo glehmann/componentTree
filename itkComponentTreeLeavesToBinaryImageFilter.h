@@ -23,7 +23,14 @@
 namespace itk {
 
 /** \class ComponentTreeLeavesToBinaryImageFilter
- * \brief TODO
+ * \brief Draw in a binary image the leaves of a component tree
+ *
+ * The leaves of the component tree -- the nodes with no children -- are
+ * drawn in a binary image by this filter. The background pixel value and the
+ * pixel value used for the leaves can specified by the user using
+ * Get/SetBackgroundValue() and Get/SetForegroundValue().
+ *
+ * \author Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA de Jouy-en-Josas, France.
  *
  * \ingroup ImageEnhancement  MathematicalMorphologyImageFilters
  */

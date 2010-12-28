@@ -1,7 +1,7 @@
 /*=========================================================================
 
   Program:   Insight Segmentation & Registration Toolkit
-  Module:    $RCSfile: itkMaximumIntensityComponentTreeFilter.h,v $
+  Module:    $RCSfile: itkMaximumComponentTreeFilter.h,v $
   Language:  C++
   Date:      $Date: 2006/03/28 19:59:05 $
   Version:   $Revision: 1.6 $
@@ -14,24 +14,26 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef __itkMaximumIntensityComponentTreeFilter_h
-#define __itkMaximumIntensityComponentTreeFilter_h
+#ifndef __itkMaximumComponentTreeFilter_h
+#define __itkMaximumComponentTreeFilter_h
 
 #include "itkInPlaceComponentTreeFilter.h"
 
 namespace itk {
-/** \class MaximumIntensityComponentTreeFilter
- * \brief TODO
+/** \class MaximumComponentTreeFilter
+ * \brief Assign to the attribute value of the node the maximum attribute value of all its children
+ *
+ * \author Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA de Jouy-en-Josas, France.
  *
  * \ingroup ImageEnhancement  MathematicalMorphologyImageFilters
  */
 template<class TImage, class TAttibuteAccessor=typename Functor::AttributeComponentTreeNodeAccessor< typename TImage::NodeType > >
-class ITK_EXPORT MaximumIntensityComponentTreeFilter : 
+class ITK_EXPORT MaximumComponentTreeFilter : 
     public InPlaceComponentTreeFilter<TImage>
 {
 public:
   /** Standard class typedefs. */
-  typedef MaximumIntensityComponentTreeFilter Self;
+  typedef MaximumComponentTreeFilter Self;
   typedef InPlaceComponentTreeFilter<TImage>
   Superclass;
   typedef SmartPointer<Self>        Pointer;
@@ -56,7 +58,7 @@ public:
   itkNewMacro(Self);  
 
   /** Runtime information support. */
-  itkTypeMacro(MaximumIntensityComponentTreeFilter, 
+  itkTypeMacro(MaximumComponentTreeFilter, 
                ImageToImageFilter);
 
 #ifdef ITK_USE_CONCEPT_CHECKING
@@ -71,18 +73,16 @@ public:
 #endif
 
 protected:
-  MaximumIntensityComponentTreeFilter();
-  ~MaximumIntensityComponentTreeFilter() {};
+  MaximumComponentTreeFilter();
+  ~MaximumComponentTreeFilter() {};
   void PrintSelf(std::ostream& os, Indent indent) const;
 
-  /** Single-threaded version of GenerateData.  This filter delegates
-   * to GrayscaleGeodesicErodeImageFilter. */
   void GenerateData();
   
-  void SetComponentMaximumIntensity( NodeType* );
+  void SetComponentMaximum( NodeType* );
 
 private:
-  MaximumIntensityComponentTreeFilter(const Self&); //purposely not implemented
+  MaximumComponentTreeFilter(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
 
 } ; // end of class
@@ -90,7 +90,7 @@ private:
 } // end namespace itk
   
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkMaximumIntensityComponentTreeFilter.txx"
+#include "itkMaximumComponentTreeFilter.txx"
 #endif
 
 #endif

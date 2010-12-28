@@ -22,7 +22,15 @@
 
 namespace itk {
 /** \class GradientComponentTreeFilter
- * \brief TODO
+ * \brief Compute the intensity gradient between in the component tree
+ *
+ * The gradient is defined as the intensity difference between the node and its parent
+ * divided by the difference between the root at the image dimension of the physical size
+ * of the node and its parent. The attribute values are not monotone in the tree.
+ *
+ * The computed value is stored as an attribute in the node.
+ *
+ * \author Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA de Jouy-en-Josas, France.
  *
  * \ingroup ImageEnhancement  MathematicalMorphologyImageFilters
  */

@@ -1,7 +1,7 @@
 /*=========================================================================
 
   Program:   Insight Segmentation & Registration Toolkit
-  Module:    $RCSfile: itkBinaryCompactnessComponentTreeFilter.h,v $
+  Module:    $RCSfile: itkSumComponentTreeFilter.h,v $
   Language:  C++
   Date:      $Date: 2006/03/28 19:59:05 $
   Version:   $Revision: 1.6 $
@@ -14,29 +14,25 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef __itkBinaryCompactnessComponentTreeFilter_h
-#define __itkBinaryCompactnessComponentTreeFilter_h
+#ifndef __itkSumComponentTreeFilter_h
+#define __itkSumComponentTreeFilter_h
 
 #include "itkInPlaceComponentTreeFilter.h"
 #include "itkProgressReporter.h"
-#include "itkMatrix.h"
-#include "itkVector.h"
-#include "vnl/algo/vnl_real_eigensystem.h"
-#include "vnl/algo/vnl_symmetric_eigensystem.h"
 
 namespace itk {
-/** \class BinaryCompactnessComponentTreeFilter
+/** \class SumComponentTreeFilter
  * \brief TODO
  *
  * \ingroup ImageEnhancement  MathematicalMorphologyImageFilters
  */
-template< class TImage, class TAttibuteAccessor=typename Functor::AttributeComponentTreeNodeAccessor< typename TImage::NodeType >  >
-class ITK_EXPORT BinaryCompactnessComponentTreeFilter : 
+template< class TImage, class TAttibuteAccessor=typename Functor::AttributeComponentTreeNodeAccessor< typename TImage::NodeType > >
+class ITK_EXPORT SumComponentTreeFilter : 
     public InPlaceComponentTreeFilter<TImage>
 {
 public:
   /** Standard class typedefs. */
-  typedef BinaryCompactnessComponentTreeFilter Self;
+  typedef SumComponentTreeFilter Self;
   typedef InPlaceComponentTreeFilter<TImage>
   Superclass;
   typedef SmartPointer<Self>        Pointer;
@@ -49,7 +45,6 @@ public:
   typedef typename ImageType::PixelType       PixelType;
   typedef typename ImageType::NodeType        NodeType;
   typedef typename ImageType::IndexType       IndexType;
-  typedef typename ImageType::PointType       PointType;
 
   typedef TAttibuteAccessor AttributeAccessorType;
   typedef typename AttributeAccessorType::AttributeType   AttributeType;
@@ -58,14 +53,11 @@ public:
   itkStaticConstMacro(ImageDimension, unsigned int,
                       TImage::ImageDimension);
 
-  typedef Matrix< double, ImageDimension, ImageDimension >   MatrixType;
-  typedef Vector< double, ImageDimension > VectorType;
-
   /** Standard New method. */
   itkNewMacro(Self);  
 
   /** Runtime information support. */
-  itkTypeMacro(BinaryCompactnessComponentTreeFilter, 
+  itkTypeMacro(SumComponentTreeFilter, 
                InPlaceComponentTreeFilter);
 
 #ifdef ITK_USE_CONCEPT_CHECKING
@@ -80,43 +72,26 @@ public:
 #endif
 
 protected:
-  BinaryCompactnessComponentTreeFilter();
-  ~BinaryCompactnessComponentTreeFilter() {};
+  SumComponentTreeFilter();
+  ~SumComponentTreeFilter() {};
   void PrintSelf(std::ostream& os, Indent indent) const;
 
-  /** Single-threaded version of GenerateData.  This filter delegates
-   * to GrayscaleGeodesicErodeImageFilter. */
   void GenerateData();
   
-  class ChildData
-    {
-    public:
-      ChildData( const double & _sum, const VectorType _cog, const MatrixType & _cm )
-        {
-        this->sum = _sum;
-        this->cog = _cog;
-        this->cm = _cm;
-        }
-      double sum;
-      VectorType cog;
-      MatrixType cm;
-    };
-
-  ChildData SetCompactness( NodeType* );
+  void SetComponentIntegratedIntensity( NodeType* );
 
 private:
-  BinaryCompactnessComponentTreeFilter(const Self&); //purposely not implemented
+  SumComponentTreeFilter(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
 
   ProgressReporter * m_Progress;
-  double m_PhysicalPixelSize;
 
 } ; // end of class
 
 } // end namespace itk
   
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkBinaryCompactnessComponentTreeFilter.txx"
+#include "itkSumComponentTreeFilter.txx"
 #endif
 
 #endif

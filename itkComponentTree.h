@@ -27,9 +27,32 @@
 namespace itk
 {
 /** \class ComponentTree
- *  \brief Templated n-dimensional image class.
+ *  \brief Connected component tree image representation
  *
- * \ingroup ImageObjects */
+ * This is the main container class used to store an image as a tree of connected components.
+ *
+ * The tree is made of a set of nodes. Each node stores the set of pixels of a connected component
+ * at a specific pixel value, and a set of children nodes which have greater pixel values.
+ * The pixels of a node and the pixels of all its children form a connected component.
+ *
+ * The tree has a single root node accessible with GetRoot().
+ *
+ * For storage efficiency, the list of pixels is not directly stored in the nodes. It is kept in a single
+ * array structure in the component tree: LinkedListArray. This array has the same number of elements than
+ * the corresponding itk::Image. Each element is the offset, as produced by itk::ImageBase methods, to the
+ * next element in the pixel list of the node, or -1 if this is the end of the list.
+ * The first and last index of the list are stored in each node.
+ * This allow constant time merging of two nodes, which is not possible if the container is a std::vector
+ * and use less memory than std::list where each index requires the storage of two additional pointers.
+ *
+ * As a consequence of the indices management, some methods which may seems best suited to be implemented
+ * in the node class are implemented in this class, for example NodeMerge().
+ *
+ * \author Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA de Jouy-en-Josas, France.
+ *
+ * \sa ComponentTreeNode ImageToMaximumTreeFilter ImageToMinimumTreeFilter
+ * \ingroup ImageObjects
+ */
 template <class TPixel, unsigned int VImageDimension, class TAttribute>
 class ITK_EXPORT ComponentTree : public ImageBase<VImageDimension>
 {
@@ -125,84 +148,6 @@ public:
   void Allocate();
 
   virtual void Graft(const DataObject *data);
-
-  /** \brief Get the continuous index from a physical point
-   *
-   * Returns true if the resulting index is within the image, false otherwise.
-   * \sa Transform */
-  template<class TCoordRep>
-  bool TransformPhysicalPointToContinuousIndex(
-              const Point<TCoordRep, ImageDimension>& point,
-              ContinuousIndex<TCoordRep, ImageDimension>& index   ) const
-    {
-    // Update the output index
-    for (unsigned int i = 0 ; i < ImageDimension ; i++)
-      {
-      index[i] = static_cast<TCoordRep>( (point[i]- this->m_Origin[i]) / this->m_Spacing[i] );
-      }
-
-    // Now, check to see if the index is within allowed bounds
-    const bool isInside =
-      this->GetLargestPossibleRegion().IsInside( index );
-
-    return isInside;
-    }
-
-  /** Get the index (discrete) from a physical point.
-   * Floating point index results are truncated to integers.
-   * Returns true if the resulting index is within the image, false otherwise
-   * \sa Transform */
-  template<class TCoordRep>
-  bool TransformPhysicalPointToIndex(
-            const Point<TCoordRep, ImageDimension>& point,
-            IndexType & index                                ) const
-    {
-    typedef typename IndexType::IndexValueType IndexValueType;
-
-    // Update the output index
-    for (unsigned int i = 0 ; i < ImageDimension ; i++)
-      {
-      index[i] = static_cast<IndexValueType>( (point[i]- this->m_Origin[i]) / this->m_Spacing[i] );
-      }
-
-    // Now, check to see if the index is within allowed bounds
-    const bool isInside =
-      this->GetLargestPossibleRegion().IsInside( index );
-
-    return isInside;
-    }
-
-  /** Get a physical point (in the space which
-   * the origin and spacing infomation comes from)
-   * from a continuous index (in the index space)
-   * \sa Transform */
-  template<class TCoordRep>
-  void TransformContinuousIndexToPhysicalPoint(
-            const ContinuousIndex<TCoordRep, ImageDimension>& index,
-            Point<TCoordRep, ImageDimension>& point        ) const
-    {
-    for (unsigned int i = 0 ; i < ImageDimension ; i++)
-      {
-      point[i] = static_cast<TCoordRep>( this->m_Spacing[i] * index[i] + this->m_Origin[i] );
-      }
-    }
-
-  /** Get a physical point (in the space which
-   * the origin and spacing infomation comes from)
-   * from a discrete index (in the index space)
-   *
-   * \sa Transform */
-  template<class TCoordRep>
-  void TransformIndexToPhysicalPoint(
-                      const IndexType & index,
-                      Point<TCoordRep, ImageDimension>& point ) const
-    {
-    for (unsigned int i = 0 ; i < ImageDimension ; i++)
-      {
-      point[i] = static_cast<TCoordRep>( this->m_Spacing[i] *
-        static_cast<double>( index[i] ) + this->m_Origin[i] );
-      }
-    }
 
 //  itkGetMacro(LinkedListArray, LinkedListArrayType);
 //  itkGetConstMacro(LinkedListArray, LinkedListArrayType);

@@ -22,7 +22,11 @@
 
 namespace itk {
 /** \class AttributeFilteringComponentTreeToImageFilter
- * \brief TODO
+ * \brief Filter and convert an itk::ComponentTree to an itk::Image
+ *
+ * A single filtering method is available, equivalent to the MAXIMUM method of AttributeFilteringComponentTreeFilter.
+ *
+ * \author Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA de Jouy-en-Josas, France.
  *
  * \ingroup ImageEnhancement  MathematicalMorphologyImageFilters
  */

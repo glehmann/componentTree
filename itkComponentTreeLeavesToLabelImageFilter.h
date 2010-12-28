@@ -23,7 +23,13 @@
 namespace itk {
 
 /** \class ComponentTreeLeavesToLabelImageFilter
- * \brief TODO
+ * \brief Draw in an image the leaves of a component tree with a single label per leaf
+ *
+ * The leaves of the component tree -- the nodes with no children -- are
+ * drawn in a label image by this filter. Each leaf gets a unique label
+ * used as pixel value.
+ *
+ * \author Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA de Jouy-en-Josas, France.
  *
  * \ingroup ImageEnhancement  MathematicalMorphologyImageFilters
  */

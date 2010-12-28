@@ -36,8 +36,11 @@ namespace itk {
 
 
 /** \class ImageToComponentTreeFilter
- * \brief TODO
+ * \brief The base class to convert an itk::Image to a itk::ComponentTree
  *
+ * \author Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA de Jouy-en-Josas, France.
+ *
+ * \sa ImageToMaximumTreeFilter ImageToMinimumTreeFilter ComponentTree
  * \ingroup ImageEnhancement  MathematicalMorphologyImageFilters
  */
 template<class TInputImage, class TOutputImage, class TCompare>

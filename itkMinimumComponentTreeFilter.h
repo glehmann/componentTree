@@ -1,7 +1,7 @@
 /*=========================================================================
 
   Program:   Insight Segmentation & Registration Toolkit
-  Module:    $RCSfile: itkIntegratedIntensityComponentTreeFilter.h,v $
+  Module:    $RCSfile: itkMinimumComponentTreeFilter.h,v $
   Language:  C++
   Date:      $Date: 2006/03/28 19:59:05 $
   Version:   $Revision: 1.6 $
@@ -14,25 +14,26 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef __itkIntegratedIntensityComponentTreeFilter_h
-#define __itkIntegratedIntensityComponentTreeFilter_h
+#ifndef __itkMinimumComponentTreeFilter_h
+#define __itkMinimumComponentTreeFilter_h
 
 #include "itkInPlaceComponentTreeFilter.h"
-#include "itkProgressReporter.h"
 
 namespace itk {
-/** \class IntegratedIntensityComponentTreeFilter
- * \brief TODO
+/** \class MinimumComponentTreeFilter
+ * \brief Assign to the attribute value of the node the maximum attribute value of all its children
+ *
+ * \author Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA de Jouy-en-Josas, France.
  *
  * \ingroup ImageEnhancement  MathematicalMorphologyImageFilters
  */
-template< class TImage, class TAttibuteAccessor=typename Functor::AttributeComponentTreeNodeAccessor< typename TImage::NodeType > >
-class ITK_EXPORT IntegratedIntensityComponentTreeFilter : 
+template<class TImage, class TAttibuteAccessor=typename Functor::AttributeComponentTreeNodeAccessor< typename TImage::NodeType > >
+class ITK_EXPORT MinimumComponentTreeFilter : 
     public InPlaceComponentTreeFilter<TImage>
 {
 public:
   /** Standard class typedefs. */
-  typedef IntegratedIntensityComponentTreeFilter Self;
+  typedef MinimumComponentTreeFilter Self;
   typedef InPlaceComponentTreeFilter<TImage>
   Superclass;
   typedef SmartPointer<Self>        Pointer;
@@ -57,8 +58,8 @@ public:
   itkNewMacro(Self);  
 
   /** Runtime information support. */
-  itkTypeMacro(IntegratedIntensityComponentTreeFilter, 
-               InPlaceComponentTreeFilter);
+  itkTypeMacro(MinimumComponentTreeFilter, 
+               ImageToImageFilter);
 
 #ifdef ITK_USE_CONCEPT_CHECKING
   /** Begin concept checking */
@@ -72,26 +73,26 @@ public:
 #endif
 
 protected:
-  IntegratedIntensityComponentTreeFilter();
-  ~IntegratedIntensityComponentTreeFilter() {};
+  MinimumComponentTreeFilter();
+  ~MinimumComponentTreeFilter() {};
   void PrintSelf(std::ostream& os, Indent indent) const;
 
+  /** Single-threaded version of GenerateData.  This filter delegates
+   * to GrayscaleGeodesicErodeImageFilter. */
   void GenerateData();
   
-  void SetComponentIntegratedIntensity( NodeType* );
+  void SetComponentMinimum( NodeType* );
 
 private:
-  IntegratedIntensityComponentTreeFilter(const Self&); //purposely not implemented
+  MinimumComponentTreeFilter(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
-
-  ProgressReporter * m_Progress;
 
 } ; // end of class
 
 } // end namespace itk
   
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkIntegratedIntensityComponentTreeFilter.txx"
+#include "itkMinimumComponentTreeFilter.txx"
 #endif
 
 #endif

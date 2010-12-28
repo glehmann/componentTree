@@ -23,7 +23,13 @@
 namespace itk {
 
 /** \class ComponentTreeToImageFilter
- * \brief TODO
+ * \brief Convert a component tree to an image
+ *
+ * The component tree is converted in a regular itk::Image by this class.
+ * The tree structure and the attribute values are lost during the
+ * conversion.
+ *
+ * \author Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA de Jouy-en-Josas, France.
  *
  * \ingroup ImageEnhancement  MathematicalMorphologyImageFilters
  */

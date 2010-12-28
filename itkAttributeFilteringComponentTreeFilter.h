@@ -21,7 +21,27 @@
 
 namespace itk {
 /** \class AttributeFilteringComponentTreeFilter
- * \brief TODO
+ * \brief Remove some nodes based on their attribute value
+ *
+ * The pixels of a removed node are added to the parent node of the removed node.
+ *
+ * Get/SetOrdering() lets chose whether the smaller attribute values (false) or the bigger
+ * attribute values (true) than the Lambda provided by the user are appropriate to remove
+ * a node.
+ *
+ * In case the attribute values are not strictly monotone, several behavior
+ * are possible, and can be chosen with SetFilteringType():
+ * - Direct: only the nodes with appropriate attribute values are removed. The children are added
+ * to the parent node of the removed node. The other node are not affected.
+ * - Subtract: the nodes with appropriate attribute values are removed. Their children are added to the parent
+ * node of the removed node and their pixel value is decreased (or increased in case of a min tree) by the difference
+ * between the pixel intensity of the removed node and its parent.
+ * - Minimum: the nodes ith appropriate attribute values are removed only if all their children node are also
+ * candidate to be removed.
+ * - Maximum: the nodes with appropriate values are removed as well as their children, independently of the
+ * attribute values of the children.
+ *
+ * \author Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA de Jouy-en-Josas, France.
  *
  * \ingroup ImageEnhancement  MathematicalMorphologyImageFilters
  */

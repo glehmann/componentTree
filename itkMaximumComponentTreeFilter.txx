@@ -1,7 +1,7 @@
 /*=========================================================================
 
   Program:   Insight Segmentation & Registration Toolkit
-  Module:    $RCSfile: itkIntegratedIntensityComponentTreeFilter.txx,v $
+  Module:    $RCSfile: itkMaximumComponentTreeFilter.txx,v $
   Language:  C++
   Date:      $Date: 2005/08/23 15:09:03 $
   Version:   $Revision: 1.6 $
@@ -14,72 +14,60 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef __itkIntegratedIntensityComponentTreeFilter_txx
-#define __itkIntegratedIntensityComponentTreeFilter_txx
+#ifndef __itkMaximumComponentTreeFilter_txx
+#define __itkMaximumComponentTreeFilter_txx
 
-#include "itkIntegratedIntensityComponentTreeFilter.h"
+#include "itkMaximumComponentTreeFilter.h"
+#include "itkProgressReporter.h"
 
 
 namespace itk {
 
 template<class TInputImage, class TAttributeAccessor>
-IntegratedIntensityComponentTreeFilter<TInputImage, TAttributeAccessor>
-::IntegratedIntensityComponentTreeFilter()
+MaximumComponentTreeFilter<TInputImage, TAttributeAccessor>
+::MaximumComponentTreeFilter()
 {
 }
 
 
 template<class TInputImage, class TAttributeAccessor>
 void
-IntegratedIntensityComponentTreeFilter<TInputImage, TAttributeAccessor>
+MaximumComponentTreeFilter<TInputImage, TAttributeAccessor>
 ::GenerateData()
 {
   // Allocate the output
   this->AllocateOutputs();
 
-  m_Progress = new ProgressReporter(this, 0, this->GetOutput()->GetRequestedRegion().GetNumberOfPixels());
-  this->SetComponentIntegratedIntensity( this->GetOutput()->GetRoot() );
-  delete m_Progress;
-  m_Progress = NULL;
-  
-//   assert( this->IsMonotone( false, false ) );
+  ProgressReporter progress(this, 0, this->GetOutput()->GetRequestedRegion().GetNumberOfPixels()*2);
+  this->SetComponentMaximum( this->GetOutput()->GetRoot() );
+  // TODO: how to generate progress ??
+
 }
 
 
 template<class TInputImage, class TAttributeAccessor>
 void
-IntegratedIntensityComponentTreeFilter<TInputImage, TAttributeAccessor>
-::SetComponentIntegratedIntensity( NodeType* node )
+MaximumComponentTreeFilter<TInputImage, TAttributeAccessor>
+::SetComponentMaximum( NodeType* node )
 {
   assert(node != NULL);
-
   AttributeAccessorType accessor;
 
-  unsigned long size = 0;
-  for( typename NodeType::IndexType current=node->GetFirstIndex();
-     current != NodeType::EndIndex;
-     current = this->GetInput()->GetLinkedListArray()[ current ] )
-  {
-  size++;
-  m_Progress->CompletedPixel();
-  }
-
-  AttributeType intensity = static_cast<AttributeType>( size * std::abs( node->GetPixel() ) );
-  
+  AttributeType mi = accessor( node );
   const typename NodeType::ChildrenListType * childrenList = & node->GetChildren();
   for( typename NodeType::ChildrenListType::const_iterator it=childrenList->begin(); it!=childrenList->end(); it++ )
     {
-    this->SetComponentIntegratedIntensity( *it );
-    intensity += accessor( *it );
+    this->SetComponentMaximum( *it );
+    mi = std::max( mi, accessor(*it) );
     }
 
-  accessor( node, intensity );
+  accessor( node, mi );
 }
 
 
 template<class TInputImage, class TAttributeAccessor>
 void
-IntegratedIntensityComponentTreeFilter<TInputImage, TAttributeAccessor>
+MaximumComponentTreeFilter<TInputImage, TAttributeAccessor>
 ::PrintSelf(std::ostream &os, Indent indent) const
 {
   Superclass::PrintSelf(os, indent);

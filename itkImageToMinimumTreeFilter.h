@@ -20,10 +20,15 @@
 #include "itkImageToComponentTreeFilter.h"
 
 namespace itk {
-  /** \class ImageToMinimumTreeFilter
- * \brief TODO
+/** \class ImageToMinimumTreeFilter
+ * \brief Convert an image to a min tree
  *
- * \ingroup ImageEnhancement  MathematicalMorphologyImageFilters
+ * A min tree is a component tree with the maximum pixel value in the root node and the minimum pixel values
+ * in the leaves.
+ *
+ * \author Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA de Jouy-en-Josas, France.
+ *
+ * \ingroup ImageEnhancement  MathematicalMorphologyImageFilters ImageToMaximumTreeFilter
  */
 template<class TInputImage, class TOutputImage>
 class ITK_EXPORT ImageToMinimumTreeFilter : 

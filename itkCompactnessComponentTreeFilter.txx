@@ -76,22 +76,21 @@ CompactnessComponentTreeFilter<TInputImage, TAttributeAccessor>
     cm += ret.cm;
     }
 
-  const PixelType & p = node->GetPixel();
   for( typename NodeType::IndexType current=node->GetFirstIndex();
      current != NodeType::EndIndex;
      current = this->GetInput()->GetLinkedListArray()[ current ] )
     {
     IndexType idx = this->GetOutput()->ComputeIndex( current );
-    sum += p;
+    sum += 1;
     PointType physicalPosition;
     this->GetOutput()->TransformIndexToPhysicalPoint(idx, physicalPosition);
     for(unsigned int i=0; i<ImageDimension; i++)
       {
-      cog[i] += physicalPosition[i] * p; 
-      cm[i][i] += p * physicalPosition[i] * physicalPosition[i];
+      cog[i] += physicalPosition[i]; 
+      cm[i][i] += physicalPosition[i] * physicalPosition[i];
       for(unsigned int j=i+1; j<ImageDimension; j++)
         {
-        double weight = p * physicalPosition[i] * physicalPosition[j];
+        double weight = physicalPosition[i] * physicalPosition[j];
         cm[i][j] += weight;
         cm[j][i] += weight;
         }

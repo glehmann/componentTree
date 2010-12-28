@@ -39,7 +39,17 @@ namespace Function {
 
 
 /** \class KeepNLobesComponentTreeFilter
- * \brief TODO
+ * \brief Keep N lobes in the component tree, based on the attribute values
+ *
+ * This filters remove the leaves of the nodes, starting from the ones with the lower
+ * attributes, and stops only when exactly N leaves exist in the tree.
+ * Each resulting leaf still has the exact same number of parents.
+ *
+ * If the number of objects in an image is known, and if those objects can be characterized
+ * by connected components and a specific attribute value, this filter can help to localize
+ * those objects.
+ *
+ * \author Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA de Jouy-en-Josas, France.
  *
  * \ingroup ImageEnhancement  MathematicalMorphologyImageFilters
  */

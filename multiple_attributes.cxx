@@ -4,7 +4,7 @@
 
 #include "itkComponentTree.h"
 #include "itkImageToMaximumTreeFilter.h"
-#include "itkIntegratedIntensityComponentTreeFilter.h"
+#include "itkSumComponentTreeFilter.h"
 #include "itkPhysicalSizeComponentTreeFilter.h"
 #include "itkLocalIntensityComponentTreeFilter.h"
 #include "itkVolumeLevellingComponentTreeFilter.h"
@@ -207,7 +207,7 @@ int main(int argc, char * argv[])
   typedef itk::Functor::ArrayAttributeComponentTreeNodeAccessor< NodeType, double, 8 > BranchAccessor;
   typedef itk::Functor::ArrayAttributeComponentTreeNodeAccessor< NodeType, double, 9 > SpotBaseAccessor;
 
-  typedef itk::IntegratedIntensityComponentTreeFilter< TreeType, IntegratedIntensityAccessor > IntegratedIntensityType;
+  typedef itk::SumComponentTreeFilter< TreeType, IntegratedIntensityAccessor > IntegratedIntensityType;
   IntegratedIntensityType::Pointer integrated_intensity = IntegratedIntensityType::New();
   integrated_intensity->SetInput( maxtree->GetOutput() );
 //   itk::SimpleFilterWatcher watcher0(integrated_intensity, "integrated_intensity");

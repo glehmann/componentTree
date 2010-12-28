@@ -22,7 +22,12 @@
 
 namespace itk {
 /** \class VolumeLevellingComponentTreeFilter
- * \brief TODO
+ * \brief Compute the volume levelling of the lobes and assign it to the attribute value of the lowest node
+ *
+ * Volume levelling is a way to take into account both the size of the lobe and the intensity variations
+ * in the lobe.
+ * 
+ * \author Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA de Jouy-en-Josas, France.
  *
  * \ingroup ImageEnhancement  MathematicalMorphologyImageFilters
  */

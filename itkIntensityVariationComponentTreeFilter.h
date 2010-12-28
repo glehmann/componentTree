@@ -22,7 +22,11 @@
 
 namespace itk {
 /** \class IntensityVariationComponentTreeFilter
- * \brief TODO
+ * \brief Compute the intensity difference with the root node and set it as attribute value
+ *
+ * Root node attribute is set to zero.
+ *
+ * \author Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA de Jouy-en-Josas, France.
  *
  * \ingroup ImageEnhancement  MathematicalMorphologyImageFilters
  */

@@ -1,4 +1,4 @@
-WRAP_CLASS("itk::BinaryCompactnessComponentTreeFilter" POINTER)
+WRAP_CLASS("itk::WeightedCompactnessComponentTreeFilter" POINTER)
   FOREACH(t ${WRAP_ITK_SCALAR})
     FOREACH(d ${WRAP_ITK_DIMS})
       WRAP_TEMPLATE("${ITKM_CT${t}${d}D}" "${ITKT_CT${t}${d}D}")

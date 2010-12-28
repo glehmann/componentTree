@@ -23,6 +23,8 @@ namespace itk {
 /** \class MonotoneComponentTreeFilter
  * \brief Make the attribute values of a component tree monotones.
  *
+ * \author Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA de Jouy-en-Josas, France.
+ *
  * \ingroup ImageEnhancement  MathematicalMorphologyImageFilters
  */
 template<class TImage, class TAttibuteAccessor=typename Functor::AttributeComponentTreeNodeAccessor< typename TImage::NodeType > >

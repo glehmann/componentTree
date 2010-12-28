@@ -26,7 +26,15 @@
 
 namespace itk {
 /** \class CompactnessComponentTreeFilter
- * \brief TODO
+ * \brief Compute the compactness of each node and store it as attribute
+ *
+ * The compactness is computed as the size of the smallest principal moment
+ * divided by the size of the greated principal moment.
+ * Its value is 1.0 for a perfect ball.
+ *
+ * The pixels values are not used to compute the moment of the nodes.
+ *
+ * \author Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA de Jouy-en-Josas, France.
  *
  * \ingroup ImageEnhancement  MathematicalMorphologyImageFilters
  */
