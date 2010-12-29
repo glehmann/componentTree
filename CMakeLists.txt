@@ -39,6 +39,7 @@ SET(Libraries
   ITKCommon
   ITKBasicFilters
   ITKIO
+  ITKReview
 )
 
 
@@ -150,6 +151,10 @@ ADD_EXECUTABLE(${CurrentExe} ${CurrentExe}.cxx)
 TARGET_LINK_LIBRARIES(${CurrentExe} ${Libraries})
 
 SET(CurrentExe "double_gradient")
+ADD_EXECUTABLE(${CurrentExe} ${CurrentExe}.cxx)
+TARGET_LINK_LIBRARIES(${CurrentExe} ${Libraries})
+
+SET(CurrentExe "shape")
 ADD_EXECUTABLE(${CurrentExe} ${CurrentExe}.cxx)
 TARGET_LINK_LIBRARIES(${CurrentExe} ${Libraries})
 

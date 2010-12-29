@@ -19,6 +19,7 @@
 
 #include "itkGranulometryComponentTreeFilter.h"
 #include "itkProgressReporter.h"
+#include <map>
 
 
 namespace itk {
@@ -41,15 +42,6 @@ GranulometryComponentTreeFilter<TImage>
 
   ProgressReporter progress(this, 0, this->GetOutput()->GetRequestedRegion().GetNumberOfPixels()*2);
 
-      std::cout << "#queue" << "\t"
-        << "attrib" << "\t"
-        << "pixel" << "\t"
-        << "size" << "\t"
-        << "diff" << "\t"
-        << "total" << "\t"
-        << std::endl;
-      double totalDiff = 0;
-
   if( !m_ReverseOrdering )
     {
     // setup the priority queue
@@ -57,6 +49,10 @@ GranulometryComponentTreeFilter<TImage>
 
     // put all the leaves in the queue
     this->PutLeavesInQueue( queue, this->GetOutput()->GetRoot() );
+
+    // the data structure to store the result of the granulometric analysis
+    typename std::map< AttributeType, double > MapType;
+    MapType result;
 
     // now drop the smallest leaves untill the number of leaves is the desired number
     while( !queue.Empty() )
@@ -68,16 +64,8 @@ GranulometryComponentTreeFilter<TImage>
       // count how much difference it will make to remove that node
       long nodeSize = this->GetOutput()->NodeCountIndexes( node );
       double nodeDifference = nodeSize * std::abs( (double)node->GetPixel() - (double)parent->GetPixel() );
-      totalDiff += nodeDifference;
-
-      // write the result to the standard output
-      std::cout << queue.Size() << "\t"
-        << node->GetAttribute() << "\t"
-        << (double)node->GetPixel() << "\t"
-        << nodeSize << "\t"
-        << nodeDifference << "\t"
-        << totalDiff << "\t"
-        << std::endl;
+      
+      result[ node->GetAttribute() ] += nodeDifference;
 
       // merge the node in its parent
       this->GetOutput()->NodeMerge( parent, node );
