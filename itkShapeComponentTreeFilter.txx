@@ -113,6 +113,7 @@ ShapeComponentTreeFilter<TInputImage, TLabelObjectAccessor, TAttributeAccessor>
   // then put that object in the input of the ShapeLabelMapFilter
   m_LabelMap->ClearLabels();
   m_LabelMap->AddLabelObject( labelObject );
+  m_LabelMap->Modified(); // temporary workaround for a bug in itk::LabelMap
   m_ShapeLabelMapFilter->Update();
   
   accessor( node, labelObjectAccessor( labelObject ) );
