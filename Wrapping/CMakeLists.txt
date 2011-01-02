@@ -7,6 +7,7 @@ INCLUDE(WrapITKTypes.cmake)
 
 BEGIN_WRAPPER_LIBRARY("${PROJECT_NAME}")
 SET(WRAPPER_LIBRARY_DEPENDS Base)
+set(WRAPPER_LIBRARY_LINK_LIBRARIES ITKCommon ITKStatistics ITKReview)
 
 # ComponentTree class mus be imported before the others
 SET(WRAPPER_LIBRARY_GROUPS
