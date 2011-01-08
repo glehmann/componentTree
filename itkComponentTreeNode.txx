@@ -135,25 +135,51 @@ ComponentTreeNode<TPixel, TIndex, TValue>
 ::Clone() const
 {
   // create a new node to clone this one
-  Self * node = new Self();
+  Self * clone = new Self();
   // copy the ivars
-  node->SetAttribute( m_Attribute );
-  node->SetParent( NULL );
-  node->SetPixel( m_Pixel );
-  node->SetFirstIndex( m_FirstIndex );
-  node->SetLastIndex( m_LastIndex );
+  clone->SetAttribute( m_Attribute );
+  clone->SetParent( NULL );
+  clone->SetPixel( m_Pixel );
+  clone->SetFirstIndex( m_FirstIndex );
+  clone->SetLastIndex( m_LastIndex );
   // and copy clone the childs
-  for( ChildrenListConstIteratorType it=this->GetChildren().begin(); it!=this->GetChildren().end(); it++ )
+  for( ChildrenListConstIteratorType it=m_Children.begin(); it!=m_Children.end(); it++ )
     {
-    assert( (*it)->GetParent() == this );
+    const Self * child = *it;
+    assert( child != NULL );
+    assert( child->GetParent() == this );
 
-    Self * child = (*it)->Clone();
-    node->AddChild( child );
-    }
-    
-  assert( this->CountChildren() == node->CountChildren() );
+    Self * clonedChild = child->Clone();
+    assert( child->GetFirstIndex() == clonedChild->GetFirstIndex() );
+    assert( child->GetLastIndex() == clonedChild->GetLastIndex() );
+    assert( child->GetPixel() == clonedChild->GetPixel() );
   
-  return node;
+    clone->AddChild( clonedChild );
+    
+    assert( clone == clonedChild->GetParent() );
+    // make sure the order is preserved
+    assert( (*this->GetChildren().begin())->GetFirstIndex() == (*clone->GetChildren().begin())->GetFirstIndex() );
+    assert( (*this->GetChildren().begin())->GetLastIndex() == (*clone->GetChildren().begin())->GetLastIndex() );
+    assert( (*this->GetChildren().begin())->GetPixel() == (*clone->GetChildren().begin())->GetPixel() );
+    }
+  assert( this->GetChildren().size() == clone->GetChildren().size() );
+  
+  return clone;
+}
+
+template <typename TPixel, typename TIndex, typename TValue>
+void
+ComponentTreeNode<TPixel, TIndex, TValue>
+::Print( std::ostream& os ) const
+{
+  os << "ComponentTreeNode " << this << std::endl;
+  os << "  Pixel: " << m_Pixel << std::endl;
+  os << "  Parent: " << m_Parent << std::endl;
+  os << "  Children: " << &m_Children << " (" << m_Children.size() << ")" << std::endl;
+  os << "  FirstIndex: " << m_FirstIndex << std::endl;
+  os << "  LastIndex: " << m_LastIndex << std::endl;
+  os << "  Attribute: " << static_cast< typename NumericTraits< AttributeType >::PrintType >( m_Attribute ) << std::endl;
+
 }
 
 } // namespace itk

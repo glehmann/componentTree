@@ -200,7 +200,8 @@ public:
     {
     return m_Parent == NULL;
     }
-    
+  
+  void Print( std::ostream& os=std::cout ) const;
 
 protected:
   /** the pixel value associated with the node */
