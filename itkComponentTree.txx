@@ -122,7 +122,7 @@ ComponentTree<TPixel, VImageDimension, TValue>
 
 /** Return the number of indexes */
 template<class TPixel, unsigned int VImageDimension, class TValue>
-int 
+unsigned long 
 ComponentTree<TPixel, VImageDimension, TValue>
 ::NodeCountIndexes( const NodeType * node ) const 
 {
@@ -201,7 +201,7 @@ ComponentTree<TPixel, VImageDimension, TValue>
   assert( node != NULL );
   assert( idx != NodeType::EndIndex );
   assert( idx >= 0 );
-  assert( idx < this->GetLargestPossibleRegion().GetNumberOfPixels() );
+  assert( (unsigned long)idx < this->GetLargestPossibleRegion().GetNumberOfPixels() );
   assert( !this->NodeHasIndex( node, idx ) );
 
   if( node->GetLastIndex() == NodeType::EndIndex )
@@ -237,7 +237,7 @@ ComponentTree<TPixel, VImageDimension, TValue>
   assert( node != NULL );
   assert( idx != NodeType::EndIndex );
   assert( idx >= 0 );
-  assert( idx < this->GetLargestPossibleRegion().GetNumberOfPixels() );
+  assert( (unsigned long)idx < this->GetLargestPossibleRegion().GetNumberOfPixels() );
 
   OffsetValueType current = node->GetFirstIndex();
   while( current != NodeType::EndIndex )

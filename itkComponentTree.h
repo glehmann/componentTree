@@ -186,7 +186,7 @@ public:
   void NodeTakeIndexesFrom( NodeType * node, NodeType *obsoletedNode );
 
   /** Return the number of index  in the node and its children */
-  int NodeCountIndexes( const NodeType *node ) const;
+  unsigned long NodeCountIndexes( const NodeType *node ) const;
 
   const PixelType & GetPixel( const IndexType & idx ) const;
 
