@@ -24,7 +24,7 @@
 namespace itk {
 
 template<class TInputImage, class TMathFunctor, class TAttributeAccessor>
-RecurssiveMathComponentTreeFilter<TInputImage, TAttributeAccessor>
+RecurssiveMathComponentTreeFilter<TInputImage, TMathFunctor, TAttributeAccessor>
 ::RecurssiveMathComponentTreeFilter()
 {
 }
@@ -32,7 +32,7 @@ RecurssiveMathComponentTreeFilter<TInputImage, TAttributeAccessor>
 
 template<class TInputImage, class TMathFunctor, class TAttributeAccessor>
 void
-RecurssiveMathComponentTreeFilter<TInputImage, TAttributeAccessor>
+RecurssiveMathComponentTreeFilter<TInputImage, TMathFunctor, TAttributeAccessor>
 ::GenerateData()
 {
   // Allocate the output
@@ -47,7 +47,7 @@ RecurssiveMathComponentTreeFilter<TInputImage, TAttributeAccessor>
 
 template<class TInputImage, class TMathFunctor, class TAttributeAccessor>
 void
-RecurssiveMathComponentTreeFilter<TInputImage, TAttributeAccessor>
+RecurssiveMathComponentTreeFilter<TInputImage, TMathFunctor, TAttributeAccessor>
 ::GenerateAttributeValue( NodeType* node )
 {
   assert(node != NULL);
@@ -68,7 +68,7 @@ RecurssiveMathComponentTreeFilter<TInputImage, TAttributeAccessor>
 
 template<class TInputImage, class TMathFunctor, class TAttributeAccessor>
 void
-RecurssiveMathComponentTreeFilter<TInputImage, TAttributeAccessor>
+RecurssiveMathComponentTreeFilter<TInputImage, TMathFunctor, TAttributeAccessor>
 ::PrintSelf(std::ostream &os, Indent indent) const
 {
   Superclass::PrintSelf(os, indent);

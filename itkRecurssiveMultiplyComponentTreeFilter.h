@@ -30,13 +30,13 @@ namespace itk {
 template< class TImage,class TAttributeAccessor=typename Functor::AttributeComponentTreeNodeAccessor< typename TImage::NodeType > >
 class ITK_EXPORT RecurssiveMultiplyComponentTreeFilter : 
     public RecurssiveMathComponentTreeFilter<TImage,
-      typename std::multiplies< typename TAttributeAccessor::AttributeType > >
+      typename std::multiplies< typename TAttributeAccessor::AttributeType >, TAttributeAccessor >
 {
 public:
   /** Standard class typedefs. */
   typedef RecurssiveMultiplyComponentTreeFilter                  Self;
   typedef RecurssiveMathComponentTreeFilter<TImage,
-                typename std::multiplies< typename TAttributeAccessor::AttributeType > >
+                typename std::multiplies< typename TAttributeAccessor::AttributeType >, TAttributeAccessor >
                                                   Superclass;
   typedef SmartPointer<Self>                      Pointer;
   typedef SmartPointer<const Self>                ConstPointer;

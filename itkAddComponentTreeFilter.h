@@ -29,13 +29,13 @@ namespace itk {
  */
 template< class TImage,class TAttributeAccessor=typename Functor::AttributeComponentTreeNodeAccessor< typename TImage::NodeType > >
 class ITK_EXPORT AddComponentTreeFilter : 
-    public BinaryMathComponentTreeFilter<TImage, typename std::plus< typename TAttributeAccessor::AttributeType > >
+    public BinaryMathComponentTreeFilter<TImage, typename std::plus< typename TAttributeAccessor::AttributeType >, TAttributeAccessor >
 {
 public:
   /** Standard class typedefs. */
   typedef AddComponentTreeFilter                  Self;
   typedef BinaryMathComponentTreeFilter<TImage,
-                typename std::plus< typename TAttributeAccessor::AttributeType > >
+                typename std::plus< typename TAttributeAccessor::AttributeType >, TAttributeAccessor >
                                                   Superclass;
   typedef SmartPointer<Self>                      Pointer;
   typedef SmartPointer<const Self>                ConstPointer;

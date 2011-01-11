@@ -33,7 +33,7 @@ class ITK_EXPORT MinimumComponentTreeFilter :
     public BinaryMathComponentTreeFilter<TImage,
       typename Function::Minimum< typename TAttributeAccessor::AttributeType,
                                   typename TAttributeAccessor::AttributeType,
-                                  typename TAttributeAccessor::AttributeType > >
+                                  typename TAttributeAccessor::AttributeType >, TAttributeAccessor >
 {
 public:
   /** Standard class typedefs. */
@@ -41,7 +41,7 @@ public:
   typedef BinaryMathComponentTreeFilter<TImage,
                 typename Function::Minimum< typename TAttributeAccessor::AttributeType,
                                   typename TAttributeAccessor::AttributeType,
-                                  typename TAttributeAccessor::AttributeType > >
+                                  typename TAttributeAccessor::AttributeType >, TAttributeAccessor >
                                                   Superclass;
   typedef SmartPointer<Self>                      Pointer;
   typedef SmartPointer<const Self>                ConstPointer;
