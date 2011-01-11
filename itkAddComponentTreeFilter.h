@@ -1,7 +1,7 @@
 /*=========================================================================
 
   Program:   Insight Segmentation & Registration Toolkit
-  Module:    $RCSfile: itkMaximumComponentTreeFilter.h,v $
+  Module:    $RCSfile: itkAddComponentTreeFilter.h,v $
   Language:  C++
   Date:      $Date: 2006/03/28 19:59:05 $
   Version:   $Revision: 1.6 $
@@ -14,14 +14,13 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef __itkMaximumComponentTreeFilter_h
-#define __itkMaximumComponentTreeFilter_h
+#ifndef __itkAddComponentTreeFilter_h
+#define __itkAddComponentTreeFilter_h
 
 #include "itkBinaryMathComponentTreeFilter.h"
-#include "itkMaximumImageFilter.h"
 
 namespace itk {
-/** \class MaximumComponentTreeFilter
+/** \class AddComponentTreeFilter
  * \brief Add the attribute of the equivalent node of several component tree
  *
  * \author Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA de Jouy-en-Josas, France.
@@ -29,19 +28,14 @@ namespace itk {
  * \ingroup ImageEnhancement  MathematicalMorphologyImageFilters
  */
 template< class TImage,class TAttributeAccessor=typename Functor::AttributeComponentTreeNodeAccessor< typename TImage::NodeType > >
-class ITK_EXPORT MaximumComponentTreeFilter : 
-    public BinaryMathComponentTreeFilter<TImage,
-      typename Function::Maximum< typename TAttributeAccessor::AttributeType,
-                                  typename TAttributeAccessor::AttributeType,
-                                  typename TAttributeAccessor::AttributeType > >
+class ITK_EXPORT AddComponentTreeFilter : 
+    public BinaryMathComponentTreeFilter<TImage, typename std::plus< typename TAttributeAccessor::AttributeType > >
 {
 public:
   /** Standard class typedefs. */
-  typedef MaximumComponentTreeFilter                  Self;
+  typedef AddComponentTreeFilter                  Self;
   typedef BinaryMathComponentTreeFilter<TImage,
-                typename Function::Maximum< typename TAttributeAccessor::AttributeType,
-                                  typename TAttributeAccessor::AttributeType,
-                                  typename TAttributeAccessor::AttributeType > >
+                typename std::plus< typename TAttributeAccessor::AttributeType > >
                                                   Superclass;
   typedef SmartPointer<Self>                      Pointer;
   typedef SmartPointer<const Self>                ConstPointer;
@@ -50,14 +44,14 @@ public:
   itkNewMacro(Self);  
 
   /** Runtime information support. */
-  itkTypeMacro(MaximumComponentTreeFilter, 
+  itkTypeMacro(AddComponentTreeFilter, 
                InPlaceComponentTreeFilter);
 
 protected:
-  MaximumComponentTreeFilter() {};
+  AddComponentTreeFilter() {};
 
 private:
-  MaximumComponentTreeFilter(const Self&); //purposely not implemented
+  AddComponentTreeFilter(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
 
 }; // end of class

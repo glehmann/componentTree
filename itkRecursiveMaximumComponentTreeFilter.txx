@@ -1,7 +1,7 @@
 /*=========================================================================
 
   Program:   Insight Segmentation & Registration Toolkit
-  Module:    $RCSfile: itkMinimumComponentTreeFilter.txx,v $
+  Module:    $RCSfile: itkRecurssiveMaximumComponentTreeFilter.txx,v $
   Language:  C++
   Date:      $Date: 2005/08/23 15:09:03 $
   Version:   $Revision: 1.6 $
@@ -14,32 +14,32 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef __itkMinimumComponentTreeFilter_txx
-#define __itkMinimumComponentTreeFilter_txx
+#ifndef __itkRecurssiveMaximumComponentTreeFilter_txx
+#define __itkRecurssiveMaximumComponentTreeFilter_txx
 
-#include "itkMinimumComponentTreeFilter.h"
+#include "itkRecurssiveMaximumComponentTreeFilter.h"
 #include "itkProgressReporter.h"
 
 
 namespace itk {
 
 template<class TInputImage, class TAttributeAccessor>
-MinimumComponentTreeFilter<TInputImage, TAttributeAccessor>
-::MinimumComponentTreeFilter()
+RecurssiveMaximumComponentTreeFilter<TInputImage, TAttributeAccessor>
+::RecurssiveMaximumComponentTreeFilter()
 {
 }
 
 
 template<class TInputImage, class TAttributeAccessor>
 void
-MinimumComponentTreeFilter<TInputImage, TAttributeAccessor>
+RecurssiveMaximumComponentTreeFilter<TInputImage, TAttributeAccessor>
 ::GenerateData()
 {
   // Allocate the output
   this->AllocateOutputs();
 
   ProgressReporter progress(this, 0, this->GetOutput()->GetRequestedRegion().GetNumberOfPixels()*2);
-  this->SetComponentMinimum( this->GetOutput()->GetRoot() );
+  this->SetComponentMaximum( this->GetOutput()->GetRoot() );
   // TODO: how to generate progress ??
 
 }
@@ -47,8 +47,8 @@ MinimumComponentTreeFilter<TInputImage, TAttributeAccessor>
 
 template<class TInputImage, class TAttributeAccessor>
 void
-MinimumComponentTreeFilter<TInputImage, TAttributeAccessor>
-::SetComponentMinimum( NodeType* node )
+RecurssiveMaximumComponentTreeFilter<TInputImage, TAttributeAccessor>
+::SetComponentMaximum( NodeType* node )
 {
   assert(node != NULL);
   AttributeAccessorType accessor;
@@ -57,8 +57,8 @@ MinimumComponentTreeFilter<TInputImage, TAttributeAccessor>
   const typename NodeType::ChildrenListType * childrenList = & node->GetChildren();
   for( typename NodeType::ChildrenListType::const_iterator it=childrenList->begin(); it!=childrenList->end(); it++ )
     {
-    this->SetComponentMinimum( *it );
-    mi = std::min( mi, accessor(*it) );
+    this->SetComponentMaximum( *it );
+    mi = std::max( mi, accessor(*it) );
     }
 
   accessor( node, mi );
@@ -67,7 +67,7 @@ MinimumComponentTreeFilter<TInputImage, TAttributeAccessor>
 
 template<class TInputImage, class TAttributeAccessor>
 void
-MinimumComponentTreeFilter<TInputImage, TAttributeAccessor>
+RecurssiveMaximumComponentTreeFilter<TInputImage, TAttributeAccessor>
 ::PrintSelf(std::ostream &os, Indent indent) const
 {
   Superclass::PrintSelf(os, indent);

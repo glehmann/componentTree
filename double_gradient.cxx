@@ -17,7 +17,7 @@
 #include "itkLocalIntensityComponentTreeFilter.h"
 #include "itkNumberOfPixelsComponentTreeFilter.h"
 #include "itkIntensityComponentTreeFilter.h"
-#include "itkMaximumComponentTreeFilter.h"
+#include "itkRecurssiveMaximumComponentTreeFilter.h"
 
 namespace itk
 {
@@ -126,7 +126,7 @@ int main(int argc, char * argv[])
   typedef itk::IntensityComponentTreeFilter< TreeType, LocalGradientAccessor > IntensityType;
   IntensityType::Pointer intensity = IntensityType::New();
   intensity->SetInput(gradient->GetOutput());
-  typedef itk::MaximumComponentTreeFilter< TreeType, LocalGradientAccessor > LocalGradientType;
+  typedef itk::RecurssiveMaximumComponentTreeFilter< TreeType, LocalGradientAccessor > LocalGradientType;
   LocalGradientType::Pointer lgradient = LocalGradientType::New();
   lgradient->SetInput( intensity->GetOutput() );
 //  lgradient->SetUseZeroLeaves( true );
