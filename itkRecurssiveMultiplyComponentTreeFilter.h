@@ -1,7 +1,7 @@
 /*=========================================================================
 
   Program:   Insight Segmentation & Registration Toolkit
-  Module:    $RCSfile: itkRecurssiveMinimumComponentTreeFilter.h,v $
+  Module:    $RCSfile: itkRecurssiveMultiplyComponentTreeFilter.h,v $
   Language:  C++
   Date:      $Date: 2006/03/28 19:59:05 $
   Version:   $Revision: 1.6 $
@@ -14,34 +14,29 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef __itkRecurssiveMinimumComponentTreeFilter_h
-#define __itkRecurssiveMinimumComponentTreeFilter_h
+#ifndef __itkRecurssiveMultiplyComponentTreeFilter_h
+#define __itkRecurssiveMultiplyComponentTreeFilter_h
 
 #include "itkRecurssiveMathComponentTreeFilter.h"
-#include "itkMinimumImageFilter.h"
 
 namespace itk {
-/** \class RecurssiveMinimumComponentTreeFilter
- * \brief Add the attribute of the equivalent node of several component tree
+/** \class RecurssiveMultiplyComponentTreeFilter
+ * \brief Multiply the attribute of the equivalent node of several component tree
  *
  * \author Gaetan Lehmann. Biologie du Developpement et de la Reproduction, INRA de Jouy-en-Josas, France.
  *
  * \ingroup ImageEnhancement  MathematicalMorphologyImageFilters
  */
 template< class TImage,class TAttributeAccessor=typename Functor::AttributeComponentTreeNodeAccessor< typename TImage::NodeType > >
-class ITK_EXPORT RecurssiveMinimumComponentTreeFilter : 
+class ITK_EXPORT RecurssiveMultiplyComponentTreeFilter : 
     public RecurssiveMathComponentTreeFilter<TImage,
-      typename Function::Minimum< typename TAttributeAccessor::AttributeType,
-                                  typename TAttributeAccessor::AttributeType,
-                                  typename TAttributeAccessor::AttributeType > >
+      typename std::multiplies< typename TAttributeAccessor::AttributeType > >
 {
 public:
   /** Standard class typedefs. */
-  typedef RecurssiveMinimumComponentTreeFilter                  Self;
+  typedef RecurssiveMultiplyComponentTreeFilter                  Self;
   typedef RecurssiveMathComponentTreeFilter<TImage,
-                typename Function::Minimum< typename TAttributeAccessor::AttributeType,
-                                  typename TAttributeAccessor::AttributeType,
-                                  typename TAttributeAccessor::AttributeType > >
+                typename std::multiplies< typename TAttributeAccessor::AttributeType > >
                                                   Superclass;
   typedef SmartPointer<Self>                      Pointer;
   typedef SmartPointer<const Self>                ConstPointer;
@@ -50,14 +45,14 @@ public:
   itkNewMacro(Self);  
 
   /** Runtime information support. */
-  itkTypeMacro(RecurssiveMinimumComponentTreeFilter, 
+  itkTypeMacro(RecurssiveMultiplyComponentTreeFilter, 
                InPlaceComponentTreeFilter);
 
 protected:
-  RecurssiveMinimumComponentTreeFilter() {};
+  RecurssiveMultiplyComponentTreeFilter() {};
 
 private:
-  RecurssiveMinimumComponentTreeFilter(const Self&); //purposely not implemented
+  RecurssiveMultiplyComponentTreeFilter(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
 
 }; // end of class

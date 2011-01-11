@@ -1,7 +1,7 @@
 /*=========================================================================
 
   Program:   Insight Segmentation & Registration Toolkit
-  Module:    $RCSfile: itkRecurssiveMaximumComponentTreeFilter.txx,v $
+  Module:    $RCSfile: itkRecurssiveMathComponentTreeFilter.txx,v $
   Language:  C++
   Date:      $Date: 2005/08/23 15:09:03 $
   Version:   $Revision: 1.6 $
@@ -14,60 +14,61 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef __itkRecurssiveMaximumComponentTreeFilter_txx
-#define __itkRecurssiveMaximumComponentTreeFilter_txx
+#ifndef __itkRecurssiveMathComponentTreeFilter_txx
+#define __itkRecurssiveMathComponentTreeFilter_txx
 
-#include "itkRecurssiveMaximumComponentTreeFilter.h"
+#include "itkRecurssiveMathComponentTreeFilter.h"
 #include "itkProgressReporter.h"
 
 
 namespace itk {
 
-template<class TInputImage, class TAttributeAccessor>
-RecurssiveMaximumComponentTreeFilter<TInputImage, TAttributeAccessor>
-::RecurssiveMaximumComponentTreeFilter()
+template<class TInputImage, class TMathFunctor, class TAttributeAccessor>
+RecurssiveMathComponentTreeFilter<TInputImage, TAttributeAccessor>
+::RecurssiveMathComponentTreeFilter()
 {
 }
 
 
-template<class TInputImage, class TAttributeAccessor>
+template<class TInputImage, class TMathFunctor, class TAttributeAccessor>
 void
-RecurssiveMaximumComponentTreeFilter<TInputImage, TAttributeAccessor>
+RecurssiveMathComponentTreeFilter<TInputImage, TAttributeAccessor>
 ::GenerateData()
 {
   // Allocate the output
   this->AllocateOutputs();
 
   ProgressReporter progress(this, 0, this->GetOutput()->GetRequestedRegion().GetNumberOfPixels()*2);
-  this->SetComponentMaximum( this->GetOutput()->GetRoot() );
+  this->GenerateAttributeValue( this->GetOutput()->GetRoot() );
   // TODO: how to generate progress ??
 
 }
 
 
-template<class TInputImage, class TAttributeAccessor>
+template<class TInputImage, class TMathFunctor, class TAttributeAccessor>
 void
-RecurssiveMaximumComponentTreeFilter<TInputImage, TAttributeAccessor>
-::SetComponentMaximum( NodeType* node )
+RecurssiveMathComponentTreeFilter<TInputImage, TAttributeAccessor>
+::GenerateAttributeValue( NodeType* node )
 {
   assert(node != NULL);
   AttributeAccessorType accessor;
+  MathFunctorType compute;
 
   AttributeType mi = accessor( node );
   const typename NodeType::ChildrenListType * childrenList = & node->GetChildren();
   for( typename NodeType::ChildrenListType::const_iterator it=childrenList->begin(); it!=childrenList->end(); it++ )
     {
-    this->SetComponentMaximum( *it );
-    mi = std::max( mi, accessor(*it) );
+    this->GenerateAttributeValue( *it );
+    mi = compute( mi, accessor(*it) );
     }
 
   accessor( node, mi );
 }
 
 
-template<class TInputImage, class TAttributeAccessor>
+template<class TInputImage, class TMathFunctor, class TAttributeAccessor>
 void
-RecurssiveMaximumComponentTreeFilter<TInputImage, TAttributeAccessor>
+RecurssiveMathComponentTreeFilter<TInputImage, TAttributeAccessor>
 ::PrintSelf(std::ostream &os, Indent indent) const
 {
   Superclass::PrintSelf(os, indent);
