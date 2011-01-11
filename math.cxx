@@ -6,7 +6,7 @@
 #include "itkImageToMaximumTreeFilter.h"
 #include "itkCompactnessComponentTreeFilter.h"
 #include "itkGradientComponentTreeFilter.h"
-#include "itkMathComponentTreeFilter.h"
+#include "itkBinaryMathComponentTreeFilter.h"
 #include "itkComponentTreeAttributeToImageFilter.h"
 
 int main(int argc, char * argv[])
@@ -46,12 +46,12 @@ int main(int argc, char * argv[])
   roundness->SetInput( maxtree->GetOutput() );
   roundness->SetInPlace( false );
 
-  typedef itk::MathComponentTreeFilter< TreeType, std::multiplies<float> > FilterType;
+  typedef itk::BinaryMathComponentTreeFilter< TreeType, std::multiplies<float> > FilterType;
   FilterType::Pointer filter = FilterType::New();
   filter->SetInput( 0, maxtree->GetOutput() );
   filter->SetInput( 1, maxtree->GetOutput() );
   filter->SetInPlace(false);
-//  itk::SimpleFilterWatcher watcher(filter, "filter");
+  itk::SimpleFilterWatcher watcher(filter, "filter");
 
   typedef itk::ComponentTreeAttributeToImageFilter< TreeType, IType > T2IType;
   T2IType::Pointer filter2 = T2IType::New();

@@ -1,7 +1,7 @@
 /*=========================================================================
 
   Program:   Insight Segmentation & Registration Toolkit
-  Module:    $RCSfile: itkMathComponentTreeFilter.h,v $
+  Module:    $RCSfile: itkBinaryMathComponentTreeFilter.h,v $
   Language:  C++
   Date:      $Date: 2006/03/28 19:59:05 $
   Version:   $Revision: 1.6 $
@@ -14,15 +14,15 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef __itkMathComponentTreeFilter_h
-#define __itkMathComponentTreeFilter_h
+#ifndef __itkBinaryMathComponentTreeFilter_h
+#define __itkBinaryMathComponentTreeFilter_h
 
 #include "itkInPlaceComponentTreeFilter.h"
 #include "itkProgressReporter.h"
 #include <vector>
 
 namespace itk {
-/** \class MathComponentTreeFilter
+/** \class BinaryMathComponentTreeFilter
  * \brief Compute the number of pixels in each node and store it as attribute
  *
  * The pixels of the children are included in the count.
@@ -33,12 +33,12 @@ namespace itk {
  * \ingroup ImageEnhancement  MathematicalMorphologyImageFilters
  */
 template< class TImage, class TMathFunctor, class TAttibuteAccessor=typename Functor::AttributeComponentTreeNodeAccessor< typename TImage::NodeType > >
-class ITK_EXPORT MathComponentTreeFilter : 
+class ITK_EXPORT BinaryMathComponentTreeFilter : 
     public InPlaceComponentTreeFilter<TImage>
 {
 public:
   /** Standard class typedefs. */
-  typedef MathComponentTreeFilter Self;
+  typedef BinaryMathComponentTreeFilter Self;
   typedef InPlaceComponentTreeFilter<TImage>
   Superclass;
   typedef SmartPointer<Self>        Pointer;
@@ -67,7 +67,7 @@ public:
   itkNewMacro(Self);  
 
   /** Runtime information support. */
-  itkTypeMacro(MathComponentTreeFilter, 
+  itkTypeMacro(BinaryMathComponentTreeFilter, 
                InPlaceComponentTreeFilter);
 
 #ifdef ITK_USE_CONCEPT_CHECKING
@@ -82,8 +82,8 @@ public:
 #endif
 
 protected:
-  MathComponentTreeFilter();
-  ~MathComponentTreeFilter() {};
+  BinaryMathComponentTreeFilter();
+  ~BinaryMathComponentTreeFilter() {};
   void PrintSelf(std::ostream& os, Indent indent) const;
 
   void GenerateData();
@@ -91,7 +91,7 @@ protected:
   void SetAttribute( NodeType *, const NodeArrayType & );
 
 private:
-  MathComponentTreeFilter(const Self&); //purposely not implemented
+  BinaryMathComponentTreeFilter(const Self&); //purposely not implemented
   void operator=(const Self&); //purposely not implemented
 
   ProgressReporter * m_Progress;
@@ -101,7 +101,7 @@ private:
 } // end namespace itk
   
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkMathComponentTreeFilter.txx"
+#include "itkBinaryMathComponentTreeFilter.txx"
 #endif
 
 #endif

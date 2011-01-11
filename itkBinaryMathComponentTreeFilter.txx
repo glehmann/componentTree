@@ -1,7 +1,7 @@
 /*=========================================================================
 
   Program:   Insight Segmentation & Registration Toolkit
-  Module:    $RCSfile: itkMathComponentTreeFilter.txx,v $
+  Module:    $RCSfile: itkBinaryMathComponentTreeFilter.txx,v $
   Language:  C++
   Date:      $Date: 2005/08/23 15:09:03 $
   Version:   $Revision: 1.6 $
@@ -14,17 +14,17 @@
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
-#ifndef __itkMathComponentTreeFilter_txx
-#define __itkMathComponentTreeFilter_txx
+#ifndef __itkBinaryMathComponentTreeFilter_txx
+#define __itkBinaryMathComponentTreeFilter_txx
 
-#include "itkMathComponentTreeFilter.h"
+#include "itkBinaryMathComponentTreeFilter.h"
 
 
 namespace itk {
 
 template<class TInputImage, class TMathFunctor, class TAttributeAccessor>
-MathComponentTreeFilter<TInputImage, TMathFunctor, TAttributeAccessor>
-::MathComponentTreeFilter()
+BinaryMathComponentTreeFilter<TInputImage, TMathFunctor, TAttributeAccessor>
+::BinaryMathComponentTreeFilter()
 {
   this->SetNumberOfRequiredInputs( 2 );
 }
@@ -32,7 +32,7 @@ MathComponentTreeFilter<TInputImage, TMathFunctor, TAttributeAccessor>
 
 template<class TInputImage, class TMathFunctor, class TAttributeAccessor>
 void
-MathComponentTreeFilter<TInputImage, TMathFunctor, TAttributeAccessor>
+BinaryMathComponentTreeFilter<TInputImage, TMathFunctor, TAttributeAccessor>
 ::GenerateData()
 {
   // Allocate the output
@@ -57,13 +57,11 @@ MathComponentTreeFilter<TInputImage, TMathFunctor, TAttributeAccessor>
 
 template<class TInputImage, class TMathFunctor, class TAttributeAccessor>
 void
-MathComponentTreeFilter<TInputImage, TMathFunctor, TAttributeAccessor>
+BinaryMathComponentTreeFilter<TInputImage, TMathFunctor, TAttributeAccessor>
 ::SetAttribute( NodeType* node, const NodeArrayType & nodes )
 {
   assert(node != NULL);
   assert( nodes.size() == this->GetNumberOfInputs() - 1 );
-  std::cout << "=== SetAttribute() ===" << std::endl;
-  node->Print();
     
   MathFunctorType compute;
   AttributeAccessorType accessor;
@@ -76,7 +74,7 @@ MathComponentTreeFilter<TInputImage, TMathFunctor, TAttributeAccessor>
   {
     const NodeType * otherNode = *nit;
     assert( otherNode != NULL );
-    otherNode->Print();
+    // otherNode->Print();
     assert( otherNode->GetPixel() == node->GetPixel() );
     assert( otherNode->GetFirstIndex() == node->GetFirstIndex() );
     assert( otherNode->GetLastIndex() == node->GetLastIndex() );
@@ -84,7 +82,7 @@ MathComponentTreeFilter<TInputImage, TMathFunctor, TAttributeAccessor>
     res = compute( res, otherNode->GetAttribute() );
     childrenNodesIterators.push_back( otherNode->GetChildren().begin() );
   }
-  std::cout << res << std::endl;
+  // std::cout << res << std::endl;
   accessor( node, res );
   const typename NodeType::ChildrenListType * childrenList = & node->GetChildren();
   for( typename NodeType::ChildrenListType::const_iterator it=childrenList->begin(); it!=childrenList->end(); it++ )
@@ -105,7 +103,7 @@ MathComponentTreeFilter<TInputImage, TMathFunctor, TAttributeAccessor>
 
 template<class TInputImage, class TMathFunctor, class TAttributeAccessor>
 void
-MathComponentTreeFilter<TInputImage, TMathFunctor, TAttributeAccessor>
+BinaryMathComponentTreeFilter<TInputImage, TMathFunctor, TAttributeAccessor>
 ::PrintSelf(std::ostream &os, Indent indent) const
 {
   Superclass::PrintSelf(os, indent);
