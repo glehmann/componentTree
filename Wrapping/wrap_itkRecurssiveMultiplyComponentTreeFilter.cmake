@@ -1,4 +1,4 @@
-WRAP_CLASS("itk::RecurssiveMinimumComponentTreeFilter" POINTER_WITH_SUPERCLASS)
+WRAP_CLASS("itk::RecurssiveMultiplyComponentTreeFilter" POINTER_WITH_SUPERCLASS)
   FOREACH(t ${WRAP_ITK_SCALAR})
     FOREACH(d ${WRAP_ITK_DIMS})
       WRAP_TEMPLATE("${ITKM_CT${t}${d}UL}" "${ITKT_CT${t}${d}UL}")
