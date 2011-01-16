@@ -40,6 +40,7 @@ SET(Libraries
   ITKBasicFilters
   ITKIO
   ITKReview
+  ITKStatistics
 )
 
 
@@ -219,6 +220,10 @@ ADD_EXECUTABLE(${CurrentExe} ${CurrentExe}.cxx)
 TARGET_LINK_LIBRARIES(${CurrentExe} ${Libraries})
 
 SET(CurrentExe "normalize")
+ADD_EXECUTABLE(${CurrentExe} ${CurrentExe}.cxx)
+TARGET_LINK_LIBRARIES(${CurrentExe} ${Libraries})
+
+SET(CurrentExe "histogram")
 ADD_EXECUTABLE(${CurrentExe} ${CurrentExe}.cxx)
 TARGET_LINK_LIBRARIES(${CurrentExe} ${Libraries})
 
