@@ -218,9 +218,6 @@ protected:
   /** the attribute */
   TAttribute m_Attribute;
 
-private:
-  ComponentTreeNode(const Self&); //purposely not implemented
-  void operator=(const Self&); //purposely not implemented
 };
 
 } // end namespace itk
