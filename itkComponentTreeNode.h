@@ -146,6 +146,8 @@ public:
     return m_Children;
     }
 
+  const Self * GetNthChild( int pos ) const;
+
   /** Get the pixel value */
   inline const PixelType& GetPixel() const
     {

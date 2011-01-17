@@ -168,6 +168,23 @@ ComponentTreeNode<TPixel, TIndex, TValue>
 }
 
 template <typename TPixel, typename TIndex, typename TValue>
+const typename ComponentTreeNode<TPixel, TIndex, TValue>::Self *
+ComponentTreeNode<TPixel, TIndex, TValue>
+::GetNthChild( int pos ) const
+{
+  int i = 0;
+  for( ChildrenListConstIteratorType it=m_Children.begin(); it!=m_Children.end(); it++ )
+    {
+    if( i == pos )
+      {
+      return *it;
+      }
+    i++;
+    }
+  itkGenericExceptionMacro(<<"Requested children index ("<<pos<<") is not valid");
+}
+
+template <typename TPixel, typename TIndex, typename TValue>
 void
 ComponentTreeNode<TPixel, TIndex, TValue>
 ::Print( std::ostream& os ) const
