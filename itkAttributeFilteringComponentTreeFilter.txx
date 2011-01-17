@@ -28,7 +28,7 @@ AttributeFilteringComponentTreeFilter<TInputImage, TAccessor>
 ::AttributeFilteringComponentTreeFilter()
 {
   m_Lambda = itk::NumericTraits< AttributeType >::Zero;
-  m_FilteringType = MAXIMUM;
+  m_FilteringType = DIRECT;
   m_ReverseOrdering = false;
 }
 
