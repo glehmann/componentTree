@@ -156,7 +156,7 @@ ComponentTree<TPixel, VImageDimension, TValue>
   assert( node != NULL );
   assert( idx != NodeType::EndIndex );
   assert( idx >= 0 );
-  assert( idx < this->GetLargestPossibleRegion().GetNumberOfPixels() );
+  assert( idx < (long)this->GetLargestPossibleRegion().GetNumberOfPixels() );
   
   typename NodeType::IndexType current = node->GetFirstIndex();
   typename NodeType::IndexType previous = NodeType::EndIndex;
