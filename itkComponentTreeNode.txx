@@ -190,7 +190,7 @@ ComponentTreeNode<TPixel, TIndex, TValue>
 ::Print( std::ostream& os ) const
 {
   os << "ComponentTreeNode " << this << std::endl;
-  os << "  Pixel: " << m_Pixel << std::endl;
+  os << "  Pixel: " << static_cast< typename NumericTraits< PixelType >::PrintType >( m_Pixel ) << std::endl;
   os << "  Parent: " << m_Parent << std::endl;
   os << "  Children: " << &m_Children << " (" << m_Children.size() << ")" << std::endl;
   os << "  FirstIndex: " << m_FirstIndex << std::endl;
