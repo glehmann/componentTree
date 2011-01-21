@@ -67,6 +67,8 @@ public:
   typedef TAttibuteAccessor AttributeAccessorType;
   typedef typename AttributeAccessorType::AttributeType   AttributeType;
   
+  typedef typename NumericTraits<PixelType>::RealType RealPixelType;
+
   /** ImageDimension constants */
   itkStaticConstMacro(ImageDimension, unsigned int,
                       TImage::ImageDimension);
@@ -180,7 +182,7 @@ protected:
   
   void DirectFiltering( NodeType* );
   
-  void SubtractFiltering( NodeType*, const PixelType & );
+  void SubtractFiltering( NodeType*, const RealPixelType & );
   
   inline bool Compare( const AttributeType & a1, const AttributeType & a2 )
     {

@@ -173,7 +173,7 @@ AttributeFilteringComponentTreeFilter<TInputImage, TAccessor>
 template<class TInputImage, class TAccessor>
 void
 AttributeFilteringComponentTreeFilter<TInputImage, TAccessor>
-::SubtractFiltering( NodeType* node, const PixelType & sub )
+::SubtractFiltering( NodeType* node, const RealPixelType & sub )
 {
   assert(node != NULL);
 
